@@ -2,12 +2,9 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +14,6 @@ import javax.persistence.Table;
 
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "rate_payment_network")
 public class RatePaymentNetwork extends RemittenceEntity implements Serializable{
 

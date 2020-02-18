@@ -3,7 +3,6 @@ package com.portal.business.commons.models;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,13 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
-import javax.persistence.CascadeType;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "payment")
-
 public class Payment extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +39,7 @@ public class Payment extends RemittenceEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
- 
+
     @Override
     public Object getPk() {
         return getId();
@@ -115,7 +110,7 @@ public class Payment extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;

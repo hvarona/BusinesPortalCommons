@@ -1,7 +1,5 @@
 package com.portal.business.commons.utils;
 
-
-
 import com.portal.business.commons.models.Enterprise;
 import com.portal.business.commons.models.Store;
 import com.portal.business.commons.models.User;
@@ -13,8 +11,6 @@ public class ServicesProviderMails {
     public static String SAC_COORDINADORES_MAIL = "sac-coordinadores@alodiga.com";
     //public static String ESP_GROUP_MAIL = "lromero@alodiga.com";
     //public static String SAC_COORDINADORES_MAIL = "lromero@alodiga.com";
-
-    
 
     public static Mail getAccountRegistrationMail(User user, String password, Enterprise enterprise) throws Exception {
 
@@ -33,20 +29,20 @@ public class ServicesProviderMails {
         String thanks = "Gracias por preferirnos, Alodiga Mejora tu vida";
         String messageFooter1 = "Este mensaje ha sido enviado desde una cuenta de correo electr&oacute;nico exclusivamente de notificaciones que no admite mensajes. No responda esta comunicaci&oacute;n.";
         String allRights = "Todos los derechos reservados";
-            hello = "Hello";
-            subject = "Alodiga ESP: Account Registration.";
-            text1 = "Welcome to Alodiga Services Provider (SP)!";
-            text2 = "Account Data: ";
-            text3 = "Account Creation";
-            distributorName = "Account: ";
-            login = "User(Login): ";
-            pass = "Password: ";
-            date = "Creation Date:";
-            moreInfo = "To sign in, click here: ";
-            mailInvite = "We invite you to continue enjoying the benefits and attractive products and services offered by Alodiga.";
-            thanks = "Thank you for choosing Alodiga, Alodiga Mejora tu vida";
-            messageFooter1 = "This message was sent from an email distributor solely for notification messages that are not supported. Do not respond to this communication";
-            allRights = "All rights reserved";
+        hello = "Hello";
+        subject = "Alodiga ESP: Account Registration.";
+        text1 = "Welcome to Alodiga Services Provider (SP)!";
+        text2 = "Account Data: ";
+        text3 = "Account Creation";
+        distributorName = "Account: ";
+        login = "User(Login): ";
+        pass = "Password: ";
+        date = "Creation Date:";
+        moreInfo = "To sign in, click here: ";
+        mailInvite = "We invite you to continue enjoying the benefits and attractive products and services offered by Alodiga.";
+        thanks = "Thank you for choosing Alodiga, Alodiga Mejora tu vida";
+        messageFooter1 = "This message was sent from an email distributor solely for notification messages that are not supported. Do not respond to this communication";
+        allRights = "All rights reserved";
         String style1 = "style='font:13px/0.6em Arial,Helvetica,sans-serif,lighter; color: #666; font-size:13px;'";
         String style2 = "style='background-color: #555555;color:#FFBF00;font:12px/1.8em Arial,Helvetica,sans-serif,lighter;font-weight:bold;padding-left:10px'";
         String body = "";
@@ -65,7 +61,7 @@ public class ServicesProviderMails {
                 + "<table width='728' border='0'>"
                 + "<tr><th width='728'>"
                 + "<p align='left' class='Estilo11'><br/><br/>&iexcl;"
-                + hello + " " + user.getFirstName() + " "+user.getLastName()+"&nbsp;" + "!</p>"
+                + hello + " " + user.getDisplayName() + "&nbsp;" + "!</p>"
                 + "<p align='left' class='Estilo11'>"
                 + text1 + "<br><br></p>"
                 + "</th>"
@@ -82,13 +78,13 @@ public class ServicesProviderMails {
                 + distributorName + "</div></td>"
                 + "<td>"
                 + "<div align='left' style='font:13px/0.6em Arial,Helvetica,sans-serif,lighter; color: #666; font-size:13px;'>"
-                + user.getFirstName() + " "+user.getLastName() + "</div>"
+                + user.getDisplayName() + "</div>"
                 + "</td>"
                 + "</tr>"
                 + "<tr height='30px'><td " + style2 + " width='305'><div align='left' >"
                 + login + "</div></td>"
                 + "<td><div align='left' style='font:13px/0.6em Arial,Helvetica,sans-serif,lighter; color: #666; font-size:13px;'>"
-                + user.getFirstName() + " "+user.getLastName()+ "</div></td></tr>"
+                + user.getDisplayName() + "</div></td></tr>"
                 + "<tr height='30px'><td " + style2 + " width='305'><div align='left' >"
                 + pass + "</div></td>"
                 + "<td><div align='left' style='font:13px/0.6em Arial,Helvetica,sans-serif,lighter; color: #666; font-size:13px;'>"
@@ -140,7 +136,5 @@ public class ServicesProviderMails {
         mail.setBcc(recipients);
         return mail;
     }
-
-   
 
 }

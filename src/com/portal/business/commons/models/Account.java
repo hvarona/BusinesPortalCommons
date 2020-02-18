@@ -25,7 +25,6 @@ import javax.persistence.Table;
  * @author usuario
  */
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "account")
 @NamedQueries({
     @NamedQuery(name = QueryConstants.LOAD_ACCOUNT_BY_LOGIN,

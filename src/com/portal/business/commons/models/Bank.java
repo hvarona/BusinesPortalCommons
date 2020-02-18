@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "bank")
 public class Bank extends RemittenceEntity implements java.io.Serializable {
 

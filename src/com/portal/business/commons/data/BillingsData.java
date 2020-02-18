@@ -1,31 +1,16 @@
 package com.portal.business.commons.data;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import com.portal.business.commons.exceptions.EmptyListException;
-import com.portal.business.commons.exceptions.GeneralException;
-import com.portal.business.commons.exceptions.NullParameterException;
-import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
-import com.portal.business.commons.managers.ContentManager;
-import com.portal.business.commons.models.Account;
-import com.portal.business.commons.models.Currency;
 import com.portal.business.commons.models.Store;
 import com.portal.business.commons.utils.EjbConstants;
-import com.portal.business.commons.utils.EjbUtils;
-import com.portal.business.commons.utils.QueryConstants;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ejb.EJB;
-import javax.transaction.UserTransaction;
 
 
 public class BillingsData extends AbstractBusinessPortalWs {
@@ -101,18 +86,12 @@ public class BillingsData extends AbstractBusinessPortalWs {
         Long enterpriseId = null;
         try {
             WsRequest request = new WsRequest();
-            List<Store> stores = storeData.getStore(request);
+            /*List<Store> stores = storeData.getStore(request);
 
             for (Store store : stores) {
                 store.getId();
 
-                if (!store.getIsPrePaid() && store.getNexBillingDate() == yesterday) {
-
-//                    processBilling(store.getId(), store.getLastBillingDate(), yesterday);
-
-                }
-
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();

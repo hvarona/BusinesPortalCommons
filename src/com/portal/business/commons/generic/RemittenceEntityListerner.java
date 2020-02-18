@@ -46,7 +46,7 @@ public class RemittenceEntityListerner {
 
     @PostLoad
     public void onEntityLoad(Object entity) {
-    	System.out.println("Loading " + entity.getClass());
+        System.out.println("Load " + entity.getClass());
     }
 
   

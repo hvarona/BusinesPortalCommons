@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "account_has_ip_address")
 public class AccountHasIpAddress   extends RemittenceEntity implements Serializable {
 

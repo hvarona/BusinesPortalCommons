@@ -2,12 +2,10 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +21,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author luis
  */
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "store_balance")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement

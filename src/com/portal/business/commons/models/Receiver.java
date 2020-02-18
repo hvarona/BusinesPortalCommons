@@ -2,13 +2,11 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import com.portal.business.commons.utils.QueryConstants;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +21,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "receiver")
 @NamedQueries({
     @NamedQuery(name = QueryConstants.LOAD_RECEIVER_BY_PHONE_NUMBER,

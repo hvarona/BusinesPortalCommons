@@ -2,17 +2,14 @@ package com.portal.business.commons.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "payment_type")
 public class PaymentType extends RemittenceEntity implements Serializable {
 

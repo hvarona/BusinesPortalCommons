@@ -2,92 +2,68 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import com.portal.business.commons.utils.QueryConstants;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
-
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-
 import javax.persistence.NamedQueries;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.Transient;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
-@Table(name = "user")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "bpuser")
+@DiscriminatorColumn(name = "DTYPE", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorValue("1")
 @NamedQueries({
-    @NamedQuery(name = QueryConstants.LOGIN_USER,
-    query = "SELECT u FROM User u WHERE u.login=:login AND u.password=:password"),
-    @NamedQuery(name = QueryConstants.LOAD_USER_BY_LOGIN,
-    query = "SELECT u FROM User u WHERE u.login=:login"),
-    @NamedQuery(name = QueryConstants.LOAD_USER_BY_EMAIL,
-    query = "SELECT u FROM User u WHERE u.email=:email")
-})
+    @NamedQuery(name = QueryConstants.LOGIN_USER, query = "SELECT u FROM User u WHERE u.login=:login AND u.password=:password"),
+    @NamedQuery(name = QueryConstants.LOAD_USER_BY_LOGIN, query = "SELECT u FROM User u WHERE u.login=:login"),
+    @NamedQuery(name = QueryConstants.LOAD_USER_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email")})
 public class User extends RemittenceEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "creationdate")
     private Timestamp creationDate;
+    @Column(name = "email")
     private String email;
+    @Column(name = "enabled")
     private boolean enabled;
+    @Column(name = "receiveNotification")
     private boolean receiveNotification;
-    private String firstName;
-    private String lastName;
+    @Column(name = "login")
     private String login;
+    @Column(name = "password")
     private String password;
+    
+    @Column(name = "phonenumber")
     private String phoneNumber;
-    //bi-directional many-to-one association to UserHasProfileHasEnterprise
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-//    private List<UserHasProfile> userHasProfileHasEnterprises;
-    @XmlTransient
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<UserHasProfile> userHasProfile;
-        //bi-directional many-to-one association to Language
+
     @ManyToOne
-    @JoinColumn(name = "languageId")
+    @JoinColumn(name = "idProfile", nullable = false)
+    private Profile profile;
+
+    @ManyToOne
+    @JoinColumn(name = "idLanguage")
     private Language language;
 
     public User() {
     }
-
-    public User(Long id, String firstName, String lastName, String login) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.login = login;
-    }
-
-    public User(Long id, Timestamp creationDate, String email, boolean enabled, boolean receiveNotification, String firstName, String lastName, String login, String password, String phoneNumber, List<UserHasProfile> userHasProfile) {
-        this.id = id;
-        this.creationDate = creationDate;
-        this.email = email;
-        this.enabled = enabled;
-        this.receiveNotification = receiveNotification;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.login = login;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.userHasProfile = userHasProfile;
-    }
-    
-    
 
     public Long getId() {
         return this.id;
@@ -121,22 +97,6 @@ public class User extends RemittenceEntity implements Serializable {
         this.enabled = enabled;
     }
 
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getLogin() {
         return this.login;
     }
@@ -161,12 +121,12 @@ public class User extends RemittenceEntity implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<UserHasProfile> getUserHasProfile() {
-        return userHasProfile;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setUserHasProfile(List<UserHasProfile> userHasProfile) {
-        this.userHasProfile = userHasProfile;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public boolean getReceiveNotification() {
@@ -177,22 +137,17 @@ public class User extends RemittenceEntity implements Serializable {
         this.receiveNotification = receiveNotification;
     }
 
-    public Profile getCurrentProfile() {
-        Profile profile = null;
-        for (UserHasProfile uhp : this.userHasProfile) {
-            if (uhp.getEndingDate() == null ) {
-                profile = uhp.getProfile();
-            }
-        }
-        return profile;
-    }
-
     public Language getLanguage() {
         return language;
     }
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    @Transient
+    public String getDisplayName() {
+        return login;
     }
 
     @Override
@@ -209,7 +164,7 @@ public class User extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -226,9 +181,6 @@ public class User extends RemittenceEntity implements Serializable {
             return false;
         }
         final User other = (User) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }

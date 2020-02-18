@@ -2,7 +2,6 @@ package com.portal.business.commons.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,12 +10,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "remittance_status_has_remittence")
 public class RemittanceHasRemittenceStatus extends RemittenceEntity implements Serializable {
 

@@ -2,7 +2,6 @@ package com.portal.business.commons.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,10 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "store_has_remittent")
 public class StoreHasRemittent extends RemittenceEntity implements Serializable {
 

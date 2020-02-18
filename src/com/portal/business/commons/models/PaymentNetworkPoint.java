@@ -2,16 +2,13 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "payment_network_point")
 public class PaymentNetworkPoint extends RemittenceEntity implements Serializable {
 

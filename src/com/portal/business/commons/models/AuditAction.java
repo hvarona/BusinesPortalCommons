@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "audit_action")
 public class AuditAction extends RemittenceEntity implements Serializable {
 

@@ -9,7 +9,6 @@ package com.portal.business.commons.models;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +19,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import com.portal.business.commons.utils.QueryConstants;
 
 import java.util.List;
@@ -40,7 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author usuario
  */
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "remittance")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({

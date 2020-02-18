@@ -1,16 +1,5 @@
 package com.portal.business.commons.data;
 
-//
-//import com.alodiga.remittance.provider.RemittanceProviderMessage;
-//import com.alodiga.remittance.provider.RemittanceProviderResponse;
-//import com.alodiga.remittance.provider.exception.CountryNotFoundException;
-//import com.alodiga.remittance.provider.exception.InvalidAddressException;
-//import com.alodiga.remittance.provider.exception.InvalidAmountException;
-//import com.alodiga.remittance.provider.exception.InvalidBankException;
-//import com.alodiga.remittance.provider.exception.ReceiverRequiredException;
-//import com.alodiga.remittance.provider.exception.RemittentRequiredException;
-//import com.alodiga.remittance.provider.model.RemittanceResponse;
-//import com.alodiga.remittance.provider.redchapina.RedChapinaProvider;
 import com.portal.business.commons.exceptions.CreditLimitExcededException;
 import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.GeneralException;
@@ -27,15 +16,12 @@ import com.portal.business.commons.exceptions.MaxAmountPerRemettenceException;
 import com.portal.business.commons.exceptions.NegativeBalanceException;
 import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
-import com.portal.business.commons.exceptions.RemittanceNotFoundException;
 import com.portal.business.commons.exceptions.RemittenceNotAvailableException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.RemittenceEntity;
 import com.portal.business.commons.generic.WsRequest;
 import com.portal.business.commons.managers.ContentManager;
 import com.portal.business.commons.managers.PreferenceManager;
-import com.portal.business.commons.models.Address;
-import com.portal.business.commons.models.Correspondent;
 import com.portal.business.commons.models.PaymentMethod;
 import com.portal.business.commons.models.PaymentNetwork;
 import com.portal.business.commons.models.PaymentNetworkType;
@@ -53,11 +39,9 @@ import java.util.ArrayList;
 
 import com.portal.business.commons.models.StoreBalanceHistory;
 import com.portal.business.commons.models.StoreSetting;
-import com.portal.business.commons.models.User;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.QueryConstants;
 
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,218 +56,20 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
-
 public class RemittanceData extends AbstractBusinessPortalWs {
 
-     private static final Logger logger = Logger.getLogger(RemittanceData.class);
-     private StoreData storeData = new StoreData();
-     public static final Long PROVIDER_SYSTEM_USER_ID = 1l;
-//     RedChapinaProvider redChapinaProvider = new RedChapinaProvider();
-     
-     
-//   public Remittance executeRemittance(Remittance remittance, Remittent remittent,Receiver receiver, Address addressReciever,Address addressRemittent, Float amountDestiny, Float amountOrigin,User user) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountPerRemettenceException, MaxAmountDailyPerStoreException,MaxAmountDailyPerReceiverException,MaxAmountDailyPerRemittentException,MaxAmountMonthlyPerRemittentException,MaxAmountMonthlyPerReceiverException,MaxAmountMonthlyPerStoreException,MaxAmountAnnualPerReceiverException,MaxAmountAnnualPerRemittentException,MaxAmountAnnualPerStoreException,CreditLimitExcededException,NegativeBalanceException, RemoteException, InvalidAddressException, CountryNotFoundException, InvalidBankException, RemittentRequiredException, ReceiverRequiredException, InvalidAmountException {
-//       if (remittance == null) {
-//           throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_REMITTANCE), null);
-//       }
-//       remittance = saveRemittance(remittance);
-//       addRemittanceStatus(remittance, RemittanceStatus.STARTED, user.getId(), "se inicia el proceso de remesa");
-//       try {
-//           validateRemittance(remittance);
-//       } catch (NullParameterException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por falta de parametros");
-//           throw e;
-//       } catch (MaxAmountPerRemettenceException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto maximo permitido por remesa");
-//           throw e;
-//       } catch (RemittenceNotAvailableException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada estar deshabilitada la opcion de efectuar remesas");
-//           throw e;
-//        } catch (MaxAmountDailyPerStoreException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto diario maximo para remesas permitido por tienda");
-//           throw e;
-//        } catch (MaxAmountMonthlyPerStoreException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto mensual maximo para remesas permitido por tienda");
-//           throw e;
-//       } catch (MaxAmountAnnualPerStoreException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto anual maximo para remesas permitido por tienda");
-//           throw e;
-//       } catch (GeneralException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por error general en el sistema");
-//           throw e;
-//       }
-//       try {
-//          validateRemittent(remittent,remittance.getAmountOrigin());
-//       } catch (NullParameterException e) {
-//          remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "se anula la remesa por falta de remitente");
-//           throw e;
-//       }  catch (MaxAmountDailyPerRemittentException e) {
-//          remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto diario maximo para remesas permitido por remitente");
-//           throw e;
-//       }  catch (MaxAmountMonthlyPerRemittentException e) {
-//          remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto mensual maximo para remesas permitido por remitente");
-//           throw e;
-//       }  catch (MaxAmountAnnualPerRemittentException e) {
-//          remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto anual maximo para remesas permitido por remitente");
-//           throw e;
-//       }   catch (Exception e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.APRROVAL_PENDDING, user.getId(), "la remesa esta pendiente por aprovaciòn ya que se debe evaluar el remitente");
-//           throw e;
-//       } 
-//       try {
-//           validateReceiver(receiver, remittance.getAmountOrigin());
-//       } catch (NullParameterException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "se anula la remesa por falta de destinatario");
-//           throw e;
-//       } catch (MaxAmountDailyPerReceiverException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto diario maximo para remesas permitido por destinatario");
-//           throw e;
-//       }  catch (MaxAmountMonthlyPerReceiverException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto mensual maximo para remesas permitido por destinatario");
-//           throw e;
-//       }  catch (MaxAmountAnnualPerReceiverException e) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el monto anual maximo para remesas permitido por destinatario");
-//           throw e;
-//       } 
-//       remittance = addRemittanceStatus(remittance,RemittanceStatus.PROCESSED, user.getId(), "la remesa cumple las validaciones");
-//     
-//       Remittance remittance1 = null;
-//       try {
-//           //ejecutar remesa
-//           remittance1 = new Remittance();
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.SENT, user.getId(), "la remesa fue enviada a la red de pago");
-//       } catch (Exception ex1) {
-//           remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por fallas al ejecutar la misma");
-//           ex1.printStackTrace();
-//       }        
-//       
-//       
-//       try {
-//           remittance = this.updateRemittance(remittance);
-//       } catch (CreditLimitExcededException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por exceder el limite de credito de la tienda");
-//           throw e;
-//       } catch (NegativeBalanceException e) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por falta de saldo en la tienda");
-//           throw e;
-//       }catch (GeneralException ex) {
-//           remittance = addRemittanceStatus(remittance, RemittanceStatus.NULLED, user.getId(), "la remesa fue anulada por fallas al ejecutar la misma");
-//           ex.printStackTrace();
-//               throw new GeneralException("Exception trying saving remittance in method executeRemittance. " + ex.getMessage());
-//       }
-//       
-//       if(remittance.getCorrespondent().getId() == Correspondent.REPCHAPINA)
-//       {
-//    	
-//    	   Address addressRemitent = remittance.getAddressRemittent();
-//   		   Address addressBeneficiary = remittance.getAddressReciever();
-//   		   String remittanceId = remittance.getId().toString();
-//   		   String userName = "System user";
-//   		   String countryIso = addressRemitent.getCountry().getIso();
-//   		   String remFirstName = remittent.getPerson().getFirstName();
-//   		   String remLastName = remittent.getPerson().getLastName();
-//   		   String remMiddleName = remittent.getPerson().getMiddleName();
-//   		   String remSecondSurName = remittent.getPerson().getSecondSurname();
-//   		   String remCountryIso = countryIso;
-//   		   String remState = addressRemitent.getState().getName();
-//   		   String remCity = addressRemitent.getCity().getName();
-//   		   String remAddress = addressRemitent.getAddress();
-//   		   String remPhoneNumber = remittent.getPerson().getPhoneNumber();
-//    	   String remZipCode = addressRemitent.getZipCode();
-//    	   
-//    	   String recFirstName = receiver.getPerson().getFirstName();
-//    	   String recLastName = receiver.getPerson().getLastName();
-//    	   String recMiddleName = receiver.getPerson().getMiddleName();
-//    	   String recSecondSurName = receiver.getPerson().getSecondSurname();
-//    	   String recCountryIso = addressBeneficiary.getCountry().getIso();
-//    	   String recState = addressBeneficiary.getStateName();
-//    	   String recCity = addressBeneficiary.getCityName();
-//    	   String recAddress = addressBeneficiary.getAddress();
-//    	   String recPhoneNumber = receiver.getPerson().getPhoneNumber();
-//    	   String recZipCode = addressBeneficiary.getZipCode();
-//   		   String recMessage = "Mensaje"; //FIXME
-//   		   String origenCurrencyIso = remittance.getOriginCurrent().getIso();
-//   		   String destinyCurrencyIso = remittance.getDestinyCurrent().getIso();
-//   		   Float exchangeRateAmount = (Float) remittance.getExchangeRate().getAmount();
-//   		   Float origenAmount = remittance.getAmountOrigin();
-//   		   Float destineAmount = remittance.getAmountDestiny();
-//   		   String deliveryForm = remittance.getDeliveryForm().getName();
-//   		   String bankId = remittance.getBank().getRedChapinaId();
-//   		   String creationDate = remittance.getCreationDate().toString();
-//   		   String creationHour = remittance.getCreationHour().toString();
-//   		   String localSales = remittance.getLocalSales().toString();
-//   		   String cashBox = remittance.getCashBox();
-//   		   String cashier = remittance.getCashier();
-//   		   String reservedField = remittance.getReserveField1().toString();
-//   		   String paymentNetworkName = remittance.getPaymentNetwork().getName(); 
-//   		   
-//    	  
-//    	   try {
-//    		   RemittanceResponse providerResponse = redChapinaProvider.executeRemittance(
-//					  remittanceId, userName, countryIso, remFirstName, 
-//					  remLastName, remMiddleName, remSecondSurName, 
-//					  remCountryIso, remState, remCity, remAddress, 
-//					  remPhoneNumber, remZipCode, recFirstName, recLastName, 
-//					  recMiddleName, recSecondSurName, recCountryIso, 
-//					  recState, recCity, recAddress, recPhoneNumber,
-//					  recZipCode, recMessage, origenCurrencyIso, 
-//					  destinyCurrencyIso, exchangeRateAmount, origenAmount, 
-//					  destineAmount, deliveryForm, bankId, creationDate,
-//					  creationHour, localSales, cashBox, cashier,
-//					  reservedField, paymentNetworkName);
-//    		   
-//    		try {
-//				this.updateRemittanceNumber(remittance.getId());
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				throw e;
-//			}
-//    		switch (providerResponse.getCode()) {
-//			case "0000":
-//				this.changeRemittanceStatus(providerResponse);
-//				break;
-//			default:
-//					this.changeRemittanceStatus(providerResponse);
-//					this.cancelRemittance(remittance, providerResponse.getCode(), "Se elimina por el motivo xy");
-//				break;
-//			}
-//		} catch (RemoteException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (InvalidAddressException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (CountryNotFoundException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (InvalidBankException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (RemittentRequiredException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (ReceiverRequiredException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (InvalidAmountException e) {
-//			e.printStackTrace();
-//			throw e;
-//		} catch (Exception e) {
-//			throw new GeneralException("Unknow exception trying to update remittance number");
-//		}
-//    	   
-//       }
-//       return remittance;
-//    }
-   
-   
+    private static final Logger logger = Logger.getLogger(RemittanceData.class);
+    private StoreData storeData = new StoreData();
+    public static final Long PROVIDER_SYSTEM_USER_ID = 1l;
+
     public Remittance saveRemittance(Remittance remittance) throws NullParameterException, GeneralException {
         if (remittance == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittance"), null);
         }
         return (Remittance) saveEntity(remittance);
     }
-    
-   public Remittance updateRemittance(Remittance remittance)throws NullParameterException,GeneralException,CreditLimitExcededException,NegativeBalanceException{
+
+    public Remittance updateRemittance(Remittance remittance) throws NullParameterException, GeneralException, CreditLimitExcededException, NegativeBalanceException {
         System.out.println("---------------------SAVE REMITTANCE------------------");
         Map<String, Object> response = new HashMap<String, Object>();
         StoreBalanceHistory balanceHistory = new StoreBalanceHistory();
@@ -293,7 +79,7 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         request.setParam(remittance.getStore().getId());
         Store store = null;
         try {
-           store = storeData.loadStore(request);
+            store = storeData.loadStore(request);
         } catch (RegisterNotFoundException ex) {
         }
         float amount = 0f;
@@ -307,13 +93,6 @@ public class RemittanceData extends AbstractBusinessPortalWs {
             }
             try {
                 entityManager.getTransaction().begin();
-                if (store.getIsPrePaid()) {
-                    System.out.println(store.getBalance() - amount);
-                    store.setBalance(store.getBalance() - amount);
-                } else {
-                    System.out.println(store.getCrediLimit() - amount);
-                    store.setBalance(store.getCrediLimit() - amount);
-                }
                 store = entityManager.merge(store);
                 entityManager.getTransaction().commit();
             } catch (Exception ex) {
@@ -321,11 +100,6 @@ public class RemittanceData extends AbstractBusinessPortalWs {
                 if (entityManager.getTransaction().isActive()) {
                     entityManager.getTransaction().rollback();
                 }
-//                RemittanceStatus remittanceStatus = ContentManager.getInstance().getRemittanceStatusById(RemittanceStatus.NULLED);
-//                remittance.setStatus(remittanceStatus);
-//                wrongRemittances.add(remittance);
-//                persistListObject(wrongRemittances);
-//                remittance = addRemittanceStatus(remittance,RemittanceStatus.NULLED, 1L, "remesa anulada por error al guardar");
                 throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ""), null);
             }
 
@@ -335,17 +109,14 @@ public class RemittanceData extends AbstractBusinessPortalWs {
             throw new NegativeBalanceException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_BALANCE, this.getClass(), getMethodName(), "param"), null);
         } catch (Exception e) {
             remittance.setBalanceHistories(null);
-//            remittance.setStore(null);
-//            wrongRemittances.add(remittance);
-//            persistListObject(wrongRemittances);
             e.printStackTrace();
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ""), null);
         }
         return remittance;
 
-   }
-   
-       public boolean persistListObject(List data) {
+    }
+
+    public boolean persistListObject(List data) {
         boolean success = false;
         EntityManager em = getEntityManagerWrapper().getEntityManager();
         EntityTransaction et = em.getTransaction();
@@ -380,81 +151,28 @@ public class RemittanceData extends AbstractBusinessPortalWs {
 
         }
     }
-   
-    public boolean validateRemittance(Remittance remittance) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountPerRemettenceException, MaxAmountDailyPerStoreException,MaxAmountMonthlyPerStoreException,MaxAmountAnnualPerStoreException {
+
+    public boolean validateRemittance(Remittance remittance) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountPerRemettenceException, MaxAmountDailyPerStoreException, MaxAmountMonthlyPerStoreException, MaxAmountAnnualPerStoreException {
         boolean remittenceAproved = true;
         if (remittance == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_REMITTANCE), null);
         }
         Long storeId = remittance.getStore().getId();
-        Long enterpriseId = remittance.getStore().getEnterprise().getId();
+        Long enterpriseId = remittance.getStore().getId();
         PreferenceManager pManager = null;
         try {
             pManager = PreferenceManager.getInstance();
         } catch (Exception ex) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-        Float maxAmountPerRemittance = 0F;
-        Float maxAmountDaily = 0F;
-        Float maxAmountMonthly = 0F;
-        Float maxAmountAnnual = 0F;
-        StoreData storeData = new StoreData();
-        try {
-            StoreSetting setting = storeData.loadActiveStoreSettingsByStoreIdAndFieldId(PreferenceFieldEnum.MAX_AMOUNT_PER_REMITTANCE.getId(), storeId);
-            maxAmountPerRemittance = Float.parseFloat(setting.getValue());
-        } catch (RegisterNotFoundException ex) {
-            maxAmountPerRemittance = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_PER_REMITTANCE.getId()));
-        }
-        try {
-            StoreSetting setting = storeData.loadActiveStoreSettingsByStoreIdAndFieldId(PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_STORE.getId(), storeId);
-            maxAmountDaily = Float.parseFloat(setting.getValue());
-        } catch (RegisterNotFoundException ex) {
-            maxAmountDaily = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_STORE.getId()));
-        }
-        try {
-            StoreSetting setting = storeData.loadActiveStoreSettingsByStoreIdAndFieldId(PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_STORE.getId(), storeId);
-            maxAmountMonthly = Float.parseFloat(setting.getValue());
-        } catch (RegisterNotFoundException ex) {
-            maxAmountMonthly =Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_STORE.getId()));
-        }
-        try {
-            StoreSetting setting = storeData.loadActiveStoreSettingsByStoreIdAndFieldId(PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_STORE.getId(), storeId);
-            maxAmountAnnual = Float.parseFloat(setting.getValue());
-        } catch (RegisterNotFoundException ex) {
-            maxAmountAnnual = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_STORE.getId()));
-        }
-        boolean transactionAvailable = pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.DISABLED_TRANSACTION.getId()).equals("1");
-        if (!transactionAvailable) {
-            throw new RemittenceNotAvailableException(logger, sysError.format(EjbConstants.ERR_REMITTENCE_NOT_AVAILABLE, this.getClass(), getMethodName()), null);
-        }
-        Float remittenceAmount = remittance.getTotalAmount();
-        if (remittenceAmount == null || (remittenceAmount != null && remittenceAmount > maxAmountPerRemittance)) {
-            throw new MaxAmountPerRemettenceException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_PER_REMITTANCE, this.getClass(), getMethodName(), maxAmountPerRemittance + ""), null);
-        }
-        float amountDaily = 0f;
-        float amountMounthy = 0f;
-        float amountAnnual = 0f;
-        amountDaily = getCurrentRemittanceAmountByStore(storeId, 0);
-        amountMounthy = getMounthlyRemittanceAmountByStore(storeId);
-        amountAnnual = getAnnualAmountRemittanceByStore(storeId);
-        if ((amountDaily + remittenceAmount) > maxAmountDaily) {
-            throw new MaxAmountDailyPerStoreException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_DAILY, this.getClass(), getMethodName(), maxAmountDaily + ""), null);
-        } 
-        if ((amountMounthy + remittenceAmount) > maxAmountMonthly) {
-            throw new MaxAmountMonthlyPerStoreException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_MOUNTHLY, this.getClass(), getMethodName(), maxAmountMonthly + ""), null);
-        } 
-        if ((amountAnnual + remittenceAmount) > maxAmountAnnual) {
-            throw new MaxAmountAnnualPerStoreException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_YEARLY, this.getClass(), getMethodName(), maxAmountAnnual + ""), null);
-        } 
         return remittenceAproved;
-//        return true;
     }
-    
-    public boolean validateRemittent(Remittent remittent, Float amount) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountDailyPerRemittentException, MaxAmountMonthlyPerRemittentException,MaxAmountAnnualPerRemittentException {
+
+    public boolean validateRemittent(Remittent remittent, Float amount) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountDailyPerRemittentException, MaxAmountMonthlyPerRemittentException, MaxAmountAnnualPerRemittentException {
         boolean remittentAproved = true;
         if (remittent == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_REMITTENT), null);
-        }else if (amount == null) {
+        } else if (amount == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_AMOUNT), null);
         }
         Long enterpriseId = 1L;
@@ -464,12 +182,11 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         } catch (Exception ex) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-            
+
         Float maxAmountDailyRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_REMITTENT.getId()));
         Float maxAmountMonthlyRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_REMITTENT.getId()));
         Float maxAmountAnnualRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_REMITTENT.getId()));
 
-      
         Float remittenceAmount = amount;
         float amountDaily = 0f;
         float amountMounthy = 0f;
@@ -479,21 +196,21 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         amountAnnual = getAnnualAmountRemittanceByRemittent(remittent.getId());
         if ((amountDaily + remittenceAmount) > maxAmountDailyRemittent) {
             throw new MaxAmountDailyPerRemittentException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_DAILY, this.getClass(), getMethodName(), maxAmountDailyRemittent + ""), null);
-        } 
+        }
         if ((amountMounthy + remittenceAmount) > maxAmountMonthlyRemittent) {
             throw new MaxAmountMonthlyPerRemittentException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_MOUNTHLY, this.getClass(), getMethodName(), maxAmountMonthlyRemittent + ""), null);
-        } 
+        }
         if ((amountAnnual + remittenceAmount) > maxAmountAnnualRemittent) {
             throw new MaxAmountAnnualPerRemittentException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_YEARLY, this.getClass(), getMethodName(), maxAmountAnnualRemittent + ""), null);
-        } 
+        }
         return remittentAproved;
     }
-   
-     public boolean validateReceiver(Receiver receiver,Float amount) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountDailyPerReceiverException,MaxAmountMonthlyPerReceiverException,MaxAmountAnnualPerReceiverException {
+
+    public boolean validateReceiver(Receiver receiver, Float amount) throws GeneralException, NullParameterException, RemittenceNotAvailableException, MaxAmountDailyPerReceiverException, MaxAmountMonthlyPerReceiverException, MaxAmountAnnualPerReceiverException {
         boolean receiverAproved = true;
         if (receiver == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_RECEIVER), null);
-        }else if (amount == null) {
+        } else if (amount == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_AMOUNT), null);
         }
         Long enterpriseId = 1L;
@@ -503,9 +220,9 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         } catch (Exception ex) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-         Float maxAmountDailyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_RECEIVER.getId()));
-         Float maxAmountMonthlyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_RECEIVER.getId()));
-         Float maxAmountAnnualReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_RECEIVER.getId()));
+        Float maxAmountDailyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_RECEIVER.getId()));
+        Float maxAmountMonthlyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_RECEIVER.getId()));
+        Float maxAmountAnnualReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_RECEIVER.getId()));
 
         Float remittenceAmount = amount;
         float amountDaily = 0f;
@@ -516,17 +233,17 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         amountAnnual = getAnnualAmountRemittanceByReceiver(receiver.getId());
         if ((amountDaily + remittenceAmount) > maxAmountDailyReceiver) {
             throw new MaxAmountDailyPerReceiverException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_DAILY, this.getClass(), getMethodName(), maxAmountDailyReceiver + ""), null);
-        } 
+        }
         if ((amountMounthy + remittenceAmount) > maxAmountMonthlyReceiver) {
             throw new MaxAmountMonthlyPerReceiverException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_MOUNTHLY, this.getClass(), getMethodName(), maxAmountMonthlyReceiver + ""), null);
-        } 
+        }
         if ((amountAnnual + remittenceAmount) > maxAmountAnnualReceiver) {
             throw new MaxAmountAnnualPerReceiverException(logger, sysError.format(EjbConstants.ERR_MAX_AMOUNT_YEARLY, this.getClass(), getMethodName(), maxAmountAnnualReceiver + ""), null);
-        } 
+        }
         return receiverAproved;
     }
-    
-     public List<Float> getEntireSalesAmountByStore(Long storeId) throws NullParameterException, GeneralException {
+
+    public List<Float> getEntireSalesAmountByStore(Long storeId) throws NullParameterException, GeneralException {
         List<Float> sales = new ArrayList<Float>();
         sales.add(getCurrentRemittanceAmountByStore(storeId, 0));
         sales.add(getCurrentRemittanceAmountByStore(storeId, 1));
@@ -535,13 +252,11 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         return sales;
     }
 
-    
-     public Float getCurrentRemittanceAmountByStore(Long storeId, int previousDays) throws NullParameterException, GeneralException {
-        
-                 System.out.println("%%%%%%%%%%%%%%%%%%%%%%% init method getCurrentRemittanceAmountByStore");
+    public Float getCurrentRemittanceAmountByStore(Long storeId, int previousDays) throws NullParameterException, GeneralException {
 
-         
-         if (storeId == null) {
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%% init method getCurrentRemittanceAmountByStore");
+
+        if (storeId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
         Float remittanceAmount = null;
@@ -573,11 +288,11 @@ public class RemittanceData extends AbstractBusinessPortalWs {
             ex.printStackTrace();
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-         System.out.println("+++++ Amount: " + remittanceAmount);
+        System.out.println("+++++ Amount: " + remittanceAmount);
         return remittanceAmount;
     }
-     
-     public Float getMounthlyRemittanceAmountByStore(Long storeId) throws NullParameterException, GeneralException {
+
+    public Float getMounthlyRemittanceAmountByStore(Long storeId) throws NullParameterException, GeneralException {
         if (storeId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -606,8 +321,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getAnnualAmountRemittanceByStore(Long storeId) throws NullParameterException, GeneralException {
+
+    public Float getAnnualAmountRemittanceByStore(Long storeId) throws NullParameterException, GeneralException {
         if (storeId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -636,8 +351,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getCurrentRemittanceAmountByRemittent(Long remittentId, int previousDays) throws NullParameterException, GeneralException {
+
+    public Float getCurrentRemittanceAmountByRemittent(Long remittentId, int previousDays) throws NullParameterException, GeneralException {
         if (remittentId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittentId"), null);
         }
@@ -672,8 +387,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getMounthlyRemittanceAmountByRemittent(Long remittentId) throws NullParameterException, GeneralException {
+
+    public Float getMounthlyRemittanceAmountByRemittent(Long remittentId) throws NullParameterException, GeneralException {
         if (remittentId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -702,8 +417,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getAnnualAmountRemittanceByRemittent(Long remittentId) throws NullParameterException, GeneralException {
+
+    public Float getAnnualAmountRemittanceByRemittent(Long remittentId) throws NullParameterException, GeneralException {
         if (remittentId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -733,8 +448,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getCurrentRemittanceAmountByReceiver(Long remittentId, int previousDays) throws NullParameterException, GeneralException {
+
+    public Float getCurrentRemittanceAmountByReceiver(Long remittentId, int previousDays) throws NullParameterException, GeneralException {
         if (remittentId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittentId"), null);
         }
@@ -769,8 +484,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getMounthlyRemittanceAmountByReceiver(Long receiverId) throws NullParameterException, GeneralException {
+
+    public Float getMounthlyRemittanceAmountByReceiver(Long receiverId) throws NullParameterException, GeneralException {
         if (receiverId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -799,8 +514,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-     
-     public Float getAnnualAmountRemittanceByReceiver(Long receiverId) throws NullParameterException, GeneralException {
+
+    public Float getAnnualAmountRemittanceByReceiver(Long receiverId) throws NullParameterException, GeneralException {
         if (receiverId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
@@ -829,7 +544,6 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittanceAmount;
     }
-
 
     private StoreBalanceHistory createStoreBalanceHistory(Store store, float transferAmount, int transferType, boolean isBalanceTranference) throws GeneralException, EmptyListException, NullParameterException, NegativeBalanceException, CreditLimitExcededException, RegisterNotFoundException {
         StoreBalanceHistory currentBalanceHistory = loadLastBalanceHistoryByStore(store.getId());
@@ -847,12 +561,6 @@ public class RemittanceData extends AbstractBusinessPortalWs {
                 newCurrentAmount = currentAmount + transferAmount;//SUMO AL MONTO ACTUAL (EL DESTINO)
                 break;
         }
-        if (store.getIsPrePaid() && newCurrentAmount < 0) {
-            throw new NegativeBalanceException("Current amount can not be negative");
-        }
-        if (!store.getIsPrePaid() && store.getCrediLimit() + newCurrentAmount < 0) {
-            throw new CreditLimitExcededException("Credit Limit Exceed");
-        }
         balanceHistory.setCurrentAmount(newCurrentAmount);
         return balanceHistory;
     }
@@ -861,12 +569,7 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         StoreBalanceHistory currentBalanceHistory = loadLastBalanceHistoryByStore(store.getId());
         float currentAmount = currentBalanceHistory != null ? currentBalanceHistory.getCurrentAmount().floatValue() : 0f;
         float newCurrentAmount = currentAmount - transferAmount;
-        if (store.getIsPrePaid() && newCurrentAmount < 0) {
-            throw new NegativeBalanceException("Current amount can not be negative");
-        }
-        if (!store.getIsPrePaid() && store.getCrediLimit() + newCurrentAmount < 0) {
-            throw new CreditLimitExcededException("Credit Limit Exceed");
-        }
+
         return true;
     }
 
@@ -894,21 +597,21 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return balanceHistory;
     }
-    
+
     public SaleType loadSaleType(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         SaleType saleType = (SaleType) loadEntity(SaleType.class, request, logger, getMethodName());
         return saleType;
     }
-    
+
     public List<SaleType> getSaleTypes(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<SaleType>) listEntities(SaleType.class, request, logger, getMethodName());
     }
-            
+
     public PaymentMethod loadPaymentMethod(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         PaymentMethod paymentMethod = (PaymentMethod) loadEntity(PaymentMethod.class, request, logger, getMethodName());
         return paymentMethod;
     }
-    
+
     public List<PaymentMethod> getPaymentMethods(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<PaymentMethod>) listEntities(PaymentMethod.class, request, logger, getMethodName());
     }
@@ -917,12 +620,11 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         PaymentNetworkType paymentNetworkType = (PaymentNetworkType) loadEntity(PaymentNetworkType.class, request, logger, getMethodName());
         return paymentNetworkType;
     }
-    
+
     public List<PaymentNetworkType> getPaymentNetworkTypes(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<PaymentNetworkType>) listEntities(PaymentNetworkType.class, request, logger, getMethodName());
     }
-    
-    
+
     public List<PaymentNetwork> getPaymentNetwork(WsRequest request) throws GeneralException, NullParameterException, EmptyListException {
         return (List<PaymentNetwork>) listEntities(PaymentNetwork.class, request, logger, getMethodName());
     }
@@ -940,31 +642,30 @@ public class RemittanceData extends AbstractBusinessPortalWs {
     public PaymentNetwork loadPaymentNetwork(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
         return (PaymentNetwork) loadEntity(PaymentNetwork.class, request, logger, getMethodName());
     }
-   
-     
+
     public Remittance loadSingleRemittance(WsRequest request) throws NullParameterException, GeneralException, RegisterNotFoundException {
         return (Remittance) loadEntity(Remittance.class, request, logger, getMethodName());
     }
-    
+
     public List<Remittance> loadRemittance(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<Remittance>) listEntities(Remittance.class, request, logger, getMethodName());
     }
-    
+
     public Remittance loadRemittanceById(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
         return (Remittance) loadEntity(Remittance.class, request, logger, getMethodName());
     }
-      
-     public List<Remittance> loadRemittances(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
+
+    public List<Remittance> loadRemittances(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<Remittance>) listEntities(Remittance.class, request, logger, getMethodName());
     }
-     
+
     public PaymentNetwork loadPaymentNetworkByEmail(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
 
         List<PaymentNetwork> paymentNetworks = null;
         Map<String, Object> params = request.getParams();
 
         if (!params.containsKey(QueryConstants.PARAM_EMAIL)) {
-            throw new NullParameterException( sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_EMAIL), null);
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_EMAIL), null);
         }
         try {
             paymentNetworks = (List<PaymentNetwork>) getNamedQueryResult(Store.class, QueryConstants.LOAD_STORE_BY_EMAIL, request, getMethodName(), logger, "PaymentNetwork");
@@ -980,7 +681,7 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         Map<String, Object> params = request.getParams();
 
         if (!params.containsKey(QueryConstants.PARAM_LOGIN)) {
-            throw new NullParameterException( sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_LOGIN), null);
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_LOGIN), null);
         }
         try {
             paymentNetworks = (List<PaymentNetwork>) getNamedQueryResult(Store.class, QueryConstants.LOAD_STORE_BY_LOGIN, request, getMethodName(), logger, "PaymentNetwork");
@@ -989,7 +690,7 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return paymentNetworks.get(0);
     }
-    
+
     public PaymentNetwork savePaymentNetwork(WsRequest request) throws GeneralException, NullParameterException {
         return (PaymentNetwork) saveEntity(request, logger, getMethodName());
     }
@@ -1000,16 +701,16 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return (PaymentNetwork) saveEntity(paymentNetwork);
     }
-    
+
     public RemittanceStatus loadRemittenceStatus(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         RemittanceStatus remittenceStatus = (RemittanceStatus) loadEntity(RemittanceStatus.class, request, logger, getMethodName());
         return remittenceStatus;
-    } 
-    
+    }
+
     public List<RemittanceStatus> getRemittenceStatus(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
         return (List<RemittanceStatus>) listEntities(RemittanceStatus.class, request, logger, getMethodName());
     }
-    
+
     public Remittance loadTransaction(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
         return (Remittance) loadEntity(Remittance.class, request, logger, getMethodName());
     }
@@ -1032,51 +733,51 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittances;
     }
-    
-     public List<Remittance> getRemittancesByRemittentId(Long remittentId) throws GeneralException, NullParameterException, EmptyListException {
-         if (remittentId == null) {
-             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittentId"), null);
-         }
-         List<Remittance> remittances = new ArrayList<Remittance>();
 
-         Query query = null;
-         try {
-             //$$$ CHECK
-             query = createQuery("SELECT r FROM Remittance r WHERE r.remittent.id=?1");
-             query.setParameter("1", remittentId);
-             remittances = query.setHint("toplink.refresh", "true").getResultList();
+    public List<Remittance> getRemittancesByRemittentId(Long remittentId) throws GeneralException, NullParameterException, EmptyListException {
+        if (remittentId == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittentId"), null);
+        }
+        List<Remittance> remittances = new ArrayList<Remittance>();
 
-         } catch (Exception e) {
-             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
-         }
-         if (remittances.isEmpty()) {
-             throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
-         }
-         return remittances;
+        Query query = null;
+        try {
+            //$$$ CHECK
+            query = createQuery("SELECT r FROM Remittance r WHERE r.remittent.id=?1");
+            query.setParameter("1", remittentId);
+            remittances = query.setHint("toplink.refresh", "true").getResultList();
+
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (remittances.isEmpty()) {
+            throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return remittances;
     }
-     
-     public List<Remittance> getRemittancesByReceiverId(Long receiverId) throws GeneralException, NullParameterException, EmptyListException {
-         if (receiverId == null) {
-             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "receiverId"), null);
-         }
-         List<Remittance> remittances = new ArrayList<Remittance>();
-         Query query = null;
-         try {
-             //$$$ CHECK
-             query = createQuery("SELECT r FROM Remittance r WHERE r.receiver.id=?1");
-             query.setParameter("1", receiverId);
-             remittances = query.setHint("toplink.refresh", "true").getResultList();
 
-         } catch (Exception e) {
-             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
-         }
-         if (remittances.isEmpty()) {
-             throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
-         }
-         return remittances;
+    public List<Remittance> getRemittancesByReceiverId(Long receiverId) throws GeneralException, NullParameterException, EmptyListException {
+        if (receiverId == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "receiverId"), null);
+        }
+        List<Remittance> remittances = new ArrayList<Remittance>();
+        Query query = null;
+        try {
+            //$$$ CHECK
+            query = createQuery("SELECT r FROM Remittance r WHERE r.receiver.id=?1");
+            query.setParameter("1", receiverId);
+            remittances = query.setHint("toplink.refresh", "true").getResultList();
+
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (remittances.isEmpty()) {
+            throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return remittances;
     }
-    
-     public List<Remittance> getRemittances() throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+
+    public List<Remittance> getRemittances() throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
         List<Remittance> remittances = new ArrayList<Remittance>();
 
         Query query = null;
@@ -1092,8 +793,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittances;
     }
-    
-     public List<Remittance> searchTransaction(WsRequest request) throws GeneralException, NullParameterException, EmptyListException {
+
+    public List<Remittance> searchTransaction(WsRequest request) throws GeneralException, NullParameterException, EmptyListException {
         List<Remittance> remittances = new ArrayList<Remittance>();
         List<RemittanceHasRemittenceStatus> status = new ArrayList<RemittanceHasRemittenceStatus>();
         Map<String, Object> params = request.getParams();
@@ -1110,10 +811,10 @@ public class RemittanceData extends AbstractBusinessPortalWs {
 //            .append(" and r.remittenceStatus.endingDate is null")
             sqlBuilder.append(" AND r.remittenceStatus.id=").append(params.get(QueryConstants.PARAM_REMITTENCE_STATUS));
         }
-        
+
         Query query = null;
         try {
-            System.out.println("query:********"+sqlBuilder.toString());
+            System.out.println("query:********" + sqlBuilder.toString());
             query = createQuery(sqlBuilder.toString());
             query.setParameter("1", EjbUtils.getBeginningDate((Date) params.get(QueryConstants.PARAM_BEGINNING_DATE)));
             query.setParameter("2", EjbUtils.getEndingDate((Date) params.get(QueryConstants.PARAM_ENDING_DATE)));
@@ -1121,7 +822,7 @@ public class RemittanceData extends AbstractBusinessPortalWs {
                 query.setMaxResults(request.getLimit());
             }
             remittances = query.setHint("toplink.refresh", "true").getResultList();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
@@ -1131,8 +832,8 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittances;
     }
-     
-     public List<RemittanceHasRemittenceStatus> getRemittancesStatusByRemittanceId(Long remittanceId) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+
+    public List<RemittanceHasRemittenceStatus> getRemittancesStatusByRemittanceId(Long remittanceId) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
         List<RemittanceHasRemittenceStatus> remittenceStatuses = new ArrayList<RemittanceHasRemittenceStatus>();
 
         Query query = null;
@@ -1149,10 +850,10 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         }
         return remittenceStatuses;
     }
-     
-     public Remittance addRemittanceStatus(Remittance remittance, Long remittanceStatusId, Long userId, String comment) {      
-         try {
-    	 	ContentManager cManager = ContentManager.getInstance();
+
+    public Remittance addRemittanceStatus(Remittance remittance, Long remittanceStatusId, Long userId, String comment) {
+        try {
+            ContentManager cManager = ContentManager.getInstance();
             RemittanceHasRemittenceStatusData hasRemittenceStatusData = new RemittanceHasRemittenceStatusData();
             RemittanceHasRemittenceStatus remittanceHasRemittenceStatus = hasRemittenceStatusData.updateRemittenceStatus(remittance, remittanceStatusId, userId, comment);
             RemittanceStatus status = cManager.getRemittanceStatusById(remittanceStatusId);
@@ -1162,29 +863,28 @@ public class RemittanceData extends AbstractBusinessPortalWs {
             ex.printStackTrace();
         }
         return remittance;
-     }
-    
-    public Remittance getRemittancesByRemittanceNumber(String remittanceNumber) throws GeneralException, NullParameterException, RegisterNotFoundException {
-         if (remittanceNumber == null) {
-             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittanceNumber"), null);
-         }
-         List<Remittance> remittances = new ArrayList<Remittance>();
-         Query query = null;
-         try {
-             //$$$ CHECK
-             query = createQuery("SELECT r FROM Remittance r WHERE r.remittanceNumber=?1");
-             query.setParameter("1", remittanceNumber);
-             remittances = query.setHint("toplink.refresh", "true").getResultList();
-
-         } catch (Exception e) {
-             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
-         }
-         if (remittances.isEmpty()) {
-             throw new RegisterNotFoundException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
-         }
-         return remittances.get(0);
     }
 
+    public Remittance getRemittancesByRemittanceNumber(String remittanceNumber) throws GeneralException, NullParameterException, RegisterNotFoundException {
+        if (remittanceNumber == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "remittanceNumber"), null);
+        }
+        List<Remittance> remittances = new ArrayList<Remittance>();
+        Query query = null;
+        try {
+            //$$$ CHECK
+            query = createQuery("SELECT r FROM Remittance r WHERE r.remittanceNumber=?1");
+            query.setParameter("1", remittanceNumber);
+            remittances = query.setHint("toplink.refresh", "true").getResultList();
+
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (remittances.isEmpty()) {
+            throw new RegisterNotFoundException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return remittances.get(0);
+    }
 
 //	//FIXME Mover a RemittanceData
 //	public RemittanceProviderResponse changeRemittanceStatus(RemittanceResponse remittanceResponse) {
@@ -1555,8 +1255,6 @@ public class RemittanceData extends AbstractBusinessPortalWs {
 //		}	
 //			return response;
 //	}
-    
-    
 //	public boolean cancelRemittance(Remittance remittance, String reason, String comments) throws RemoteException{
 //		boolean success = false;
 //		if(remittance.getCorrespondent().getId() == Correspondent.REPCHAPINA){
@@ -1578,28 +1276,26 @@ public class RemittanceData extends AbstractBusinessPortalWs {
 //		return success;
 //	}
 //    
-	
-	public void updateRemittanceNumber(Long remittentId) throws Exception{
-		  Query query = null;
-		  int row = 0;
-	         try {
-	             //$$$ CHECK
-	             query = createQuery("UPDATE Remittance r SET r.remittanceNumber =?1 WHERE r.id=?2");
-	             query.setParameter("1", "Y" + remittentId);
-	             query.setParameter("2", remittentId);
-	             executeQuery(query);
-	         } catch (Exception e) {
-	             throw  e;
-	         }
-	         //return row;
-	}
-    
-	public Remittent load(WsRequest request) throws NullParameterException, GeneralException, RegisterNotFoundException {
-		return (Remittent) this.loadEntity(Remittent.class, request.getParam(), logger, "Load remitten");
-	}
-	
-	
-     public List<Remittance> getRemittancesByStatusId(Long statusId) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+    public void updateRemittanceNumber(Long remittentId) throws Exception {
+        Query query = null;
+        int row = 0;
+        try {
+            //$$$ CHECK
+            query = createQuery("UPDATE Remittance r SET r.remittanceNumber =?1 WHERE r.id=?2");
+            query.setParameter("1", "Y" + remittentId);
+            query.setParameter("2", remittentId);
+            executeQuery(query);
+        } catch (Exception e) {
+            throw e;
+        }
+        //return row;
+    }
+
+    public Remittent load(WsRequest request) throws NullParameterException, GeneralException, RegisterNotFoundException {
+        return (Remittent) this.loadEntity(Remittent.class, request.getParam(), logger, "Load remitten");
+    }
+
+    public List<Remittance> getRemittancesByStatusId(Long statusId) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
         List<Remittance> remittances = new ArrayList<Remittance>();
 
         Query query = null;

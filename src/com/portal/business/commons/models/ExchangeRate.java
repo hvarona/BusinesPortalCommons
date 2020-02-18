@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "exchange_rate")
 public class ExchangeRate extends RemittenceEntity implements Serializable {
 
