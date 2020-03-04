@@ -1,10 +1,12 @@
 package com.portal.business.commons.utils;
 
+import com.alodiga.security.encryption.S3cur1ty3Cryt3r;
 import org.apache.commons.codec.binary.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -14,6 +16,10 @@ import javax.crypto.spec.SecretKeySpec;
  * @author kerwin
  */
 public class AlodigaCryptographyUtils {
+
+    private static final String KEY_ENCRIPT_DESENCRIPT = "1nt3r4xt3l3ph0ny";
+    private static final String K2_ENCRIPT_DESENCRIPT = "DESede";
+    private static final String VECTOR_ENCRIPT_DESENCRIPT = "0123456789ABCDEF";
 
     public static String encrypt(String texto, String secretKey) {
         String base64EncryptedString = "";
@@ -57,6 +63,26 @@ public class AlodigaCryptographyUtils {
             ex.printStackTrace();
         }
         return base64EncryptedString;
+    }
+
+    public static String aloDesencrypt(String input) {
+        try {
+            return S3cur1ty3Cryt3r.aloDesencript(input, KEY_ENCRIPT_DESENCRIPT, null, K2_ENCRIPT_DESENCRIPT, VECTOR_ENCRIPT_DESENCRIPT);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(AlodigaCryptographyUtils.class.getName()).log(Level.SEVERE, null, ex);
+            //TODO throw exception
+            return null;
+        }
+    }
+
+    public static String aloEncrpter(String clave) {
+        try {
+            return S3cur1ty3Cryt3r.aloEncrpter(clave, KEY_ENCRIPT_DESENCRIPT, null, K2_ENCRIPT_DESENCRIPT, VECTOR_ENCRIPT_DESENCRIPT);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(AlodigaCryptographyUtils.class.getName()).log(Level.SEVERE, null, ex);
+            //TODO throw exception
+            return null;
+        }
     }
 
 }

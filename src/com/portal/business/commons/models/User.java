@@ -2,7 +2,6 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.utils.QueryConstants;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -17,10 +16,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import javax.persistence.NamedQueries;
 import javax.persistence.Transient;
 
 @Entity
@@ -28,10 +24,6 @@ import javax.persistence.Transient;
 @Table(name = "bpuser")
 @DiscriminatorColumn(name = "DTYPE", discriminatorType = DiscriminatorType.INTEGER)
 @DiscriminatorValue("1")
-@NamedQueries({
-    @NamedQuery(name = QueryConstants.LOGIN_USER, query = "SELECT u FROM User u WHERE u.login=:login AND u.password=:password"),
-    @NamedQuery(name = QueryConstants.LOAD_USER_BY_LOGIN, query = "SELECT u FROM User u WHERE u.login=:login"),
-    @NamedQuery(name = QueryConstants.LOAD_USER_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email")})
 public class User extends RemittenceEntity implements Serializable {
 
     @Id
@@ -50,7 +42,7 @@ public class User extends RemittenceEntity implements Serializable {
     private String login;
     @Column(name = "password")
     private String password;
-    
+
     @Column(name = "phonenumber")
     private String phoneNumber;
 

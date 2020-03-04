@@ -74,8 +74,10 @@
         <class>com.portal.business.commons.models.StoreSetting</class>
         <class>com.portal.business.commons.models.Pos</class>
         <class>com.portal.business.commons.models.Operator</class>
-        <class>com.portal.business.commons.models.Commerce</class>
-        <class>com.portal.business.commons.models.CommerceStatus</class>
+        <class>com.portal.business.commons.models.Business</class>
+        <class>com.portal.business.commons.models.BusinessStatus</class>
+        <class>com.portal.business.commons.models.PreferenceFieldData</class>
+        <class>com.portal.business.commons.models.UserCardTransactionLog</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.logging.timestamp" value="true"/>
@@ -84,9 +86,9 @@
             <property name="toplink.cache.size.default" value="5000"/>
             <property name="toplink.cache.shared.Secret" value="false"/>
             <property name="javax.persistence.schema-generation-action" value="create"/>
-            <property name="javax.persistence.schema-generation-target" value="database"/> 
-            <property name="eclipselink.ddl-generation" value="create-tables" />
-            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <property name="javax.persistence.schema-generation-target" value="database"/>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="database"/>
             <property name="eclipselink.deploy-on-startup" value="true"/>
         </properties>
     </persistence-unit>

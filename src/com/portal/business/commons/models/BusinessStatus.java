@@ -15,8 +15,8 @@ import javax.persistence.Table;
  * @author hvarona
  */
 @Entity
-@Table(name = "commerce_status")
-public class CommerceStatus extends RemittenceEntity implements Serializable {
+@Table(name = "business_status")
+public class BusinessStatus extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class CommerceStatus extends RemittenceEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
-    public CommerceStatus() {
+    public BusinessStatus() {
     }
 
     public Long getId() {

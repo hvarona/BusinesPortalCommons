@@ -1,12 +1,10 @@
 package com.portal.business.commons.models;
 
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +18,6 @@ import javax.persistence.Temporal;
  * @author usuario
  */
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "store")
 public class Store extends RemittenceEntity implements Serializable {
 
@@ -44,7 +41,7 @@ public class Store extends RemittenceEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "idCommerce")
-    private Commerce commerce;
+    private Business commerce;
 
     public Store() {
     }
@@ -97,11 +94,11 @@ public class Store extends RemittenceEntity implements Serializable {
         this.closeTime = closeTime;
     }
 
-    public Commerce getCommerce() {
+    public Business getCommerce() {
         return commerce;
     }
 
-    public void setCommerce(Commerce commerce) {
+    public void setCommerce(Business commerce) {
         this.commerce = commerce;
     }
 

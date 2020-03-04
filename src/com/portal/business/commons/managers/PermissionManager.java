@@ -53,7 +53,6 @@ public class PermissionManager {
                 ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profile);
                 permissionByGroup.put(permissionGroup.getId(), ps);
             } catch (EmptyListException e) {
-                e.printStackTrace();
             }
         }
         permissions = userdata.getPermissions();
@@ -88,7 +87,6 @@ public class PermissionManager {
                 ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profiles.get(0));
                 permissionByGroup.put(permissionGroup.getId(), ps);
             } catch (EmptyListException e) {
-                e.printStackTrace();
             }
         }
         permissions = userdata.getPermissions();
@@ -98,7 +96,6 @@ public class PermissionManager {
                     ps = userdata.getPermissionByProfileId(profile);
                     permissionByProfile.put(profile.getId(), ps);
                 } catch (EmptyListException e) {
-                    e.printStackTrace();
                 }
             }
         } catch (Exception ex) {

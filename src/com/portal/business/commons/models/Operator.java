@@ -27,7 +27,7 @@ public class Operator extends User {
 
     @ManyToOne
     @JoinColumn(name = "idCommerce")
-    private Commerce commerce;
+    private Business commerce;
 
     @ManyToMany
     @JoinTable(
@@ -53,11 +53,11 @@ public class Operator extends User {
         this.lastName = lastName;
     }
 
-    public Commerce getCommerce() {
+    public Business getCommerce() {
         return commerce;
     }
 
-    public void setCommerce(Commerce commerce) {
+    public void setCommerce(Business commerce) {
         this.commerce = commerce;
     }
 

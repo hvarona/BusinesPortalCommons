@@ -6,6 +6,7 @@ import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
+import com.portal.business.commons.models.Business;
 import com.portal.business.commons.models.Permission;
 import com.portal.business.commons.models.PermissionGroup;
 import com.portal.business.commons.models.PermissionHasProfile;
@@ -59,6 +60,13 @@ public class UserData extends AbstractBusinessPortalWs {
 
     public User saveUser(WsRequest request) throws NullParameterException, GeneralException {
         return (User) saveEntity(request, LOG, getMethodName());
+    }
+
+    public User saveUser(User user) throws NullParameterException, GeneralException {
+        if (user == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "user"), null);
+        }
+        return (User) saveEntity(user);
     }
 
     public List<PermissionGroup> getPermissionGroups() throws EmptyListException, NullParameterException, GeneralException {
@@ -317,9 +325,83 @@ public class UserData extends AbstractBusinessPortalWs {
         }
     }
 
+    public Profile loadProfile(Long profileId) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (profileId == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "profileId"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
+            Root<Profile> from = cq.from(Profile.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), profileId));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (Profile) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            ex.printStackTrace();
+            throw new RegisterNotFoundException("No se encontro el perfil");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new GeneralException("No se encontro el perfil");
+        }
+    }
+
     public Profile loadProfile(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         Profile profile = (Profile) loadEntity(Profile.class, request, LOG, getMethodName());
 
         return profile;
     }
+
+    public Permission loadPermission(Long permissionId) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (permissionId == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "permissionId"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
+            Root<Permission> from = cq.from(Permission.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), permissionId));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (Permission) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            ex.printStackTrace();
+            throw new RegisterNotFoundException("No se encontro el permiso");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new GeneralException("No se encontro el permiso");
+        }
+    }
+
+    public List<Business> getBusinesses() throws EmptyListException, GeneralException {
+        List<Business> business = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+
+            cq.select(from);
+            cq.where(
+                    cb.equal(from.get("enabled"), true)
+            );
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            business = query.getResultList();
+
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (business == null || business.isEmpty()) {
+            throw new EmptyListException("No");
+        }
+        return business;
+    }
+
 }

@@ -2,10 +2,10 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.utils.QueryConstants;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,32 +13,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "preference_value")
-@NamedQueries({
-    @NamedQuery(name = QueryConstants.PREFERENCE_VALUE_BY_PREFERENCE_FIELD,
-    query = "SELECT pv FROM PreferenceValue pv WHERE pv.preferenceField.id=:preferenceFieldId AND pv.enterprise.id=:enterpriseId AND pv.endingDate IS NULL ORDER BY pv.id DESC")
-})
 public class PreferenceValue extends RemittenceEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private Timestamp beginningDate;
-    private Timestamp endingDate;
+
+    @Column(name = "beginningDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date beginningDate;
+
+    @Column(name = "endingDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endingDate;
+
+    @Column(name = "stringValue")
     private String value;
+
     @ManyToOne
-    @JoinColumn(name = "enterpriseId")
-    private Enterprise enterprise;
+    @JoinColumn(name = "idBusiness")
+    private Business business;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "preferenceFieldId")
+    @JoinColumn(name = "idPreferenceField")
     private PreferenceField preferenceField;
 
     public PreferenceValue() {
@@ -52,19 +56,19 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
         this.id = id;
     }
 
-    public Timestamp getBeginningDate() {
+    public Date getBeginningDate() {
         return this.beginningDate;
     }
 
-    public void setBeginningDate(Timestamp beginningDate) {
+    public void setBeginningDate(Date beginningDate) {
         this.beginningDate = beginningDate;
     }
 
-    public Timestamp getEndingDate() {
+    public Date getEndingDate() {
         return this.endingDate;
     }
 
-    public void setEndingDate(Timestamp endingDate) {
+    public void setEndingDate(Date endingDate) {
         this.endingDate = endingDate;
     }
 
@@ -84,12 +88,12 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
         this.preferenceField = preferenceField;
     }
 
-    public Enterprise getEnterprise() {
-        return this.enterprise;
+    public Business getBusiness() {
+        return business;
     }
 
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
+    public void setBusiness(Business business) {
+        this.business = business;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -123,9 +127,6 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
             return false;
         }
         final PreferenceValue other = (PreferenceValue) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }

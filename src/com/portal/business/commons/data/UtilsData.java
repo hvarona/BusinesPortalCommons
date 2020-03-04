@@ -46,6 +46,9 @@ import java.util.Random;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.apache.log4j.Logger;
 
 /**
@@ -239,6 +242,24 @@ public class UtilsData extends AbstractBusinessPortalWs {
     public Language loadLanguage(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         Language language = (Language) loadEntity(Language.class, request, logger, getMethodName());
         return language;
+    }
+
+    public Language getLanguage(String isoName) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        try {
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Language> cq = cb.createQuery(Language.class);
+            Root<Language> from = cq.from(Language.class);
+            cq.select(from);
+            cq.where(
+                    cb.equal(from.get("iso"), isoName));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (Language) query.getSingleResult();
+        } catch (Exception ex) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
+        }
     }
 
     public State loadState(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {

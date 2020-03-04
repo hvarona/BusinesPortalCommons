@@ -183,9 +183,9 @@ public class RemittanceData extends AbstractBusinessPortalWs {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
 
-        Float maxAmountDailyRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_REMITTENT.getId()));
-        Float maxAmountMonthlyRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_REMITTENT.getId()));
-        Float maxAmountAnnualRemittent = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_REMITTENT.getId()));
+        Float maxAmountDailyRemittent = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_REMITTENT.getId()));
+        Float maxAmountMonthlyRemittent = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_REMITTENT.getId()));
+        Float maxAmountAnnualRemittent = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_REMITTENT.getId()));
 
         Float remittenceAmount = amount;
         float amountDaily = 0f;
@@ -220,9 +220,9 @@ public class RemittanceData extends AbstractBusinessPortalWs {
         } catch (Exception ex) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-        Float maxAmountDailyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_RECEIVER.getId()));
-        Float maxAmountMonthlyReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_RECEIVER.getId()));
-        Float maxAmountAnnualReceiver = Float.parseFloat(pManager.getPreferencesValueByEnterpriseAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_RECEIVER.getId()));
+        Float maxAmountDailyReceiver = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_DAILY_PER_RECEIVER.getId()));
+        Float maxAmountMonthlyReceiver = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_MONTHLY_PER_RECEIVER.getId()));
+        Float maxAmountAnnualReceiver = Float.parseFloat(pManager.getPreferencesValueByBusinessAndPreferenceId(enterpriseId, PreferenceFieldEnum.MAX_AMOUNT_YEARLY_PER_RECEIVER.getId()));
 
         Float remittenceAmount = amount;
         float amountDaily = 0f;

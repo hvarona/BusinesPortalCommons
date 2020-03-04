@@ -6,7 +6,7 @@ import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
-import com.portal.business.commons.models.Commerce;
+import com.portal.business.commons.models.Business;
 import com.portal.business.commons.models.Pos;
 import com.portal.business.commons.models.Store;
 import com.portal.business.commons.utils.EjbConstants;
@@ -25,7 +25,7 @@ public class PosData extends AbstractBusinessPortalWs {
 
     private static final Logger LOG = Logger.getLogger(PosData.class);
 
-    public List<Pos> getPosList(Commerce commerce) throws EmptyListException, GeneralException {
+    public List<Pos> getPosList(Business commerce) throws EmptyListException, GeneralException {
 
         List<Pos> posList = null;
         try {
@@ -47,7 +47,26 @@ public class PosData extends AbstractBusinessPortalWs {
         return (Pos) loadEntity(Pos.class, request, LOG, getMethodName());
     }
 
-    public List<Store> getStoreList(Commerce commerce) throws EmptyListException, GeneralException {
+    public List<Pos> getPosByStore(Store store) throws EmptyListException, GeneralException {
+        List<Pos> posList = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Pos> cq = cb.createQuery(Pos.class);
+            Root<Pos> from = cq.from(Pos.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("store"), store));
+            
+            posList = entityManager.createQuery(cq).getResultList();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (posList == null || posList.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return posList;
+    }
+
+    public List<Store> getStoreList(Business commerce) throws EmptyListException, GeneralException {
 
         List<Store> stores = null;
         try {

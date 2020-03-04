@@ -28,6 +28,7 @@ public class ProfileData extends RemittenceEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "languageId")
     private Language language;
+    
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "profileId")
     private Profile profile;

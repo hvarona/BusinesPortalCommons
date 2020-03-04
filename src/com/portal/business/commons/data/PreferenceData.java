@@ -5,12 +5,11 @@ import com.portal.business.commons.exceptions.GeneralException;
 import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
-import com.portal.business.commons.generic.WsRequest;
+import com.portal.business.commons.models.Business;
+import com.portal.business.commons.models.Preference;
 import com.portal.business.commons.models.PreferenceField;
-import com.portal.business.commons.models.PreferenceType;
 import com.portal.business.commons.models.PreferenceValue;
 import com.portal.business.commons.utils.EjbConstants;
-import com.portal.business.commons.utils.QueryConstants;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,54 +17,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.apache.log4j.Logger;
-
 
 /**
  *
  * @author usuario
  */
-public class PreferenceData  extends AbstractBusinessPortalWs {
-     
-    private static final Logger logger = Logger.getLogger(PreferenceData.class);
-    public PreferenceField deletePreferenceField(WsRequest request) throws GeneralException, NullParameterException {
-        return null;
-    }
+public class PreferenceData extends AbstractBusinessPortalWs {
 
-    
-    public PreferenceType deletePreferenceType(WsRequest request) throws GeneralException, NullParameterException {
-        return null;
-    }
+    private static final Logger LOG = Logger.getLogger(PreferenceData.class);
 
-    public PreferenceValue deletePreferenceValue(WsRequest request) throws GeneralException, NullParameterException {
-        return null;
-    }
-
-    private PreferenceValue getLastPreferenceValueByPreferenceField(Long preferenceFieldId, Long enterpriseId) throws GeneralException, NullParameterException, EmptyListException {
-
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("preferenceFieldId", preferenceFieldId);
-        params.put("enterpriseId", enterpriseId);
-        WsRequest request = new WsRequest();
-        request.setParams(params);
-        request.setLimit(1);
-        List<PreferenceValue> preferences = new ArrayList<PreferenceValue>();
+    private PreferenceValue getLastPreferenceValueByPreferenceField(PreferenceField field, Business business) throws GeneralException, NullParameterException, EmptyListException {
         try {
-            preferences = (List<PreferenceValue>) getNamedQueryResult(PreferenceData.class, QueryConstants.PREFERENCE_VALUE_BY_PREFERENCE_FIELD, request, getMethodName(), logger, "preferenceValue");
-            return preferences.get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
+            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            cq.select(from);
+            cq.where(cb.and(
+                    cb.equal(from.get("business"), business),
+                    cb.and(
+                            cb.equal(from.get("preferenceField"), field),
+                            cb.isNull(from.get("endingDate"))))); //The preference needs to be active
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            query.setMaxResults(1);
+            return (PreferenceValue) query.getSingleResult();
+        } catch (Exception ex) {
+            return null;
         }
-        return null;
     }
 
-
-    public Map<Long, String> getLastPreferenceValues(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        Map<Long, String> currentValues = new HashMap<Long, String>();
-        Map<String, Object> params = request.getParams();
-        List<PreferenceField> fields = this.getPreferenceFields(request);
+    public Map<Long, String> getLastPreferenceValues(Business business) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+        Map<Long, String> currentValues = new HashMap();
+        List<PreferenceField> fields = this.getPreferenceFields();
         for (PreferenceField field : fields) {
-            PreferenceValue pv = getLastPreferenceValueByPreferenceField(field.getId(), Long.valueOf("" + params.get("enterpriseId")));
+            PreferenceValue pv = getLastPreferenceValueByPreferenceField(field, business);
             if (pv != null) {
                 currentValues.put(field.getId(), pv.getValue());
             }
@@ -73,116 +64,139 @@ public class PreferenceData  extends AbstractBusinessPortalWs {
         return currentValues;
     }
 
-    
-    public List<PreferenceField> getPreferenceFields(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        return (List<PreferenceField>) listEntities(PreferenceField.class, request, logger, getMethodName());
-    }
+    public List<PreferenceField> getPreferenceFields() throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+        List<PreferenceField> preferenceFields = null;
 
-    
-    public List<PreferenceType> getPreferenceTypes(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        return (List<PreferenceType>) listEntities(PreferenceType.class, request, logger, getMethodName());
-    }
-
-    
-    public List<PreferenceValue> getPreferenceValues(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        return (List<PreferenceValue>) listEntities(PreferenceValue.class, request, logger, getMethodName());
-    }
-
-    
-    public List<PreferenceValue> getPreferenceValuesByEnterpriseIdAndFieldId(Long enterpriseId, Long fieldId) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        List<PreferenceValue> preferenceValues = new ArrayList<PreferenceValue>();
-
-        Query query = null;
         try {
-            query = createQuery("SELECT p FROM PreferenceValue p WHERE p.preferenceField.id=?1 AND p.enterprise.id= ?2");
-            query.setParameter("1", fieldId);
-            query.setParameter("2", enterpriseId);
-            preferenceValues = query.setHint("toplink.refresh", "true").getResultList();
 
-        } catch (Exception e) {
-            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<PreferenceField> cq = cb.createQuery(PreferenceField.class);
+            Root<PreferenceField> from = cq.from(PreferenceField.class);
+            cq.select(from);
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            preferenceFields = query.getResultList();
+        } catch (Exception ex) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-        if (preferenceValues.isEmpty()) {
-            throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        if (preferenceFields == null || preferenceFields.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return preferenceFields;
+    }
+
+    public List<PreferenceValue> getPreferenceValuesByBusisnessAndField(PreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+        List<PreferenceValue> preferenceValues = null;
+
+        try {
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
+            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            cq.select(from);
+            cq.where(cb.and(
+                    cb.equal(from.get("business"), business),
+                    cb.equal(from.get("preferenceField"), field))); //The preference needs to be active
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            preferenceValues = query.getResultList();
+        } catch (Exception ex) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
+        }
+        if (preferenceValues == null || preferenceValues.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
         }
         return preferenceValues;
     }
 
-    public PreferenceValue loadActivePreferenceValuesByEnterpriseIdAndFieldId(Long enterpriseId, Long fieldId) throws GeneralException, RegisterNotFoundException, NullParameterException {
+    public PreferenceValue loadActivePreferenceValuesByBusinessAndField(PreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException {
 
-        PreferenceValue preferenceValue = null;
         try {
-            Query query = null;
 
-            query = createQuery("SELECT p FROM PreferenceValue p WHERE p.preferenceField.id=?1 AND p.enterprise.id= ?2 AND p.endingDate IS NULL");
-            query.setParameter("1", fieldId);
-            query.setParameter("2", enterpriseId);
-            preferenceValue = (PreferenceValue) query.setHint("toplink.refresh", "true").getSingleResult();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
+            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            cq.select(from);
+            cq.where(cb.and(
+                    cb.equal(from.get("business"), business),
+                    cb.and(
+                            cb.equal(from.get("preferenceField"), field),
+                            cb.isNull(from.get("endingDate"))))); //The preference needs to be active
 
-        } catch (Exception e) {
-            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            query.setMaxResults(1);
+            return (PreferenceValue) query.getSingleResult();
+        } catch (Exception ex) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
-        if (preferenceValue == null) {
-            throw new RegisterNotFoundException(logger, sysError.format(EjbConstants.ERR_REGISTER_NOT_FOUND_EXCEPTION, this.getClass(), getMethodName()), null);
-        }
-        return preferenceValue;
     }
 
-    
-    public PreferenceField loadPreferenceField(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
-        return (PreferenceField) loadEntity(PreferenceField.class, request, logger, getMethodName());
-    }
-
-    
-    public PreferenceType loadPreferenceType(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
-        return (PreferenceType) loadEntity(PreferenceType.class, request, logger, getMethodName());
-    }
-
-    
-    public PreferenceValue loadPreferenceValue(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
-        return (PreferenceValue) loadEntity(PreferenceValue.class, request, logger, getMethodName());
-    }
-
-    
-    public PreferenceField savePreferenceField(WsRequest request) throws GeneralException, NullParameterException {
-        return (PreferenceField) saveEntity(request, logger, getMethodName());
-    }
-
-    
-    public PreferenceType savePreferenceType(WsRequest request) throws GeneralException, NullParameterException {
-        return (PreferenceType) saveEntity(request, logger, getMethodName());
-    }
-
-    
-    public PreferenceValue savePreferenceValue(WsRequest request) throws GeneralException, NullParameterException {
-        return (PreferenceValue) saveEntity(request, logger, getMethodName());
-    }
-
-    
-    public List<PreferenceValue> savePreferenceValues(WsRequest request) throws GeneralException, NullParameterException {
+    public List<PreferenceValue> savePreferenceValues(List<PreferenceValue> values) throws GeneralException, NullParameterException {
         Timestamp time = new Timestamp(new Date().getTime());
-        List<PreferenceValue> returnValues = new ArrayList<PreferenceValue>();
-        List<PreferenceValue> preferenceValues = (List<PreferenceValue>) request.getParam();
-        for (PreferenceValue pv : preferenceValues) {
+        List<PreferenceValue> returnValues = new ArrayList();
+        for (PreferenceValue pv : values) {
             PreferenceValue oldPv = null;
             pv.setBeginningDate(time);
             try {
-                oldPv = getLastPreferenceValueByPreferenceField(pv.getPreferenceField().getId(), pv.getEnterprise().getId());
+                oldPv = getLastPreferenceValueByPreferenceField(pv.getPreferenceField(), pv.getBusiness());
                 if (oldPv != null) {
-                    if (pv.getValue().equals(oldPv.getValue()) == false) //SETEO ENDING DAY  Y SALVO EL NUEVO VALOR
-                    {
+                    if (!pv.getValue().equals(oldPv.getValue())) {
                         oldPv.setEndingDate(time);
-                        saveEntity(oldPv, logger, getMethodName());
-                        returnValues.add((PreferenceValue) saveEntity(pv, logger, getMethodName()));
+                        saveEntity(oldPv, LOG, getMethodName());
+                        returnValues.add((PreferenceValue) saveEntity(pv, LOG, getMethodName()));
                     }
                 }
             } catch (EmptyListException e) {
                 e.printStackTrace();
             }
             if (oldPv == null) {
-                returnValues.add((PreferenceValue) saveEntity(pv, logger, getMethodName())); //SALVO EL NUEVO VALOR
-            }        }
+                returnValues.add((PreferenceValue) saveEntity(pv, LOG, getMethodName())); //SALVO EL NUEVO VALOR
+            }
+        }
 
         return returnValues;
+    }
+
+    public List<Preference> getPreferences() throws GeneralException, RegisterNotFoundException, EmptyListException {
+        List<Preference> preferences = null;
+
+        try {
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Preference> cq = cb.createQuery(Preference.class);
+            Root<Preference> from = cq.from(Preference.class);
+            cq.select(from);
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            preferences = query.getResultList();
+        } catch (Exception ex) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
+        }
+        if (preferences == null || preferences.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return preferences;
+    }
+
+    public Preference getPreference(Long preferenceId) throws NullParameterException, GeneralException, RegisterNotFoundException {
+        try {
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Preference> cq = cb.createQuery(Preference.class);
+            Root<Preference> from = cq.from(Preference.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("id"), preferenceId));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            Preference preference = (Preference) query.getSingleResult();
+            return preference;
+        } catch (Exception ex) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
+        }
     }
 }

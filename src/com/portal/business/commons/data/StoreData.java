@@ -6,7 +6,7 @@ import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
-import com.portal.business.commons.models.Commerce;
+import com.portal.business.commons.models.Business;
 import com.portal.business.commons.models.PreferenceField;
 import com.portal.business.commons.models.Store;
 import com.portal.business.commons.models.StoreBalance;
@@ -33,7 +33,7 @@ public class StoreData extends AbstractBusinessPortalWs {
 
     private static final Logger logger = Logger.getLogger(StoreData.class);
 
-    public List<Store> getStores(Commerce commerce) throws EmptyListException, GeneralException, NullParameterException {
+    public List<Store> getStores(Business commerce) throws EmptyListException, GeneralException, NullParameterException {
         List<Store> stores = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -51,6 +51,24 @@ public class StoreData extends AbstractBusinessPortalWs {
         }
         return stores;
 
+    }
+
+    public Store getStore(Long storeId) throws GeneralException, RegisterNotFoundException, NullParameterException {
+        if (storeId == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Store> cq = cb.createQuery(Store.class);
+            Root<Store> from = cq.from(Store.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("id"), storeId));
+
+            Query query = entityManager.createQuery(cq);
+            return (Store) query.getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
     }
 
     public Store loadStore(WsRequest request) throws GeneralException, RegisterNotFoundException, NullParameterException {
