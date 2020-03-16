@@ -28,6 +28,13 @@ public class Language extends RemittenceEntity implements Serializable {
     public Language() {
     }
 
+    public Language(Long id, String description, boolean enabled, String iso) {
+        this.id = id;
+        this.description = description;
+        this.enabled = enabled;
+        this.iso = iso;
+    }
+
     public Long getId() {
         return this.id;
     }
@@ -74,7 +81,7 @@ public class Language extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;

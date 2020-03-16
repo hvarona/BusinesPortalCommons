@@ -3,7 +3,9 @@ package com.portal.business.commons.models;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -21,54 +22,36 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "store_close")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-//@NamedQueries({
-//    @NamedQuery(name = "StoreClose.findAll", query = "SELECT s FROM StoreClose s"),
-//    @NamedQuery(name = "StoreClose.findById", query = "SELECT s FROM StoreClose s WHERE s.id = :id"),
-//    @NamedQuery(name = "StoreClose.findByStoreid", query = "SELECT s FROM StoreClose s WHERE s.store.id = :storeid"),
-//    @NamedQuery(name = "StoreClose.findByClosedate", query = "SELECT s FROM StoreClose s WHERE s.closedate = :closedate"),
-//    @NamedQuery(name = "StoreClose.findByCloseamount", query = "SELECT s FROM StoreClose s WHERE s.closeamount = :closeamount")})
-
 public class StoreClose extends RemittenceEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "storeid")
     private Store store;
 
-    //private Date dateclosedate; 
+    @Column(name = "closeDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date closeDate;
 
-    private Timestamp closedate;
-    private Float closeamount;
+    @Column(name = "closeAmount")
+    private Float closeAmount;
 
     public StoreClose() {
     }
-
-    
-        
-//    public Date getDateclosedate() {
-//        return dateclosedate;
-//    }
-//
-//    public void setDateclosedate(Date dateclosedate) {
-//        this.dateclosedate = dateclosedate;
-//    }
-
-
 
     public StoreClose(Long id) {
         this.id = id;
     }
 
-    public StoreClose(Long id, Store store, Timestamp closedate, Float closeamount) {
+    public StoreClose(Long id, Store store, Timestamp closeDate, Float closeAmount) {
         this.id = id;
         this.store = store;
-        this.closedate = closedate;
-        this.closeamount = closeamount;
+        this.closeDate = closeDate;
+        this.closeAmount = closeAmount;
     }
 
     public Long getId() {
@@ -87,20 +70,20 @@ public class StoreClose extends RemittenceEntity implements Serializable {
         this.store = store;
     }
 
-    public Timestamp getClosedate() {
-        return closedate;
+    public Date getCloseDate() {
+        return closeDate;
     }
 
-    public void setClosedate(Timestamp closedate) {
-        this.closedate = closedate;
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
     }
 
-    public Float getCloseamount() {
-        return closeamount;
+    public Float getCloseAmount() {
+        return closeAmount;
     }
 
-    public void setCloseamount(Float closeamount) {
-        this.closeamount = closeamount;
+    public void setCloseAmount(Float closeAmount) {
+        this.closeAmount = closeAmount;
     }
 
     @Override
@@ -125,7 +108,7 @@ public class StoreClose extends RemittenceEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "StoreClose{" + "id=" + id + ", store=" + store + ", closedate=" + closedate + ", closeamount=" + closeamount + '}';
+        return "StoreClose{" + "id=" + id + ", store=" + store + ", closedate=" + closeDate + ", closeamount=" + closeAmount + '}';
     }
 
     @Override
