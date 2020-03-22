@@ -33,18 +33,6 @@ public class Enterprise extends RemittenceEntity implements Serializable {
     private String invoiceAddress;
     private String name;
     private String url;
-    
-    //bi-directional many-to-one association to Currency
-    @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "currencyId")
-    private Currency currency;
-    //bi-directional many-to-one association to Country
-    @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "countryId")
-    private Country country;
-//    //bi-directional many-to-one association to EnterpriseHasTinType
-//    @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-//    private List<EnterpriseHasTinType> enterpriseHasTinTypes;
 
 
     public Enterprise() {
@@ -114,33 +102,10 @@ public class Enterprise extends RemittenceEntity implements Serializable {
         this.url = url;
     }
 
-    public Currency getCurrency() {
-        return this.currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
-    public Country getCountry() {
-        return this.country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-//    public List<EnterpriseHasTinType> getEnterpriseHasTinTypes() {
-//        return this.enterpriseHasTinTypes;
-//    }
-//
-//    public void setEnterpriseHasTinTypes(List<EnterpriseHasTinType> enterpriseHasTinTypes) {
-//        this.enterpriseHasTinTypes = enterpriseHasTinTypes;
-//    }
-
+    
     @Override
     public String toString() {
-        return "Enterprise{" + "id=" + id + ", address=" + address + ", atcNumber=" + atcNumber + ", email=" + email + ", enabled=" + enabled + ", invoiceAddress=" + invoiceAddress + ", name=" + name + ", url=" + url + ", currency=" + currency + ", country=" + country + '}';
+        return "Enterprise{" + "id=" + id + ", address=" + address + ", atcNumber=" + atcNumber + ", email=" + email + ", enabled=" + enabled + ", invoiceAddress=" + invoiceAddress + ", name=" + name + ", url=" + url + '}';
     }
 
     @Override

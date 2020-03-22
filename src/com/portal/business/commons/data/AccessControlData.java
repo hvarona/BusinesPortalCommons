@@ -1,6 +1,5 @@
 package com.portal.business.commons.data;
 
-import com.portal.business.commons.exceptions.DisabledAccountException;
 import com.portal.business.commons.exceptions.DisabledUserException;
 import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.GeneralException;
@@ -9,7 +8,6 @@ import com.portal.business.commons.exceptions.RegisterNotFoundException;
 
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
-import com.portal.business.commons.models.Account;
 import com.portal.business.commons.models.Permission;
 import com.portal.business.commons.models.PermissionHasProfile;
 import com.portal.business.commons.models.Profile;
@@ -35,10 +33,9 @@ import javax.persistence.Query;
  */
 public class AccessControlData extends AbstractBusinessPortalWs {
 
+    private static final Logger logger = Logger.getLogger(AccessControlData.class);
 
-  private static final Logger logger = Logger.getLogger(AccessControlData.class);
-
-   public void deletePermissionHasProfile(Long profileId) throws NullParameterException, GeneralException {
+    public void deletePermissionHasProfile(Long profileId) throws NullParameterException, GeneralException {
         if (profileId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "profileId"), null);
         }
@@ -50,16 +47,6 @@ public class AccessControlData extends AbstractBusinessPortalWs {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-
-//    private Integer getActualValue(PreferenceField preferenceField) {
-//        List<PreferenceValue> preferenceValues = preferenceField.getPreferenceValue();
-//        for (PreferenceValue preferenceValue : preferenceValues) {
-//            if (preferenceValue.getEndingDate() == null) {
-//                return Integer.parseInt(preferenceValue.getValue());
-//            }
-//        }
-//        return 0;
-//    }
 
     public List<Profile> getParentsByProfile(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
         List<Profile> profiles = null;
@@ -110,7 +97,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
     public void logginFailed(WsRequest request) throws NullParameterException, GeneralException, RegisterNotFoundException {
         Object o = request.getParam();
         if (o == null) {
-            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_CUSTOMER_ID + " - "  + QueryConstants.PARAM_USER_ID), null);
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_CUSTOMER_ID + " - " + QueryConstants.PARAM_USER_ID), null);
         }
 
     }
@@ -142,7 +129,6 @@ public class AccessControlData extends AbstractBusinessPortalWs {
     public User validateUser(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException, DisabledUserException {
         User user = null;
 
-
         if (login == null || login.equals("")) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_LOGIN), null);
         }
@@ -172,35 +158,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         return user;
     }
 
-    public Account validateAccount(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException, DisabledAccountException {
-
-        Account account = null;
-        String accountPassword = password;
-        if (login == null || accountPassword == null) {
-            throw new NullParameterException( sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "login"), null);
-        }
-        try {
-            Query query = createQuery("SELECT a FROM Account a WHERE a.login=?1 AND a.accountPassword=?2");
-            query.setParameter("1", login);
-            query.setParameter("2", accountPassword);
-            account = (Account) query.setHint("toplink.refresh", "true").getSingleResult();
-            if (!account.getEnabled()) {
-                throw new DisabledAccountException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName(), "account enabled"), null);
-            }
-        }  catch (DisabledAccountException ex) {
-            throw (ex);
-        }catch (NoResultException ex) {
-            throw new RegisterNotFoundException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), ex);
-        } catch (Exception ex) {
-            ex.getMessage();
-            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), ex);
-        }
-        return account;
-
-
-    }
-    
-     public static void generateNewPassword(User user) throws GeneralException {
+    public static void generateNewPassword(User user) throws GeneralException {
         try {
             UserData userData = new UserData();
             SecureRandom random = new SecureRandom();
@@ -229,8 +187,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
             throw new GeneralException(ex.getMessage());
         }
     }
-      
-      
+
     private static void sendUserRecoveryPasswordMail(User user, String newPassword) throws GeneralException {
         try {
             Mail mail = RemettenceMails.getRecoveryPasswordMail(user, newPassword);

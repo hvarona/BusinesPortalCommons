@@ -1,40 +1,20 @@
 package com.portal.business.commons.models;
 
+public class Bank {
 
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "bank")
-public class Bank extends RemittenceEntity implements java.io.Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String name;
-    private Long countryId;
+    private Country country;
     private String redChapinaId;
-    
-    
-    
 
     public Bank() {
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -46,46 +26,34 @@ public class Bank extends RemittenceEntity implements java.io.Serializable {
         this.name = name;
     }
 
-    public Long getCountryId() {
-        return countryId;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setCountry(Country country) {
+        this.country = country;
     }
-  
+
     public String getRedChapinaId() {
-		return redChapinaId;
-	}
-
-	public void setRedChapinaId(String redChapinaId) {
-		this.redChapinaId = redChapinaId;
-	}
-
-	@Override
-    public String toString() {
-        return "Bank{" + "id=" + id + ", name=" + name + ", bank=" + countryId + '}';
-    }
-    
-        @Override
-    public Object getPk() {
-        return getId();
+        return redChapinaId;
     }
 
-    @Override
-    public String getTableName() throws TableNotFoundException {
-        return super.getTableName(this.getClass());
+    public void setRedChapinaId(String redChapinaId) {
+        this.redChapinaId = redChapinaId;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -93,10 +61,10 @@ public class Bank extends RemittenceEntity implements java.io.Serializable {
             return false;
         }
         final Bank other = (Bank) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
+        if (this.id != other.id) {
             return false;
         }
         return true;
     }
-    
+
 }

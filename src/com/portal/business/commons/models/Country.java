@@ -1,25 +1,8 @@
 package com.portal.business.commons.models;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
+public class Country {
 
-@Entity
-@Table(name = "country")
-public class Country extends RemittenceEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    public static final Long USA = 47L;
-    public static final Long VENEZUELA = 1L;
-    public static final Long COLOMBIA = 35L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String name;
     private String shortName;
     private String code;
@@ -31,29 +14,11 @@ public class Country extends RemittenceEntity implements Serializable {
     public Country() {
     }
 
-    public Country(Long id, String name, String shortName, String code, String alternativeName1, String alternativeName2, String alternativeName3, String iso) {
-        this.id = id;
-        this.name = name;
-        this.shortName = shortName;
-        this.code = code;
-        this.alternativeName1 = alternativeName1;
-        this.alternativeName2 = alternativeName2;
-        this.alternativeName3 = alternativeName3;
-        this.iso = iso;
+    public long getId() {
+        return id;
     }
 
-    public Country(Long id, String name, String shortName, String code) {
-        this.id = id;
-        this.name = name;
-        this.shortName = shortName;
-        this.code = code;
-    }
-    
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -114,29 +79,17 @@ public class Country extends RemittenceEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Country{" + "id=" + id + ", name=" + name + ", shortName=" + shortName + ", code=" + code + ", alternativeName1=" + alternativeName1 + ", alternativeName2=" + alternativeName2 + ", alternativeName3=" + alternativeName3 +", iso =" + iso +'}';
-    }
-
-    @Override
-    public Object getPk() {
-        return getId();
-    }
-
-    @Override
-    public String getTableName() throws TableNotFoundException {
-        return super.getTableName(this.getClass());
-    }
-
-    @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        int hash = 3;
+        hash = 59 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -144,11 +97,7 @@ public class Country extends RemittenceEntity implements Serializable {
             return false;
         }
         final Country other = (Country) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return this.id == other.id;
     }
 
-    
 }
