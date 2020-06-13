@@ -39,6 +39,9 @@ public class Store extends RemittenceEntity implements Serializable {
     @Column(name = "closetime")
     private Date closeTime;
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     @ManyToOne
     @JoinColumn(name = "idCommerce")
     private Business commerce;
@@ -100,6 +103,14 @@ public class Store extends RemittenceEntity implements Serializable {
 
     public void setCommerce(Business commerce) {
         this.commerce = commerce;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

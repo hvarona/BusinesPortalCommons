@@ -44,6 +44,28 @@ public class StoreData extends AbstractBusinessPortalWs {
 
     }
 
+    public List<Store> getEnabledStores(Business commerce) throws EmptyListException, GeneralException, NullParameterException {
+        List<Store> stores = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Store> cq = cb.createQuery(Store.class);
+            Root<Store> from = cq.from(Store.class);
+            cq.select(from).where(
+                    cb.equal(from.get("commerce"), commerce),
+                    cb.equal(from.get("enabled"), true));
+
+            Query query = entityManager.createQuery(cq);
+            stores = query.getResultList();
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (stores == null || stores.isEmpty()) {
+            throw new EmptyListException(logger, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return stores;
+
+    }
+
     public Store getStore(Long storeId) throws GeneralException, RegisterNotFoundException, NullParameterException {
         if (storeId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
@@ -71,5 +93,20 @@ public class StoreData extends AbstractBusinessPortalWs {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "store"), null);
         }
         return (Store) saveEntity(store);
+    }
+    
+    public Store getStoreByCode(String code) throws NullParameterException, GeneralException {
+        if (code == null) {
+            throw new NullParameterException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Store> cq = cb.createQuery(Store.class);
+            Root<Store> from = cq.from(Store.class);
+            cq.select(from).where(cb.equal(from.get("storeCode"), code));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
     }
 }

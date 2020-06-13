@@ -31,7 +31,12 @@
         <class>com.portal.business.commons.models.UserCardTransactionLog</class>
         <class>com.portal.business.commons.models.BusinessBalanceIncoming</class>
         <class>com.portal.business.commons.models.BusinessBalanceOutgoing</class>
+        <class>com.portal.business.commons.models.BusinessSell</class>
         <class>com.portal.business.commons.models.BusinessClose</class>
+        <class>com.portal.business.commons.models.Address</class>
+        <class>com.portal.business.commons.models.Register</class>
+        <class>com.portal.business.commons.models.RegisterNaturalPerson</class>
+        <class>com.portal.business.commons.models.RegisterLegalPerson</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.logging.timestamp" value="true"/>
@@ -41,7 +46,7 @@
             <property name="toplink.cache.shared.Secret" value="false"/>
             <property name="javax.persistence.schema-generation-action" value="create"/>
             <property name="javax.persistence.schema-generation-target" value="database"/>
-            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
             <property name="eclipselink.deploy-on-startup" value="true"/>
             <property name="eclipselink.logging.level.sql" value="FINE"/>

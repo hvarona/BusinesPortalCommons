@@ -1,6 +1,22 @@
 package com.portal.business.commons.models;
 
-public class Address {
+import com.portal.business.commons.exceptions.TableNotFoundException;
+import com.portal.business.commons.generic.RemittenceEntity;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "address")
+public class Address extends RemittenceEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String address;
     private String cityName;
@@ -8,11 +24,22 @@ public class Address {
     private String stateName;
     private String zipCode;
 
+    @Transient
     private City city;
+    @Transient
     private State state;
+    @Transient
     private Country country;
 
     public Address() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAddress() {
@@ -77,6 +104,16 @@ public class Address {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    @Override
+    public Object getPk() {
+        return getId();
+    }
+
+    @Override
+    public String getTableName() throws TableNotFoundException {
+        return super.getTableName(this.getClass());
     }
 
 }

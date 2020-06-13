@@ -25,8 +25,8 @@ public class TinType extends RemittenceEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean isNatural;
-    private String name;
+    private boolean isNatural; 
+   private String name;
     private String prefix;
 
     public TinType() {

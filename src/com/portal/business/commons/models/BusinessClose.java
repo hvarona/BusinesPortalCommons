@@ -36,11 +36,10 @@ public class BusinessClose extends RemittenceEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateClose;
 
-    @Column(name = "amount")
-    private double amount;
-
     @Column(name = "status")
     private CloseStatus status;
+    
+    
 
     public static enum CloseStatus {
         PENDING, PROCESSED;
@@ -49,10 +48,9 @@ public class BusinessClose extends RemittenceEntity implements Serializable {
     public BusinessClose() {
     }
 
-    public BusinessClose(Business business, Date dateClose, double amount, CloseStatus status) {
+    public BusinessClose(Business business, Date dateClose, CloseStatus status) {
         this.business = business;
         this.dateClose = dateClose;
-        this.amount = amount;
         this.status = status;
     }
 
@@ -78,14 +76,6 @@ public class BusinessClose extends RemittenceEntity implements Serializable {
 
     public void setDateClose(Date dateClose) {
         this.dateClose = dateClose;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 
     public CloseStatus getStatus() {

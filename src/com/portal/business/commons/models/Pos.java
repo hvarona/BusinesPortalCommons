@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.Temporal;
 
@@ -27,7 +28,6 @@ import javax.persistence.Temporal;
  * @author hvarona
  */
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "pos")
 public class Pos extends RemittenceEntity implements Serializable {
 
@@ -48,6 +48,9 @@ public class Pos extends RemittenceEntity implements Serializable {
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date closeTime;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
 
     public Pos() {
     }
@@ -74,6 +77,8 @@ public class Pos extends RemittenceEntity implements Serializable {
 
     public void setStore(Store store) {
         this.store = store;
+        this.openTime = store.getOpenTime();
+        this.closeTime = store.getCloseTime();
     }
 
     public Date getOpenTime() {
@@ -116,6 +121,14 @@ public class Pos extends RemittenceEntity implements Serializable {
         }
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "Pos{" + "id=" + id + ", posCode=" + posCode + ", store=" + store + '}';
@@ -126,7 +139,7 @@ public class Pos extends RemittenceEntity implements Serializable {
             if (store == null) {
                 return "";
             }
-            String toEncrypt = store.getStoreCode() + ";" + posCode;
+            String toEncrypt = store.getCommerce().getCode() + ";" + store.getStoreCode() + ";" + posCode;
             String value = AlodigaCryptographyUtils.encrypt(toEncrypt, "1nt3r4xt3l3ph0ny");
             return value;
         } catch (Exception ex) {

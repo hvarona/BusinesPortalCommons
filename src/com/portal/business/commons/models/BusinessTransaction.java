@@ -29,6 +29,22 @@ public class BusinessTransaction {
 
     private double amountWithoutFee;
 
+    public BusinessTransaction(Business business, BusinessClose close, User user, 
+            Date dateTransaction, Long transactionId, OperationType type, 
+            float businessFee, double totalAmount, double amountWithoutFee) {
+        this.business = business;
+        this.close = close;
+        this.user = user;
+        this.dateTransaction = dateTransaction;
+        this.transactionId = transactionId;
+        this.type = type;
+        this.businessFee = businessFee;
+        this.totalAmount = totalAmount;
+        this.amountWithoutFee = amountWithoutFee;
+    }
+
+    
+
     public BusinessTransaction(BusinessBalanceIncoming incoming) {
         this.id = incoming.getId();
         this.business = incoming.getBusiness();

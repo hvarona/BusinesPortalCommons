@@ -33,6 +33,21 @@ public class BusinessData extends AbstractBusinessPortalWs {
 
     private static final Logger LOG = Logger.getLogger(BusinessData.class);
 
+    public Business getBusinessByCode(String code) throws NullParameterException, GeneralException {
+        if (code == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("code"), code));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
     public List<Business> getOperatorList() throws EmptyListException, GeneralException {
 
         List<Business> businessList = null;
@@ -99,16 +114,15 @@ public class BusinessData extends AbstractBusinessPortalWs {
         List<BusinessBalanceOutgoing> outcomings = getPendingOutcomingBalance(business);
         Date dateClose = new Date();
 
-        double totalAmount = 0;
+        /*double totalAmount = 0;
         for (BusinessBalanceIncoming incoming : incomings) {
             totalAmount += incoming.getAmountWithoutFee();
         }
 
         for (BusinessBalanceOutgoing outcoming : outcomings) {
             totalAmount -= outcoming.getAmountWithoutFee();
-        }
-
-        BusinessClose businessClose = new BusinessClose(business, dateClose, totalAmount, BusinessClose.CloseStatus.PENDING);
+        }*/
+        BusinessClose businessClose = new BusinessClose(business, dateClose, BusinessClose.CloseStatus.PENDING);
         businessClose = (BusinessClose) saveEntity(businessClose);
 
         for (BusinessBalanceIncoming incoming : incomings) {
@@ -175,7 +189,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
 
             cq.where(predArray);
             Query query = entityManager.createQuery(cq);
-            
+
             incomings = query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
