@@ -108,65 +108,8 @@ public class BusinessData extends AbstractBusinessPortalWs {
         return (BusinessBalanceOutgoing) saveEntity(outgoing);
     }
 
-    public synchronized BusinessClose closeBusiness(Business business) throws GeneralException, NullParameterException {
-
-        List<BusinessBalanceIncoming> incomings = getPendingIncomingBalance(business);
-        List<BusinessBalanceOutgoing> outcomings = getPendingOutcomingBalance(business);
-        Date dateClose = new Date();
-
-        /*double totalAmount = 0;
-        for (BusinessBalanceIncoming incoming : incomings) {
-            totalAmount += incoming.getAmountWithoutFee();
-        }
-
-        for (BusinessBalanceOutgoing outcoming : outcomings) {
-            totalAmount -= outcoming.getAmountWithoutFee();
-        }*/
-        BusinessClose businessClose = new BusinessClose(business, dateClose, BusinessClose.CloseStatus.PENDING);
-        businessClose = (BusinessClose) saveEntity(businessClose);
-
-        for (BusinessBalanceIncoming incoming : incomings) {
-            incoming.setClose(businessClose);
-            saveEntity(incoming);
-        }
-
-        for (BusinessBalanceOutgoing outcoming : outcomings) {
-            outcoming.setClose(businessClose);
-            saveEntity(outcoming);
-        }
-
-        return businessClose;
-    }
-
-    private List<BusinessBalanceIncoming> getPendingIncomingBalance(Business business) {
-        try {
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<BusinessBalanceIncoming> cq = cb.createQuery(BusinessBalanceIncoming.class);
-            Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
-            cq.select(from);
-            cq.where(cb.equal(from.get("business"), business),
-                    cb.isNull(from.get("close")));
-
-            return entityManager.createQuery(cq).getResultList();
-        } catch (Exception e) {
-        }
-        return new ArrayList();
-    }
-
-    private List<BusinessBalanceOutgoing> getPendingOutcomingBalance(Business business) {
-        try {
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<BusinessBalanceOutgoing> cq = cb.createQuery(BusinessBalanceOutgoing.class);
-            Root<BusinessBalanceOutgoing> from = cq.from(BusinessBalanceOutgoing.class);
-            cq.select(from);
-            cq.where(cb.equal(from.get("business"), business),
-                    cb.isNull(from.get("close")));
-
-            return entityManager.createQuery(cq).getResultList();
-        } catch (Exception e) {
-        }
-        return new ArrayList();
-    }
+    
+    
 
     private List<BusinessBalanceIncoming> getBusinessIncomingTransactions(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
         List<BusinessBalanceIncoming> incomings = new ArrayList();
