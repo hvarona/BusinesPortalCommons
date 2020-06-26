@@ -1,4 +1,4 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
 /**
  *
@@ -12,7 +12,7 @@ public class RemittancePaymentInfo {
     private float totalAmount;
     private String exchangeRateId;
     private String ratePaymentNetworkId = "1";
-    private DeliveryForm deliveryForm;
+    private RemittanceDeliveryForm deliveryForm;
     private PaymentNetwork paymentNetwork;
 
     public RemittancePaymentInfo() {
@@ -58,11 +58,11 @@ public class RemittancePaymentInfo {
         this.ratePaymentNetworkId = ratePaymentNetworkId;
     }
 
-    public DeliveryForm getDeliveryForm() {
+    public RemittanceDeliveryForm getDeliveryForm() {
         return deliveryForm;
     }
 
-    public void setDeliveryForm(DeliveryForm deliveryForm) {
+    public void setDeliveryForm(RemittanceDeliveryForm deliveryForm) {
         this.deliveryForm = deliveryForm;
     }
 

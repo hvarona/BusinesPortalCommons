@@ -1,4 +1,4 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
 public class RemittancePerson {
 
@@ -9,7 +9,7 @@ public class RemittancePerson {
     private String phoneNumber;
     private String email;
     private String currencyId;
-    private Address address = new Address();
+    private RemittanceAddress address = new RemittanceAddress();
 
     public RemittancePerson() {
     }
@@ -62,11 +62,11 @@ public class RemittancePerson {
         this.email = email;
     }
 
-    public Address getAddress() {
+    public RemittanceAddress getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(RemittanceAddress address) {
         this.address = address;
     }
 

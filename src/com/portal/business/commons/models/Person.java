@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.remittance.RemittanceAddress;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import com.portal.business.commons.generic.RemittenceEntityListerner;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "person")
@@ -31,9 +33,10 @@ public class Person extends RemittenceEntity implements Serializable {
     private Timestamp creationDate;
     private String email;
     private boolean enabled;
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "addressId")
-    private Address address;
+    /*@ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "addressId")*/
+    @Transient
+    private RemittanceAddress address;
 
     public Person() {
     }
@@ -111,11 +114,11 @@ public class Person extends RemittenceEntity implements Serializable {
         this.secondSurname = secondSurname;
     }
 
-    public Address getAddress() {
+    public RemittanceAddress getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(RemittanceAddress address) {
         this.address = address;
     }
 

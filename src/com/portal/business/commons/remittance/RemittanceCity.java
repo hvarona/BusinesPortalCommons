@@ -1,15 +1,16 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
-import com.portal.business.commons.remittance.RemittanceCountry;
-
-public class Bank {
+/**
+ * The persistent class for the city database table.
+ *
+ */
+public class RemittanceCity {
 
     private long id;
     private String name;
-    private RemittanceCountry country;
-    private String redChapinaId;
+    private RemittanceState state;
 
-    public Bank() {
+    public RemittanceCity() {
     }
 
     public long getId() {
@@ -28,26 +29,18 @@ public class Bank {
         this.name = name;
     }
 
-    public RemittanceCountry getCountry() {
-        return country;
+    public RemittanceState getState() {
+        return state;
     }
 
-    public void setCountry(RemittanceCountry country) {
-        this.country = country;
-    }
-
-    public String getRedChapinaId() {
-        return redChapinaId;
-    }
-
-    public void setRedChapinaId(String redChapinaId) {
-        this.redChapinaId = redChapinaId;
+    public void setState(RemittanceState state) {
+        this.state = state;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 83 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
@@ -62,7 +55,7 @@ public class Bank {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Bank other = (Bank) obj;
+        final RemittanceCity other = (RemittanceCity) obj;
         if (this.id != other.id) {
             return false;
         }

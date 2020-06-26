@@ -1,19 +1,19 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
 /**
  *
  * @author henry
  */
-public class PaymentNetwork {
+public class RemittanceDeliveryForm {
 
-    long id;
+    private long id;
+
     private String name;
-    private Country country;
 
-    public PaymentNetwork() {
+    public RemittanceDeliveryForm() {
     }
 
-    public PaymentNetwork(long id, String name) {
+    public RemittanceDeliveryForm(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -34,18 +34,10 @@ public class PaymentNetwork {
         this.name = name;
     }
 
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
@@ -60,13 +52,11 @@ public class PaymentNetwork {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PaymentNetwork other = (PaymentNetwork) obj;
+        final RemittanceDeliveryForm other = (RemittanceDeliveryForm) obj;
         if (this.id != other.id) {
             return false;
         }
         return true;
     }
-    
-    
 
 }

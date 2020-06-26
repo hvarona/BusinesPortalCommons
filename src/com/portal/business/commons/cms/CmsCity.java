@@ -1,38 +1,42 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.cms;
 
 import java.io.Serializable;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.utils.QueryConstants;
 
 /**
  * The persistent class for the city database table.
  *
  */
-public class City {
+@Entity
+@Table(name = "city")
+public class CmsCity implements Serializable {
 
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "name", length = 50)
     private String name;
-    private State state;
 
-    public City() {
+    @ManyToOne
+    @JoinColumn(name = "stateId")
+    private CmsState state;
+
+    public CmsCity() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,11 +48,11 @@ public class City {
         this.name = name;
     }
 
-    public State getState() {
+    public CmsState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(CmsState state) {
         this.state = state;
     }
 
@@ -70,7 +74,7 @@ public class City {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final City other = (City) obj;
+        final CmsCity other = (CmsCity) obj;
         if (this.id != other.id) {
             return false;
         }

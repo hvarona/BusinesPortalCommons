@@ -1,17 +1,17 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 
-public class State {
+public class RemittanceState {
 
     private long id;
     private String name;
-    private Country country;
+    private RemittanceCountry country;
 
-    public State() {
+    public RemittanceState() {
     }
 
-    public State(Long id, String name) {
+    public RemittanceState(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -32,11 +32,11 @@ public class State {
         this.name = name;
     }
 
-    public Country getCountry() {
+    public RemittanceCountry getCountry() {
         return this.country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(RemittanceCountry country) {
         this.country = country;
     }
 
@@ -63,7 +63,7 @@ public class State {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final State other = (State) obj;
+        final RemittanceState other = (RemittanceState) obj;
         if (this.id != other.id) {
             return false;
         }

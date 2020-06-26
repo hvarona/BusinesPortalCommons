@@ -1,38 +1,21 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.remittance.*;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
-@Entity
-@Table(name = "address")
-public class Address extends RemittenceEntity implements Serializable {
+public class RemittanceAddress implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "address")
     private String address;
-    @Column(name = "zipCode")
+    private String cityName;
+    private String countryName;
+    private String stateName;
     private String zipCode;
 
-    @Transient
     private RemittanceCity city;
-    @Transient
     private RemittanceState state;
-    @Transient
     private RemittanceCountry country;
 
-    public Address() {
+    public RemittanceAddress() {
     }
 
     public Long getId() {
@@ -49,6 +32,30 @@ public class Address extends RemittenceEntity implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 
     public String getZipCode() {
@@ -81,16 +88,6 @@ public class Address extends RemittenceEntity implements Serializable {
 
     public void setCountry(RemittanceCountry country) {
         this.country = country;
-    }
-
-    @Override
-    public Object getPk() {
-        return this.id;
-    }
-
-    @Override
-    public String getTableName() throws TableNotFoundException {
-        return super.getTableName(this.getClass());
     }
 
 }

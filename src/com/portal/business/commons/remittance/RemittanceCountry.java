@@ -1,6 +1,6 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
-public class Country {
+public class RemittanceCountry {
 
     private long id;
     private String name;
@@ -11,7 +11,7 @@ public class Country {
     private String alternativeName3;
     private String iso;
 
-    public Country() {
+    public RemittanceCountry() {
     }
 
     public long getId() {
@@ -96,7 +96,7 @@ public class Country {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Country other = (Country) obj;
+        final RemittanceCountry other = (RemittanceCountry) obj;
         return this.id == other.id;
     }
 

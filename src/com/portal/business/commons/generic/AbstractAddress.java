@@ -5,7 +5,7 @@
  */
 package com.portal.business.commons.generic;
 
-import com.portal.business.commons.models.Address;
+import com.portal.business.commons.remittance.RemittanceAddress;
 import java.util.List;
 /**
  *
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public abstract class AbstractAddress {
      
-    public abstract boolean  deleteAddress(Address address);
-    public abstract boolean updateAddress(Address address);
-    public abstract List<Address> listAddress(Address address);
-    public abstract Address findtAddress(Address address);
-    public abstract boolean insertAddress(Address address); 
+    public abstract boolean  deleteAddress(RemittanceAddress address);
+    public abstract boolean updateAddress(RemittanceAddress address);
+    public abstract List<RemittanceAddress> listAddress(RemittanceAddress address);
+    public abstract RemittanceAddress findtAddress(RemittanceAddress address);
+    public abstract boolean insertAddress(RemittanceAddress address); 
     
 }

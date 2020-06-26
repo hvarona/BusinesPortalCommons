@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.remittance.RemittanceAddress;
 import com.portal.business.commons.enumeration.MaritalStatus;
 import com.portal.business.commons.enumeration.PersonSexType;
 import java.util.Date;

@@ -1,24 +1,13 @@
-package com.portal.business.commons.models;
+package com.portal.business.commons.remittance;
 
-import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
-
-public class Currency {
+public class RemittanceCurrency {
 
     private long id;
     private String name;
     private String symbol;
     private String iso;
 
-    public Currency() {
+    public RemittanceCurrency() {
     }
 
     public long getId() {
