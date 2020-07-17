@@ -7,9 +7,11 @@ import com.portal.business.commons.cms.CmsPersonType;
 import com.portal.business.commons.cms.CmsState;
 import com.portal.business.commons.exceptions.GeneralException;
 import com.portal.business.commons.exceptions.NullParameterException;
+import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.EntityManagerWrapper;
 import com.portal.business.commons.generic.RemittenceGenericEntity;
 import com.portal.business.commons.models.CardPreRequest;
+import com.portal.business.commons.models.Permission;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.MessageFormatHelper;
 import java.util.ArrayList;
@@ -17,7 +19,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -48,36 +52,6 @@ public class CmsData {
 
     protected String getMethodName() {
         return Thread.currentThread().getStackTrace()[2].getMethodName();
-    }
-
-    protected Object saveEntity(Object entity) throws GeneralException, NullParameterException {
-        if (entity == null) {
-            throw new NullParameterException("NullParameterException ");
-        }
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            if (!transaction.isActive()) {
-                transaction.begin();
-            }
-            if (((RemittenceGenericEntity) entity).getPk() != null) {
-                //processAuditData(EventType.UPDATE, entity, auditData, entityManagerWrapper);
-                entityManagerWrapper.update(entity);
-            } else {
-                entityManagerWrapper.save(entity);
-                //processAuditData(EventType.CREATE, entity, auditData, entityManagerWrapper);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                transaction.rollback();
-            } catch (Exception e1) {
-                throw new GeneralException("GeneralException saveEntity");
-            }
-            throw new GeneralException("GeneralException saveEntity");
-        }
-
-        return entity;
     }
 
     public List<CmsCountry> getCountries() throws GeneralException {
@@ -159,5 +133,119 @@ public class CmsData {
         }
     }
 
-    
+    public CmsCountry getCountry(Long idCountry) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (idCountry == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "idCountry"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsCountry> cq = cb.createQuery(CmsCountry.class);
+            Root<CmsCountry> from = cq.from(CmsCountry.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), idCountry));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsCountry) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("No se encontro el pais");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("No se encontro el pais");
+        }
+    }
+
+    public CmsState getState(Long idState) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (idState == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "idState"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsState> cq = cb.createQuery(CmsState.class);
+            Root<CmsState> from = cq.from(CmsState.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), idState));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsState) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("No se encontro el estado");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("No se encontro el estado");
+        }
+    }
+
+    public CmsCity getCity(Long idCity) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (idCity == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "idCity"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsCity> cq = cb.createQuery(CmsCity.class);
+            Root<CmsCity> from = cq.from(CmsCity.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), idCity));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsCity) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("No se encontro la ciudad");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("No se encontro la ciudad");
+        }
+    }
+
+    public CmsPersonType getPersonType(Long idPersonType) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (idPersonType == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "idPersonType"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsPersonType> cq = cb.createQuery(CmsPersonType.class);
+            Root<CmsPersonType> from = cq.from(CmsPersonType.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), idPersonType));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsPersonType) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("No se encontro el tipo de persona");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("No se encontro el tipo de person");
+        }
+    }
+
+    public CmsDocumentPersonType getDocumentPersonType(Long idDocumentPersonType) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (idDocumentPersonType == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "idDocumentPersonType"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsDocumentPersonType> cq = cb.createQuery(CmsDocumentPersonType.class);
+            Root<CmsDocumentPersonType> from = cq.from(CmsDocumentPersonType.class);
+
+            cq.select(from).where(cb.equal(from.get("id"), idDocumentPersonType));
+
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsDocumentPersonType) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("No se encontro el documento de persona");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("No se encontro el documento de persona");
+        }
+    }
+
 }

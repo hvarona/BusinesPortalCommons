@@ -84,6 +84,10 @@ public class CardPreRequest extends RemittenceEntity implements Serializable {
     @Column(name = "sendInfo")
     private CardPreRequestSendInfo sendInfo;
 
+    @Column(name = "dateRequest")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date dateRequest;
+
     @Transient
     private CmsCountry country;
 
@@ -312,6 +316,14 @@ public class CardPreRequest extends RemittenceEntity implements Serializable {
 
     public void setSendInfo(CardPreRequestSendInfo sendInfo) {
         this.sendInfo = sendInfo;
+    }
+
+    public Date getDateRequest() {
+        return dateRequest;
+    }
+
+    public void setDateRequest(Date dateRequest) {
+        this.dateRequest = dateRequest;
     }
 
     @Override

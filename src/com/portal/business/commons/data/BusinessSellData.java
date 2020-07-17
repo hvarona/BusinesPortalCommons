@@ -33,8 +33,8 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
         }
         return (BusinessSell) saveEntity(businessSell);
     }
-    
-    public List<BusinessSell> getBusinessSells(Business business, Date startDate, Date endDate) throws GeneralException {
+
+    public List<BusinessSell> getBusinessSales(Business business, Date startDate, Date endDate) throws GeneralException {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<BusinessSell> cq = cb.createQuery(BusinessSell.class);
@@ -46,7 +46,7 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
 
             predList.add(cb.equal(from.get("business"), business));
             predList.add(cb.between(dateEntryPath, startDate, endDate));
-            
+
             Predicate[] predArray = new Predicate[predList.size()];
             predList.toArray(predArray);
 
@@ -59,8 +59,34 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
-    public List<BusinessSell> getBusinessSells(Store store, Date startDate, Date endDate) throws GeneralException {
+
+    public Long getBusinessSalesNumber(Business business, Date startDate, Date endDate) throws GeneralException {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<BusinessSell> from = cq.from(BusinessSell.class);
+            cq.select(cb.count(from));
+
+            List<Predicate> predList = new ArrayList();
+            Path<Date> dateEntryPath = from.get("dateSell");
+
+            predList.add(cb.equal(from.get("business"), business));
+            predList.add(cb.between(dateEntryPath, startDate, endDate));
+
+            Predicate[] predArray = new Predicate[predList.size()];
+            predList.toArray(predArray);
+
+            cq.where(predArray);
+            Query query = entityManager.createQuery(cq);
+
+            return (Long) query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
+    public List<BusinessSell> getBusinessSales(Store store, Date startDate, Date endDate) throws GeneralException {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<BusinessSell> cq = cb.createQuery(BusinessSell.class);
@@ -72,7 +98,7 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
 
             predList.add(cb.equal(from.get("store"), store));
             predList.add(cb.between(dateEntryPath, startDate, endDate));
-            
+
             Predicate[] predArray = new Predicate[predList.size()];
             predList.toArray(predArray);
 
@@ -85,8 +111,8 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
-    public List<BusinessSell> getBusinessSells(Pos pos, Date startDate, Date endDate) throws GeneralException {
+
+    public List<BusinessSell> getBusinessSales(Pos pos, Date startDate, Date endDate) throws GeneralException {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<BusinessSell> cq = cb.createQuery(BusinessSell.class);
@@ -98,7 +124,7 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
 
             predList.add(cb.equal(from.get("pos"), pos));
             predList.add(cb.between(dateEntryPath, startDate, endDate));
-            
+
             Predicate[] predArray = new Predicate[predList.size()];
             predList.toArray(predArray);
 

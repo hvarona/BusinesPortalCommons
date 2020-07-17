@@ -26,7 +26,7 @@ public class CmsPersonType implements Serializable {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "countryID")
+    @JoinColumn(name = "countryId")
     private CmsCountry country;
 
     @Column(name = "originApplicationId")

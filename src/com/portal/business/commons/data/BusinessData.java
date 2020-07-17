@@ -33,6 +33,21 @@ public class BusinessData extends AbstractBusinessPortalWs {
 
     private static final Logger LOG = Logger.getLogger(BusinessData.class);
 
+    public Business getBusinessById(Long id) throws NullParameterException, GeneralException {
+        if (id == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "id"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("id"), id));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+    
     public Business getBusinessByCode(String code) throws NullParameterException, GeneralException {
         if (code == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
@@ -47,8 +62,68 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
+    
+    public Business getBusinessByIdentification(String identification) throws NullParameterException, GeneralException {
+        if (identification == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "indetification"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("indetification"), identification));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+    
+    public Business getBusinessByEmail(String email) throws NullParameterException, GeneralException {
+        if (email == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "email"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("email"), email));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+    
+    public Business getBusinessByPhone(String phoneNumber) throws NullParameterException, GeneralException {
+        if (phoneNumber == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "phoneNumber"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("phoneNumber"), phoneNumber));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+    
+    public Business getBusinessByLogin(String login) throws NullParameterException, GeneralException {
+        if (login == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Business> cq = cb.createQuery(Business.class);
+            Root<Business> from = cq.from(Business.class);
+            cq.select(from).where(cb.equal(from.get("login"), login));
+            return entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
 
-    public List<Business> getOperatorList() throws EmptyListException, GeneralException {
+    public List<Business> getBusinessList() throws EmptyListException, GeneralException {
 
         List<Business> businessList = null;
         try {
@@ -107,9 +182,6 @@ public class BusinessData extends AbstractBusinessPortalWs {
         }
         return (BusinessBalanceOutgoing) saveEntity(outgoing);
     }
-
-    
-    
 
     private List<BusinessBalanceIncoming> getBusinessIncomingTransactions(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
         List<BusinessBalanceIncoming> incomings = new ArrayList();
@@ -196,6 +268,79 @@ public class BusinessData extends AbstractBusinessPortalWs {
         }
 
         return businessTransactions;
+    }
+
+    private Long getBusinessIncomingTransactionsNumber(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
+        List<BusinessBalanceIncoming> incomings = new ArrayList();
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
+            cq.select(cb.count(from));
+
+            List<Predicate> predList = new ArrayList();
+            Path<Date> dateEntryPath = from.get("dateTransaction");
+
+            predList.add(cb.equal(from.get("business"), business));
+            predList.add(cb.between(dateEntryPath, startDate, endDate));
+            if (type != null) {
+                predList.add(cb.equal(from.get("type"), type));
+            }
+            Predicate[] predArray = new Predicate[predList.size()];
+            predList.toArray(predArray);
+
+            cq.where(predArray);
+            Query query = entityManager.createQuery(cq);
+
+            return (Long) query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
+    private Long getBusinessOutgoingTransactionsNumber(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
+        List<BusinessBalanceOutgoing> outgoings = new ArrayList();
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<BusinessBalanceOutgoing> from = cq.from(BusinessBalanceOutgoing.class);
+            cq.select(cb.count(from));
+            List<Predicate> predList = new ArrayList();
+            Path<Date> dateEntryPath = from.get("dateTransaction");
+
+            predList.add(cb.equal(from.get("business"), business));
+            predList.add(cb.between(dateEntryPath, startDate, endDate));
+            if (type != null) {
+                predList.add(cb.equal(from.get("type"), type));
+            }
+            Predicate[] predArray = new Predicate[predList.size()];
+            predList.toArray(predArray);
+
+            cq.where(predArray);
+            return (Long) entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
+    public long getBusinessTransactionsNumber(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
+        long answer = 0;
+        try {
+            System.out.println("Generando reporte desde " + startDate + " hasta " + endDate + " de operacion " + type);
+            answer += getBusinessIncomingTransactionsNumber(business, startDate, endDate, type);
+
+        } catch (GeneralException e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+
+        try {
+            answer += getBusinessOutgoingTransactionsNumber(business, startDate, endDate, type);
+        } catch (GeneralException e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+
+        return answer;
     }
 
 }
