@@ -9,16 +9,12 @@ import com.portal.business.commons.exceptions.GeneralException;
 import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.EntityManagerWrapper;
-import com.portal.business.commons.generic.RemittenceGenericEntity;
-import com.portal.business.commons.models.CardPreRequest;
-import com.portal.business.commons.models.Permission;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.MessageFormatHelper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -97,6 +93,21 @@ public class CmsData {
         }
     }
 
+    public List<CmsPersonType> getPersonTypes(CmsCountry country) throws NullParameterException, GeneralException {
+        if (country == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "country"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsPersonType> cq = cb.createQuery(CmsPersonType.class);
+            Root<CmsPersonType> from = cq.from(CmsPersonType.class);
+            cq.select(from).where(cb.equal(from.get("country"), country));
+            return entityManager.createQuery(cq).getResultList();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
     private List<CmsPersonType> getPersonType(CmsCountry country, boolean natural) throws NullParameterException, GeneralException {
         if (country == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "country"), null);
@@ -127,6 +138,25 @@ public class CmsData {
                 cq.select(from).where(cb.equal(from.get("personType"), personType));
                 documentTypes.addAll(entityManager.createQuery(cq).getResultList());
             }
+            return documentTypes;
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
+    public List<CmsDocumentPersonType> getDocumentTypes(CmsPersonType personType) throws NullParameterException, GeneralException {
+        if (personType == null) {
+            throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "personType"), null);
+        }
+        try {
+            List<CmsDocumentPersonType> documentTypes = new ArrayList();
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsDocumentPersonType> cq = cb.createQuery(CmsDocumentPersonType.class);
+            Root<CmsDocumentPersonType> from = cq.from(CmsDocumentPersonType.class);
+            cq.select(from).where(cb.equal(from.get("personType"), personType));
+            documentTypes.addAll(entityManager.createQuery(cq).getResultList());
+
             return documentTypes;
         } catch (Exception e) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);

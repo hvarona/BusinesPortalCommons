@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -36,17 +38,19 @@ public class Register extends RemittenceEntity implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date applianceDate;
 
-    @Column(name = "commercialRegister", unique = false, nullable = true, length = 100000)
-    private byte[] commercialRegister;
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
 
-    @Column(name = "commercialId", unique = false, nullable = true, length = 100000)
-    private byte[] commercialId;
+    @Column(name = "website")
+    private String website;
 
-    @Column(name = "individualId", unique = false, nullable = true, length = 100000)
-    private byte[] individualId;
+    @ManyToOne
+    @JoinColumn(name = "idAddress")
+    private Address businessAddress;
 
-    @Column(name = "bankSupport", unique = false, nullable = true, length = 100000)
-    private byte[] bankSupport;
+    @ManyToOne
+    @JoinColumn(name = "idPerson")
+    private Person person;
 
     public Register() {
     }
@@ -67,36 +71,36 @@ public class Register extends RemittenceEntity implements Serializable {
         this.applianceDate = applianceDate;
     }
 
-    public byte[] getCommercialRegister() {
-        return commercialRegister;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setCommercialRegister(byte[] commercialRegister) {
-        this.commercialRegister = commercialRegister;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public byte[] getCommercialId() {
-        return commercialId;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setCommercialId(byte[] commercialId) {
-        this.commercialId = commercialId;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public byte[] getIndividualId() {
-        return individualId;
+    public Address getBusinessAddress() {
+        return businessAddress;
     }
 
-    public void setIndividualId(byte[] individualId) {
-        this.individualId = individualId;
+    public void setBusinessAddress(Address businessAddress) {
+        this.businessAddress = businessAddress;
     }
 
-    public byte[] getBankSupport() {
-        return bankSupport;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setBankSupport(byte[] bankSupport) {
-        this.bankSupport = bankSupport;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     @Override

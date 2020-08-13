@@ -11,10 +11,8 @@ import com.portal.business.commons.models.IpBlackList;
 import com.portal.business.commons.models.Language;
 import com.portal.business.commons.models.Period;
 import com.portal.business.commons.models.Store;
-import com.portal.business.commons.models.TinType;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.Mail;
-import com.portal.business.commons.utils.QueryConstants;
 import com.portal.business.commons.utils.SendMail;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +41,6 @@ public class UtilsData extends AbstractBusinessPortalWs {
         WsRequest request = new WsRequest();
         List<Language> languages = (List<Language>) listEntities(Language.class, request, logger, getMethodName());
         return languages;
-    }
-
-    public List<TinType> getTinTypes() throws EmptyListException, GeneralException, NullParameterException {
-        WsRequest request = new WsRequest();
-        List<TinType> tinTypes = (List<TinType>) listEntities(TinType.class, request, logger, getMethodName());
-
-        return tinTypes;
-    }
-
-    public List<TinType> getTinTypesByEnterprise(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
-        List<TinType> tinTypes = null;
-        if (!request.getParams().containsKey(QueryConstants.PARAM_ENTERPRISE_ID)) {
-            throw new NullParameterException(logger, sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_ENTERPRISE_ID), null);
-        }
-        tinTypes = (List<TinType>) getNamedQueryResult(UtilsData.class, QueryConstants.TIN_TYPES_BY_ENTERPRISE, request, getMethodName(), logger, "tinTypes");
-        return tinTypes;
     }
 
     public List<Language> getLanguages(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {

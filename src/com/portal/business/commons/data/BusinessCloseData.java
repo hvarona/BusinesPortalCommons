@@ -59,6 +59,34 @@ public class BusinessCloseData extends AbstractBusinessPortalWs {
         return businessClose;
     }
 
+    public synchronized BusinessClose closeBusiness(Business business, Date dateClose) throws GeneralException, NullParameterException {
+
+        List<BusinessBalanceIncoming> incomings = getPendingIncomingBalance(business, dateClose);
+        List<BusinessBalanceOutgoing> outcomings = getPendingOutcomingBalance(business, dateClose);
+
+        BusinessClose businessClose = new BusinessClose(business, dateClose, BusinessClose.CloseStatus.PENDING);
+        businessClose = (BusinessClose) saveEntity(businessClose);
+
+        for (BusinessBalanceIncoming incoming : incomings) {
+            incoming.setClose(businessClose);
+            saveEntity(incoming);
+        }
+
+        for (BusinessBalanceOutgoing outcoming : outcomings) {
+            outcoming.setClose(businessClose);
+            saveEntity(outcoming);
+        }
+
+        List<BusinessSell> sells = getPendingBusinessSell(business, dateClose);
+
+        for (BusinessSell sell : sells) {
+            sell.setBusinessClose(businessClose);
+            saveEntity(sell);
+        }
+
+        return businessClose;
+    }
+
     private List<BusinessBalanceIncoming> getPendingIncomingBalance(Business business) {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -89,6 +117,38 @@ public class BusinessCloseData extends AbstractBusinessPortalWs {
         return new ArrayList();
     }
 
+    private List<BusinessBalanceIncoming> getPendingIncomingBalance(Business business, Date dateClose) {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<BusinessBalanceIncoming> cq = cb.createQuery(BusinessBalanceIncoming.class);
+            Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("business"), business),
+                    cb.isNull(from.get("close")),
+                    cb.lessThan(from.<Date>get("dateTransaction"), dateClose));
+
+            return entityManager.createQuery(cq).getResultList();
+        } catch (Exception e) {
+        }
+        return new ArrayList();
+    }
+
+    private List<BusinessBalanceOutgoing> getPendingOutcomingBalance(Business business, Date dateClose) {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<BusinessBalanceOutgoing> cq = cb.createQuery(BusinessBalanceOutgoing.class);
+            Root<BusinessBalanceOutgoing> from = cq.from(BusinessBalanceOutgoing.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("business"), business),
+                    cb.isNull(from.get("close")),
+                    cb.lessThan(from.<Date>get("dateTransaction"), dateClose));
+
+            return entityManager.createQuery(cq).getResultList();
+        } catch (Exception e) {
+        }
+        return new ArrayList();
+    }
+
     private List<BusinessSell> getPendingBusinessSell(Business business) {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -97,6 +157,22 @@ public class BusinessCloseData extends AbstractBusinessPortalWs {
             cq.select(from);
             cq.where(cb.equal(from.get("business"), business),
                     cb.isNull(from.get("businessClose")));
+
+            return entityManager.createQuery(cq).getResultList();
+        } catch (Exception e) {
+        }
+        return new ArrayList();
+    }
+    
+    private List<BusinessSell> getPendingBusinessSell(Business business, Date dateClose) {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<BusinessSell> cq = cb.createQuery(BusinessSell.class);
+            Root<BusinessSell> from = cq.from(BusinessSell.class);
+            cq.select(from);
+            cq.where(cb.equal(from.get("business"), business),
+                    cb.isNull(from.get("businessClose")),
+                    cb.lessThan(from.<Date>get("dateSell"), dateClose));
 
             return entityManager.createQuery(cq).getResultList();
         } catch (Exception e) {

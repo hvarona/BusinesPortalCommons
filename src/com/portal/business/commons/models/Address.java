@@ -2,7 +2,6 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.remittance.*;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Table(name = "address")
+@Table(name = "bpAddress")
 public class Address extends RemittenceEntity implements Serializable {
 
     @Id
@@ -22,15 +20,12 @@ public class Address extends RemittenceEntity implements Serializable {
 
     @Column(name = "address")
     private String address;
+
     @Column(name = "zipCode")
     private String zipCode;
 
-    @Transient
-    private RemittanceCity city;
-    @Transient
-    private RemittanceState state;
-    @Transient
-    private RemittanceCountry country;
+    @Column(name = "idCity")
+    private int idCity;
 
     public Address() {
     }
@@ -59,28 +54,12 @@ public class Address extends RemittenceEntity implements Serializable {
         this.zipCode = zipCode;
     }
 
-    public RemittanceCity getCity() {
-        return city;
+    public int getIdCity() {
+        return idCity;
     }
 
-    public void setCity(RemittanceCity city) {
-        this.city = city;
-    }
-
-    public RemittanceState getState() {
-        return state;
-    }
-
-    public void setState(RemittanceState state) {
-        this.state = state;
-    }
-
-    public RemittanceCountry getCountry() {
-        return country;
-    }
-
-    public void setCountry(RemittanceCountry country) {
-        this.country = country;
+    public void setIdCity(int idCity) {
+        this.idCity = idCity;
     }
 
     @Override
