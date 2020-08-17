@@ -2,40 +2,38 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "person")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "PTYPE", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorValue("1")
 public class Person extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String secondSurname;
-    private String phoneNumber;
-    private Timestamp creationDate;
-    private String email;
-    private boolean enabled;
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "addressId")
-    private Address address;
+    
+    @Column(name = "idDocumentType")
+    private int idDocumentType;
 
+    @Column(name = "identification", nullable = false)
+    private String identification;
+    
+    
     public Person() {
     }
 
@@ -45,79 +43,6 @@ public class Person extends RemittenceEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Timestamp getCreationDate() {
-        return this.creationDate;
-    }
-
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean getEnabled() {
-        return this.enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getSecondSurname() {
-        return secondSurname;
-    }
-
-    public void setSecondSurname(String secondSurname) {
-        this.secondSurname = secondSurname;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
 

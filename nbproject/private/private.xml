@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/usuario/workspace2/PortalDeNegocios/BusinessPortalCommons/src/com/portal/business/commons/data/UserData.java</file>
-            <file>file:/home/usuario/workspace2/PortalDeNegocios/BusinessPortalCommons/build.xml</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/Person.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/Address.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/LegalPerson.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/data/BusinessData.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/META-INF/persistence.xml</file>
         </group>
     </open-files>
 </project-private>

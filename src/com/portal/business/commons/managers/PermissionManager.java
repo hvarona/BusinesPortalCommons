@@ -39,33 +39,30 @@ public class PermissionManager {
         instance = new PermissionManager();
     }
 
-     public PermissionManager(Long profileId) throws Exception {
+    public PermissionManager(Profile profile) throws Exception {
         UserData userdata = new UserData();
-        
-        
+
         permissionGroups = userdata.getPermissionGroups();
         permissions = userdata.getPermissions();
-        
-        
-          permissionByGroup = new HashMap<Long, List<Permission>>();
-          permissionByProfile = new HashMap<Long, List<Permission>>();
-          List<Permission> ps = null;
+
+        permissionByGroup = new HashMap<Long, List<Permission>>();
+        permissionByProfile = new HashMap<Long, List<Permission>>();
+        List<Permission> ps = null;
         for (PermissionGroup permissionGroup : permissionGroups) {
             try {
-                ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup.getId(),profileId);
+                ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profile);
                 permissionByGroup.put(permissionGroup.getId(), ps);
             } catch (EmptyListException e) {
-                e.printStackTrace();
             }
         }
         permissions = userdata.getPermissions();
         List<Profile> profiles = null;
         try {
             profiles = userdata.getProfiles();
-            for (Profile profile : profiles) {
+            for (Profile prof : profiles) {
                 try {
-                    ps = userdata.getPermissionByProfileId(profile.getId());
-                    permissionByProfile.put(profile.getId(), ps);
+                    ps = userdata.getPermissionByProfileId(prof);
+                    permissionByProfile.put(prof.getId(), ps);
                 } catch (EmptyListException e) {
 //                    e.printStackTrace();
                 }
@@ -75,34 +72,30 @@ public class PermissionManager {
         }
 
     }
-     
-   public PermissionManager() throws Exception {
+
+    public PermissionManager() throws Exception {
         UserData userdata = new UserData();
+        List<Profile> profiles = userdata.getProfiles();
         permissionGroups = userdata.getPermissionGroups();
         permissions = userdata.getPermissions();
-        
-        
-          permissionByGroup = new HashMap<Long, List<Permission>>();
-          permissionByProfile = new HashMap<Long, List<Permission>>();
-          List<Permission> ps = null;
+
+        permissionByGroup = new HashMap();
+        permissionByProfile = new HashMap();
+        List<Permission> ps;
         for (PermissionGroup permissionGroup : permissionGroups) {
             try {
-                ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup.getId(),1l);
+                ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profiles.get(0));
                 permissionByGroup.put(permissionGroup.getId(), ps);
             } catch (EmptyListException e) {
-                e.printStackTrace();
             }
         }
         permissions = userdata.getPermissions();
-        List<Profile> profiles = null;
         try {
-            profiles = userdata.getProfiles();
             for (Profile profile : profiles) {
                 try {
-                    ps = userdata.getPermissionByProfileId(profile.getId());
+                    ps = userdata.getPermissionByProfileId(profile);
                     permissionByProfile.put(profile.getId(), ps);
                 } catch (EmptyListException e) {
-                    e.printStackTrace();
                 }
             }
         } catch (Exception ex) {
@@ -110,7 +103,6 @@ public class PermissionManager {
         }
 
     }
-
 
     public List<Permission> getPermissionByGroupId(Long groupId) throws NullParameterException {
         if (groupId == null) {
@@ -139,6 +131,7 @@ public class PermissionManager {
 //        return null;
 //    }
 //
+
     public PermissionGroup getPermissionGroupById(Long permissionGroupId) throws NullParameterException {
         if (permissionGroupId == null) {
             throw new NullParameterException("Parameter permissionGroupId cannot be null");
@@ -171,5 +164,4 @@ public class PermissionManager {
 //         }
 //         return false;
 //    }
-
 }

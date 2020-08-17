@@ -1,23 +1,20 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.remittance.RemittanceCurrency;
+import com.portal.business.commons.remittance.RemittanceCountry;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import javax.persistence.CascadeType;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
-@EntityListeners(RemittenceEntityListerner.class)
 @Table(name = "exchange_rate")
 public class ExchangeRate extends RemittenceEntity implements Serializable {
 
@@ -29,14 +26,14 @@ public class ExchangeRate extends RemittenceEntity implements Serializable {
     private Timestamp beginingDate;
     private Timestamp endingDate;
     private Float amount;
-    @ManyToOne
-    @JoinColumn(name = "countryId")
-    private Country country;
-    @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="currencyId")
-    private Currency currency;
-    
-
+    /*@ManyToOne
+    @JoinColumn(name = "countryId")*/
+    @Transient
+    private RemittanceCountry country;
+    /*@ManyToOne(cascade = {CascadeType.REFRESH})
+    @JoinColumn(name="currencyId")*/
+    @Transient
+    private RemittanceCurrency currency;
     
 
     public Long getId() {
@@ -71,19 +68,19 @@ public class ExchangeRate extends RemittenceEntity implements Serializable {
         this.amount = amount;
     }
 
-    public Country getCountry() {
+    public RemittanceCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(RemittanceCountry country) {
         this.country = country;
     }
 
-    public Currency getCurrency() {
+    public RemittanceCurrency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(RemittanceCurrency currency) {
         this.currency = currency;
     }
 

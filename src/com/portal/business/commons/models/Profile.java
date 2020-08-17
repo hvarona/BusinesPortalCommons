@@ -5,6 +5,7 @@ import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,50 +14,30 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-
 @Entity
 @Table(name = "profile")
 public class Profile extends RemittenceEntity implements Serializable {
 
-    public static Long ADMINISTRATOR = 1L;
-    public static Long STORE = 2L;
-    public static Long REMITTANCE_OPERATOR = 3L;
-    public static Long COMMERCIAL_ANALYST = 4L;
-    public static Long COMPLIANCE_OFFICER = 5L;
-    public static Long SELLER = 6L;
-
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "enabled")
     private boolean enabled;
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "isOperator")
+    private boolean isOperator;
+
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<PermissionHasProfile> permissionHasProfiles;
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<ProfileData> profileData;
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List<ReportHasProfile> reportHasProfiles;
 
     public Profile() {
     }
 
-    public Profile(Long id, boolean enabled, String name) {
-        this.id = id;
-        this.enabled = enabled;
-        this.name = name;
-    }
-
-    public Profile(Long id, boolean enabled, String name, List<PermissionHasProfile> permissionHasProfiles, List<ProfileData> profileData, List<ReportHasProfile> reportHasProfiles) {
-        this.id = id;
-        this.enabled = enabled;
-        this.name = name;
-        this.permissionHasProfiles = permissionHasProfiles;
-        this.profileData = profileData;
-        this.reportHasProfiles = reportHasProfiles;
-    }
-    
     public Long getId() {
         return this.id;
     }
@@ -71,6 +52,14 @@ public class Profile extends RemittenceEntity implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isIsOperator() {
+        return isOperator;
+    }
+
+    public void setIsOperator(boolean isOperator) {
+        this.isOperator = isOperator;
     }
 
     public String getName() {
@@ -95,14 +84,6 @@ public class Profile extends RemittenceEntity implements Serializable {
 
     public void setProfileData(List<ProfileData> profileData) {
         this.profileData = profileData;
-    }
-
-    public List<ReportHasProfile> getReportHasProfiles() {
-        return this.reportHasProfiles;
-    }
-
-    public void setReportHasProfiles(List<ReportHasProfile> reportHasProfiles) {
-        this.reportHasProfiles = reportHasProfiles;
     }
 
     @Override
@@ -130,19 +111,19 @@ public class Profile extends RemittenceEntity implements Serializable {
         }
         return pd;
     }
-    
+
     @Override
     public boolean equals(Object other) {
         return (other instanceof Profile) && (id != null)
-            ? id.equals(((Profile) other).id)
-            : (other == this);
+                ? id.equals(((Profile) other).id)
+                : (other == this);
     }
 
     @Override
     public int hashCode() {
         return (id != null)
-            ? (this.getClass().hashCode() + id.hashCode())
-            : super.hashCode();
+                ? (this.getClass().hashCode() + id.hashCode())
+                : super.hashCode();
     }
-    
+
 }

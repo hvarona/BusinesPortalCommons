@@ -7,20 +7,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.interceptor.Interceptors;
 import org.apache.log4j.Logger;
 
 
 public class BillingTimerData extends  AbstractBusinessPortalWs{
 
-    private static final Logger logger = Logger.getLogger(BillingTimerData.class);
+    private static final Logger LOG = Logger.getLogger(BillingTimerData.class);
 
     @Resource
     private SessionContext ctx;
@@ -52,14 +47,14 @@ public class BillingTimerData extends  AbstractBusinessPortalWs{
     @Timeout
     public void execute(Timer timer) {
         try {
-            logger.info("[BillingTimerEJB] Ejecutando");
+            LOG.info("[BillingTimerEJB] Ejecutando");
             System.out.println("[BillingTimerEJB] Ejecutando");
             executeBilling();
             stop();
             start();
 
         } catch (Exception e) {
-            logger.error("Error", e);
+            LOG.error("Error", e);
         }
     }
 
@@ -75,12 +70,12 @@ public class BillingTimerData extends  AbstractBusinessPortalWs{
     }
 
     public void forceExecution() throws Exception {
-        logger.info("Ejecutó forceExecution!!!!!!!!");
+        LOG.info("Ejecutó forceExecution!!!!!!!!");
         //System.out.println("Ejecutó forceExecution!!!!!!!!");
     }
 
     public void forceTimeout() throws Exception {
-        logger.info("[TopUpUpdateTimerEJB] Forzando timeout para dentro de 1 minuto");
+        LOG.info("[TopUpUpdateTimerEJB] Forzando timeout para dentro de 1 minuto");
         //System.out.println("[TopUpUpdateTimerEJB] Forzando timeout para dentro de 1 minuto");
         cancelTimers();
         setTimeoutInterval();
@@ -105,7 +100,7 @@ public class BillingTimerData extends  AbstractBusinessPortalWs{
     public void restart() throws Exception {
         stop();
         start();
-        logger.info("[TopUpUpdateTimerEJB] Reiniciado");
+        LOG.info("[TopUpUpdateTimerEJB] Reiniciado");
         //System.out.println("[TopUpUpdateTimerEJB] Reiniciado");
     }
 
@@ -127,14 +122,14 @@ public class BillingTimerData extends  AbstractBusinessPortalWs{
     public void start() throws Exception {
         setTimeoutInterval();
         createTimer();
-        logger.info("[TopUpUpdateTimerEJB] Iniciado");
+        LOG.info("[TopUpUpdateTimerEJB] Iniciado");
         //System.out.println("TopUpUpdateTimerEJB] Iniciado");
     }
 
     @SuppressWarnings("unchecked")
     public void stop() throws Exception {
         cancelTimers();
-        logger.info("[TopUpUpdateTimerEJB] Detenido");
+        LOG.info("[TopUpUpdateTimerEJB] Detenido");
         //System.out.println("[TopUpUpdateTimerEJB] Detenido");
     }
 

@@ -3,22 +3,23 @@ package com.portal.business.commons.models;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
-
 @Entity
 @Table(name = "preference_type")
 public class PreferenceType extends RemittenceEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "type")
     private String type;
 
     public PreferenceType() {
@@ -54,7 +55,7 @@ public class PreferenceType extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -71,9 +72,6 @@ public class PreferenceType extends RemittenceEntity implements Serializable {
             return false;
         }
         final PreferenceType other = (PreferenceType) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }
