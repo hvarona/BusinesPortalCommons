@@ -16,24 +16,21 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-public class SendMail {
+public abstract class SendMail {
 
     public static void sendMails(List<Mail> mails) throws MessagingException {
         if (mails == null || mails.isEmpty()) {
             throw new MessagingException();
         }
         for (Mail mail : mails) {
-            sendMail(mail);
+            sendRegisterMail(mail);
         }
     }
 
-    public static void sendMail(Mail mail) throws MessagingException {
+    public static void sendRegisterMail(Mail mail) throws MessagingException {
         try {
             if (mail == null) {
                 throw new NullParameterException("Parameter mail cannot be null");
-            }
-            if (mail.getEnterprise() != null) {
-                mail.setFrom(mail.getEnterprise().getEmail());
             }
             if (mail.getFrom() == null || "".equals(mail.getFrom())) {
                 throw new NullParameterException("Parameter mail.getFrom cannot be null");
@@ -97,7 +94,7 @@ public class SendMail {
                 for (int i = 0; i < mail.getDataHandlers().size(); i++) {
                     // attach the file to the message
                     mbp2.setDataHandler(mail.getDataHandlers().get(i));
-                    mbp2.setFileName(mail.getSubject().toString() + i + "." + typeFile(mail.getDataHandlers().get(i).getContentType()));
+                    mbp2.setFileName(mail.getSubject() + i + "." + typeFile(mail.getDataHandlers().get(i).getContentType()));
                     mp.addBodyPart(mbp2);
                 }
             }

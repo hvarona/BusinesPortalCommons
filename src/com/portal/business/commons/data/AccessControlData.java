@@ -13,11 +13,11 @@ import com.portal.business.commons.models.PermissionHasProfile;
 import com.portal.business.commons.models.Profile;
 import com.portal.business.commons.models.ProfileData;
 import com.portal.business.commons.models.User;
+import com.portal.business.commons.utils.BusinessPortalMails;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.Encoder;
 import com.portal.business.commons.utils.Mail;
 import com.portal.business.commons.utils.QueryConstants;
-import com.portal.business.commons.utils.RemettenceMails;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import org.apache.log4j.Logger;
@@ -190,9 +190,9 @@ public class AccessControlData extends AbstractBusinessPortalWs {
 
     private static void sendUserRecoveryPasswordMail(User user, String newPassword) throws GeneralException {
         try {
-            Mail mail = RemettenceMails.getRecoveryPasswordMail(user, newPassword);
+            Mail mail = BusinessPortalMails.getRecoveryPasswordMail(user, newPassword);
             //Inicia el envio del correo electronico
-            (new com.portal.business.commons.utils.MailSender(mail)).start();
+            (new com.portal.business.commons.utils.RegisterMailSender(mail)).start();
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new GeneralException(ex.getMessage());

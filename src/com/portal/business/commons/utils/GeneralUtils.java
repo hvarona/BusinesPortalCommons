@@ -1,7 +1,5 @@
 package com.portal.business.commons.utils;
 
-import com.portal.business.commons.exceptions.GeneralException;
-import com.portal.business.commons.managers.PreferenceManager;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
