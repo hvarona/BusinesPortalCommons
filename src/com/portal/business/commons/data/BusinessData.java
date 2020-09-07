@@ -1,5 +1,7 @@
 package com.portal.business.commons.data;
 
+import com.alodiga.wallet.common.ejb.PreferencesEJB;
+import com.alodiga.wallet.common.genericEJB.EJBRequest;
 import com.portal.business.commons.enumeration.OperationType;
 import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.GeneralException;
@@ -14,10 +16,19 @@ import com.portal.business.commons.models.BusinessClose;
 import com.portal.business.commons.models.BusinessTransaction;
 import com.portal.business.commons.models.Operator;
 import com.portal.business.commons.utils.EjbConstants;
+import com.portal.business.commons.utils.EjbUtils;
+import com.alodiga.wallet.common.manager.PreferenceManager;
+import com.alodiga.wallet.common.model.PreferenceFieldEnum;
+import com.alodiga.wallet.common.utils.EJBServiceLocator;
+import com.alodiga.wallet.common.utils.QueryConstants;
+import com.portal.business.commons.models.LimitedsTransactionsResponse;
+import com.portal.business.commons.models.ResponseCode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -347,6 +358,217 @@ public class BusinessData extends AbstractBusinessPortalWs {
         }
 
         return answer;
+    }
+    
+    public Float getAmountBusinessIncomingTransactions(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
+        Float transactionAmount = null;
+        Double transactionResult = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Double> cq = cb.createQuery(Double.class);
+            Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
+            cq.select(cb.sumAsDouble(from.<Float>get("totalAmount")));
+
+            List<Predicate> predList = new ArrayList();
+            Path<Date> dateEntryPath = from.get("dateTransaction");
+
+            predList.add(cb.equal(from.get("business"), business));
+            
+            predList.add(cb.between(dateEntryPath, startDate, endDate));
+            if (type != null) {
+                predList.add(cb.equal(from.get("type"), type));
+            }
+            Predicate[] predArray = new Predicate[predList.size()];
+            predList.toArray(predArray);
+
+            cq.where(predArray);
+            Query query = entityManager.createQuery(cq);
+
+            transactionResult = (Double)query.getSingleResult();
+             try {
+                    transactionResult = transactionResult != null ? transactionResult : 0f;
+                } catch (NullPointerException e) {
+                    //No devuelve nada
+                    transactionResult = 0d;
+                }
+                transactionAmount = transactionResult.floatValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        return transactionAmount;
+    }
+    
+    public Long getQuantityBusinessIncomingTransactions(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
+            cq.select(cb.count(from));
+
+            List<Predicate> predList = new ArrayList();
+            Path<Date> dateEntryPath = from.get("dateTransaction");
+
+            predList.add(cb.equal(from.get("business"), business));
+            
+            predList.add(cb.between(dateEntryPath, startDate, endDate));
+            if (type != null) {
+                predList.add(cb.equal(from.get("type"), type));
+            }
+           Predicate[] predArray = new Predicate[predList.size()];
+            predList.toArray(predArray);
+
+            cq.where(predArray);
+            return (Long) entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+    
+     
+    public List<Float> getEntireSalesAmountByBusiness(Business bussiness, OperationType type) throws NullParameterException, GeneralException {
+        List<Float> sales = new ArrayList<Float>();
+        sales.add(getAmountBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDate(new Date()),EjbUtils.getEndingDate(new Date()),type));
+        sales.add(getAmountBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDateMonth(new Date()),new Date(),type));
+        sales.add(getAmountBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDateAnnual(new Date()),new Date(),type));
+        return sales;
+    }
+    
+     public List<Integer> getEntireSalesQuantityByBusiness(Business bussiness, OperationType type) throws NullParameterException, GeneralException {
+        List<Integer> salesQuantity = new ArrayList<Integer>();
+        salesQuantity.add((getQuantityBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDate(new Date()),EjbUtils.getEndingDate(new Date()),type)).intValue());
+        salesQuantity.add((getQuantityBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDateMonth(new Date()),new Date(),type)).intValue());
+        salesQuantity.add((getQuantityBusinessIncomingTransactions(bussiness, EjbUtils.getBeginningDateAnnual(new Date()),new Date(),type)).intValue());
+        return salesQuantity;
+    }
+    
+    public LimitedsTransactionsResponse validTransacionalLimit(Business business, OperationType type) throws NullParameterException, GeneralException{
+        LimitedsTransactionsResponse response = new LimitedsTransactionsResponse();
+        List<Integer> salesQuantity = getEntireSalesQuantityByBusiness(business, type);
+        PreferencesEJB preferenceEJB = (PreferencesEJB) EJBServiceLocator.getInstance().get(com.alodiga.wallet.common.utils.EjbConstants.PREFERENCES_EJB);
+        EJBRequest request = new EJBRequest();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(QueryConstants.PARAM_BUSSINESS_ID, business.getId());
+        params.put(QueryConstants.CLASSIFICATION_ID, 2L);
+        params.put(QueryConstants.PARAM_PRODUCT_ID, 1L);
+        params.put(QueryConstants.PARAM_TRANSACTION_TYPE_ID, 1L);
+        request.setParams(params);
+        Map<Long, String> preferencesBussiness = new HashMap<Long, String>();
+        Map<Long, String> preferencesGlobal = new HashMap<Long, String>();
+        Integer disabledTransactionBussiness = 1;
+        Integer numberCardActivate = 0;
+            try {
+                preferencesBussiness = preferenceEJB.getLastPreferenceValuesByBusiness(request);
+                PreferenceManager pManager = PreferenceManager.getInstance();
+                preferencesGlobal = pManager.getPreferences();
+                //se debe consultar si las transacciones estan habilitadas en las preferencias especificas y en las generales
+                disabledTransactionBussiness = preferencesBussiness.get(PreferenceFieldEnum.DISABLED_TRANSACTION_ID.getId())!=null?
+                             Integer.parseInt(preferencesBussiness.get(PreferenceFieldEnum.DISABLED_TRANSACTION_ID.getId())):1; 
+                Integer disabledTransaction = Integer.parseInt(preferencesGlobal.get(PreferenceFieldEnum.DISABLED_TRANSACTION_ID.getId())); 
+                //si el tipo de operacion es activar tarjetas solo evaluamos esa preferencia
+                if (type==OperationType.CARD_ACTIVATED){
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_NUMBER_OF_CARDS_ENABLED.getId())!=null){
+                        numberCardActivate = Integer.parseInt(preferencesBussiness.get(PreferenceFieldEnum.MAX_NUMBER_OF_CARDS_ENABLED.getId()));
+                    }else{
+                        numberCardActivate = Integer.parseInt(preferencesGlobal.get(PreferenceFieldEnum.MAX_NUMBER_OF_CARDS_ENABLED.getId()));
+                    }
+                    if (salesQuantity.get(0)>numberCardActivate){
+                        response.setCode(ResponseCode.MAX_NUMBER_OF_CARDS_ENABLED.getCodigo());
+                        response.setMessage(ResponseCode.MAX_NUMBER_OF_CARDS_ENABLED.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                 //si el tipo de operacion no es activar tarjetas evaluamos los limites transaccionales   
+                }else{
+                    List<Float> sales = getEntireSalesAmountByBusiness(business, type);
+                    Float maxAmountDaily = 0F;
+                    Float maxAmountMonth = 0F;
+                    Float maxAmountYearly = 0F;
+                    Integer maxTransactionQuantityDaily = 0;
+                    Integer maxTransactionQuantityMonth = 0;
+                    Integer maxTransactionQuantityYaerly = 0;
+                    //preguntar primero si existe la preferencia especifica para el negocio sino tomar la general
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_DAILY_LIMIT_ID.getId())!=null){
+                        maxAmountDaily = Float.parseFloat(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_DAILY_LIMIT_ID.getId()));
+                    }else{
+                        maxAmountDaily = Float.parseFloat(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_DAILY_LIMIT_ID.getId()));
+                    }
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_MONTH_LIMIT_ID.getId())!=null){
+                        maxAmountMonth = Float.parseFloat(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_MONTH_LIMIT_ID.getId()));
+                    }else{
+                        maxAmountMonth = Float.parseFloat(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_MONTH_LIMIT_ID.getId()));
+                    }
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_YEAR_LIMIT_ID.getId())!=null){
+                        maxAmountYearly = Float.parseFloat(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_YEAR_LIMIT_ID.getId()));
+                    }else{
+                        maxAmountYearly = Float.parseFloat(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_AMOUNT_YEAR_LIMIT_ID.getId()));
+                    }
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_DAILY_LIMIT_ID.getId())!=null){
+                        maxTransactionQuantityDaily = Integer.parseInt(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_DAILY_LIMIT_ID.getId()));
+                    }else{
+                        maxTransactionQuantityDaily = Integer.parseInt(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_DAILY_LIMIT_ID.getId()));
+                    }
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_MONTH_LIMIT_ID.getId())!=null){
+                        maxTransactionQuantityMonth = Integer.parseInt(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_MONTH_LIMIT_ID.getId()));
+                    }else{
+                        maxTransactionQuantityMonth = Integer.parseInt(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_MONTH_LIMIT_ID.getId()));
+                    }
+                    if (preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_YEAR_LIMIT_ID.getId())!=null){
+                        maxTransactionQuantityYaerly = Integer.parseInt(preferencesBussiness.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_YEAR_LIMIT_ID.getId()));
+                    }else{
+                        maxTransactionQuantityYaerly = Integer.parseInt(preferencesGlobal.get(PreferenceFieldEnum.MAX_TRANSACTION_QUANTITY_YEAR_LIMIT_ID.getId()));
+                    }
+                    if(disabledTransactionBussiness!=1 && disabledTransaction!=1){
+                        response.setCode(ResponseCode.TRANSACTION_DISABLED.getCodigo());
+                        response.setMessage(ResponseCode.TRANSACTION_DISABLED.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                    if (sales.get(0)>maxAmountDaily){
+                        response.setCode(ResponseCode.MAX_TRANSACTION_AMOUNT_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_AMOUNT_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                    if (sales.get(1)>maxAmountMonth){
+                         response.setCode(ResponseCode.MAX_TRANSACTION_AMOUNT_MONTH_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_AMOUNT_MONTH_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                    if (sales.get(2)>maxAmountYearly){
+                        response.setCode(ResponseCode.MAX_TRANSACTION_AMOUNT_YEAR_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_AMOUNT_YEAR_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                     if (salesQuantity.get(0)>maxTransactionQuantityDaily){
+                        response.setCode(ResponseCode.MAX_TRANSACTION_QUANTITY_DAILY_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_QUANTITY_DAILY_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                    if (salesQuantity.get(1)>maxTransactionQuantityMonth){
+                         response.setCode(ResponseCode.MAX_TRANSACTION_QUANTITY_MONTH_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_QUANTITY_MONTH_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                    if (salesQuantity.get(2)>maxTransactionQuantityYaerly){
+                        response.setCode(ResponseCode.MAX_TRANSACTION_QUANTITY_YEAR_LIMIT_ID.getCodigo());
+                        response.setMessage(ResponseCode.MAX_TRANSACTION_QUANTITY_YEAR_LIMIT_ID.getMessage());
+                        response.setValid(false);
+                        return response;
+                    }
+                }
+                response.setCode(ResponseCode.SUCESS.getCodigo());
+                response.setMessage(ResponseCode.SUCESS.getMessage());
+                response.setValid(true);
+            } catch (Exception e) {
+                    throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+            }
+        return response;
     }
 
 }
