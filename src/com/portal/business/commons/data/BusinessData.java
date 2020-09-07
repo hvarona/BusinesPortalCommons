@@ -14,12 +14,14 @@ import com.portal.business.commons.models.BusinessClose;
 import com.portal.business.commons.models.BusinessTransaction;
 import com.portal.business.commons.models.Operator;
 import com.portal.business.commons.utils.EjbConstants;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -47,7 +49,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
+
     public Business getBusinessByCode(String code) throws NullParameterException, GeneralException {
         if (code == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
@@ -62,7 +64,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
+
     public Business getBusinessByIdentification(String identification) throws NullParameterException, GeneralException {
         if (identification == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "indetification"), null);
@@ -77,7 +79,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
+
     public Business getBusinessByEmail(String email) throws NullParameterException, GeneralException {
         if (email == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "email"), null);
@@ -92,7 +94,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
+
     public Business getBusinessByPhone(String phoneNumber) throws NullParameterException, GeneralException {
         if (phoneNumber == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "phoneNumber"), null);
@@ -107,7 +109,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
-    
+
     public Business getBusinessByLogin(String login) throws NullParameterException, GeneralException {
         if (login == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), "code"), null);
@@ -271,12 +273,11 @@ public class BusinessData extends AbstractBusinessPortalWs {
     }
 
     private Long getBusinessIncomingTransactionsNumber(Business business, Date startDate, Date endDate, OperationType type) throws GeneralException {
-        List<BusinessBalanceIncoming> incomings = new ArrayList();
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            CriteriaQuery<Double> cq = cb.createQuery(Double.class);
             Root<BusinessBalanceIncoming> from = cq.from(BusinessBalanceIncoming.class);
-            cq.select(cb.count(from));
+            cq.select(cb.sumAsDouble(from.<Float>get("totalAmount")));
 
             List<Predicate> predList = new ArrayList();
             Path<Date> dateEntryPath = from.get("dateTransaction");
@@ -306,6 +307,7 @@ public class BusinessData extends AbstractBusinessPortalWs {
             CriteriaQuery<Long> cq = cb.createQuery(Long.class);
             Root<BusinessBalanceOutgoing> from = cq.from(BusinessBalanceOutgoing.class);
             cq.select(cb.count(from));
+
             List<Predicate> predList = new ArrayList();
             Path<Date> dateEntryPath = from.get("dateTransaction");
 
@@ -332,12 +334,16 @@ public class BusinessData extends AbstractBusinessPortalWs {
 
         } catch (GeneralException e) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
             answer += getBusinessOutgoingTransactionsNumber(business, startDate, endDate, type);
         } catch (GeneralException e) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return answer;

@@ -41,6 +41,9 @@ public class Business extends User {
     @JoinColumn(name = "idStatus")
     private BusinessStatus status;
 
+    @Column(name = "idPerson", nullable = true)
+    private String idPerson;
+
     public Business() {
     }
 
@@ -106,6 +109,14 @@ public class Business extends User {
 
     public void setStatus(BusinessStatus status) {
         this.status = status;
+    }
+
+    public String getIdPerson() {
+        return idPerson;
+    }
+
+    public void setIdPerson(String idPerson) {
+        this.idPerson = idPerson;
     }
 
     @Override
