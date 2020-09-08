@@ -198,13 +198,4 @@ public class UtilsData extends AbstractBusinessPortalWs {
         }
         return (Store) saveEntity(store);
     }
-    
-    public void sendMail(Mail mail) throws GeneralException, NullParameterException {
-        SendMail SendMail = new SendMail();
-        try {
-            SendMail.sendMail(mail);
-        } catch (Exception ex) {
-            throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
-        }
-    }
 }

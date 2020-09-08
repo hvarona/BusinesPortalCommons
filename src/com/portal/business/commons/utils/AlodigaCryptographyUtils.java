@@ -1,8 +1,8 @@
 package com.portal.business.commons.utils;
 
-import com.alodiga.security.encryption.S3cur1ty3Cryt3r;
 import org.apache.commons.codec.binary.Base64;
 
+import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;

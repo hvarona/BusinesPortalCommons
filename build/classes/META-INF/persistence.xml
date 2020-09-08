@@ -5,10 +5,8 @@
     <class>com.portal.business.commons.models.PermissionGroupData</class>
     <class>com.portal.business.commons.models.PreferenceField</class>
     <class>com.portal.business.commons.models.PreferenceType</class>
-    <class>com.portal.business.commons.models.TinType</class>
     <class>com.portal.business.commons.models.Profile</class>
     <class>com.portal.business.commons.models.PermissionGroup</class>
-    <class>com.portal.business.commons.models.Enterprise</class>
     <class>com.portal.business.commons.models.PreferenceValue</class>
     <class>com.portal.business.commons.models.IpAddress</class>
     <class>com.portal.business.commons.models.ParameterType</class>
@@ -33,12 +31,15 @@
     <class>com.portal.business.commons.models.BusinessBalanceOutgoing</class>
     <class>com.portal.business.commons.models.BusinessSell</class>
     <class>com.portal.business.commons.models.BusinessClose</class>
-    <class>com.portal.business.commons.models.Address</class>
-    <class>com.portal.business.commons.models.Register</class>
     <class>com.portal.business.commons.models.CardPreRequest</class>
     <class>com.portal.business.commons.models.Person</class>
     <class>com.portal.business.commons.models.NaturalPerson</class>
     <class>com.portal.business.commons.models.LegalPerson</class>
+    <class>com.portal.business.commons.models.AccountBank</class>
+    <class>com.portal.business.commons.models.AccountTypeBank</class>
+    <class>com.portal.business.commons.models.StatusAccountBank</class>
+    <class>com.portal.business.commons.models.Bank</class>
+    <class>com.portal.business.commons.models.Country</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.timestamp" value="true"/>

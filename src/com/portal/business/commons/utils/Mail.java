@@ -1,7 +1,5 @@
 package com.portal.business.commons.utils;
 
-
-import com.portal.business.commons.models.Enterprise;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.activation.DataHandler;
@@ -22,7 +20,6 @@ public class Mail implements Serializable {
     private ArrayList<String> attachments;
     /** Lista de datahandler para adjuntar**/
     private ArrayList<DataHandler> dataHandlers;
-    private Enterprise enterprise;
 
     public Mail() {
         bcc = new ArrayList<String>();
@@ -138,13 +135,5 @@ public class Mail implements Serializable {
 
     public void setDataHandlers(ArrayList<DataHandler> dataHandlers) {
         this.dataHandlers = dataHandlers;
-    }
-
-    public Enterprise getEnterprise() {
-        return enterprise;
-    }
-
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
     }
 }

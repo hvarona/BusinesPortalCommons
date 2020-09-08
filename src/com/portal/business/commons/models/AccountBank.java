@@ -27,7 +27,8 @@ public class AccountBank extends RemittenceEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "businessId")
+    @JoinColumn(name = "businessId", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Business commerce;
     @Column(name = "accountNumber")
     private String accountNumber;

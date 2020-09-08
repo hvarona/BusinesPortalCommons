@@ -8,30 +8,33 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bank")
-public class Bank extends RemittenceEntity implements Serializable{
+@Table(name = "country")
+public class Country extends RemittenceEntity implements Serializable{
 
-
-    private static final long serialVersionUID = 1L;
+     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "aba")
-    private String aba;
-    @JoinColumn(name = "countryId", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Country countryId;
+    @Column(name = "shortName")
+    private String shortName;
+    @Column(name = "code")
+    private String code;
+    @Column(name = "alternativeName1")
+    private String alternativeName1;
+    @Column(name = "alternativeName2")
+    private String alternativeName2;
+    @Column(name = "alternativeName3")
+    private String alternativeName3;
+  
 
 
-    public Bank() {
+    public Country() {
     }
 
     public Long getId() {
@@ -50,23 +53,47 @@ public class Bank extends RemittenceEntity implements Serializable{
         this.name = name;
     }
 
-    public String getAba() {
-        return aba;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setAba(String aba) {
-        this.aba = aba;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
-    public Country getCountryId() {
-        return countryId;
+    public String getCode() {
+        return code;
     }
 
-    public void setCountryId(Country countryId) {
-        this.countryId = countryId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    
+    public String getAlternativeName1() {
+        return alternativeName1;
+    }
+
+    public void setAlternativeName1(String alternativeName1) {
+        this.alternativeName1 = alternativeName1;
+    }
+
+    public String getAlternativeName2() {
+        return alternativeName2;
+    }
+
+    public void setAlternativeName2(String alternativeName2) {
+        this.alternativeName2 = alternativeName2;
+    }
+
+    public String getAlternativeName3() {
+        return alternativeName3;
+    }
+
+    public void setAlternativeName3(String alternativeName3) {
+        this.alternativeName3 = alternativeName3;
+    }
+
+      
 
     @Override
     public int hashCode() {
@@ -86,7 +113,7 @@ public class Bank extends RemittenceEntity implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Bank other = (Bank) obj;
+        final Country other = (Country) obj;
         if (this.id != other.id) {
             return false;
         }

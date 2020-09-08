@@ -36,6 +36,15 @@ public class Operator extends User {
             inverseJoinColumns = @JoinColumn(name = "idOperator")
     )
     private List<Permission> excludedPermission;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "idStore",nullable = true)
+    private Store store;
+    
+    @ManyToOne
+    @JoinColumn(name = "idPos",nullable = true)
+    private Pos pos;
 
     public String getFirstName() {
         return firstName;
@@ -69,6 +78,22 @@ public class Operator extends User {
         this.excludedPermission = excludedPermission;
     }
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public Pos getPos() {
+        return pos;
+    }
+
+    public void setPos(Pos pos) {
+        this.pos = pos;
+    }
+    
     @Override
     public String getDisplayName() {
         return getFirstName() + " " + getLastName();
