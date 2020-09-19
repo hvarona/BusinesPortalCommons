@@ -63,6 +63,10 @@
     <class>com.portal.business.commons.cms.CmsCity</class>
     <class>com.portal.business.commons.cms.CmsDocumentPersonType</class>
     <class>com.portal.business.commons.cms.CmsPersonType</class>
+    <class>com.portal.business.commons.cms.CmsCardStatus</class>
+    <class>com.portal.business.commons.cms.CmsCard</class>
+    <class>com.portal.business.commons.cms.CmsStatusCustomer</class>
+    <class>com.portal.business.commons.cms.CmsNaturalCustomer</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.level" value="ALL"/>

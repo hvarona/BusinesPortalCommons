@@ -1,14 +1,18 @@
 package com.portal.business.commons.cms.data;
 
+import com.portal.business.commons.cms.CmsCard;
 import com.portal.business.commons.cms.CmsCity;
 import com.portal.business.commons.cms.CmsCountry;
 import com.portal.business.commons.cms.CmsDocumentPersonType;
+import com.portal.business.commons.cms.CmsNaturalCustomer;
 import com.portal.business.commons.cms.CmsPersonType;
 import com.portal.business.commons.cms.CmsState;
+import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.GeneralException;
 import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.EntityManagerWrapper;
+import com.portal.business.commons.models.Operator;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.MessageFormatHelper;
 import java.util.ArrayList;
@@ -276,6 +280,61 @@ public class CmsData {
             ex.getMessage();
             throw new GeneralException("No se encontro el documento de persona");
         }
+    }
+
+    public CmsCard getCardByNumber(String cardNumber) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        if (cardNumber == null) {
+            throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "cardNumber"), null);
+        }
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsCard> cq = cb.createQuery(CmsCard.class);
+            Root<CmsCard> from = cq.from(CmsCard.class);
+            cq.select(from).where(cb.equal(from.get("cardNumber"), cardNumber));
+            Query query = entityManager.createQuery(cq);
+            query.setHint("toplink.refresh", "true");
+            return (CmsCard) query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new RegisterNotFoundException("Card Number not found");
+        } catch (Exception ex) {
+            ex.getMessage();
+            throw new GeneralException("Database Error");
+        }
+    }
+
+    public List<CmsNaturalCustomer> getAssociatedCustomer(CmsNaturalCustomer customer) throws EmptyListException, GeneralException {
+
+        List<CmsNaturalCustomer> customerList = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsNaturalCustomer> cq = cb.createQuery(CmsNaturalCustomer.class);
+            Root<CmsNaturalCustomer> from = cq.from(CmsNaturalCustomer.class);
+            customerList = entityManager.createQuery(cq.select(from).where(cb.equal(from.get("naturalCustomer"), customer))).getResultList();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (customerList == null || customerList.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return customerList;
+    }
+    
+    public List<CmsCard> getCardByCustomer(CmsNaturalCustomer customer) throws EmptyListException, GeneralException {
+
+        List<CmsCard> cardList = null;
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CmsCard> cq = cb.createQuery(CmsCard.class);
+            Root<CmsCard> from = cq.from(CmsCard.class);
+            cardList = entityManager.createQuery(cq.select(from).where(cb.equal(from.get("naturalCustomer"), customer))).getResultList();
+        } catch (Exception e) {
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+        if (cardList == null || cardList.isEmpty()) {
+            throw new EmptyListException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), null);
+        }
+        return cardList;
     }
 
 }
