@@ -17,7 +17,7 @@ import com.portal.business.commons.models.BusinessSell;
 import com.portal.business.commons.models.Operator;
 import com.portal.business.commons.models.Pos;
 import com.portal.business.commons.models.Store;
-import com.portal.business.commons.models.User;
+import com.portal.business.commons.models.BPUser;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -135,7 +135,7 @@ public class Startup extends HttpServlet {
                 List<Operator> operators = new OperatorData().getOperatorList(business);
                 while (cal.getTimeInMillis() < System.currentTimeMillis()) {
                     long transactionId = (long) (Math.random() * 2500);
-                    User operator = null;
+                    BPUser operator = null;
                     if (operators.size() <= 0) {
                         operator = business;
                     } else {
@@ -193,7 +193,7 @@ public class Startup extends HttpServlet {
                 List<Operator> operators = new OperatorData().getOperatorList(business);
                 while (cal.getTimeInMillis() < System.currentTimeMillis()) {
                     long transactionId = (long) (Math.random() * 2500);
-                    User operator = null;
+                    BPUser operator = null;
                     if (operators.size() <= 0) {
                         operator = business;
                     } else {
@@ -260,7 +260,7 @@ public class Startup extends HttpServlet {
         }
     }
 
-    private void saveRecharge(Business business, User operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
+    private void saveRecharge(Business business, BPUser operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
         BusinessBalanceIncoming log = new BusinessBalanceIncoming();
         log.setBusiness(business);
         log.setUser(operator);
@@ -274,7 +274,7 @@ public class Startup extends HttpServlet {
         businessData.saveIncomingBalance(log);
     }
 
-    private void saveWithdrae(Business business, User operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
+    private void saveWithdrae(Business business, BPUser operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
         BusinessBalanceOutgoing log = new BusinessBalanceOutgoing();
         log.setBusiness(business);
         log.setUser(operator);

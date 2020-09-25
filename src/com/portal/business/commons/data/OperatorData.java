@@ -7,10 +7,10 @@ import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
 import com.portal.business.commons.models.Business;
-import com.portal.business.commons.models.Language;
+import com.portal.business.commons.models.BPLanguage;
 import com.portal.business.commons.models.Operator;
-import com.portal.business.commons.models.Permission;
-import com.portal.business.commons.models.Profile;
+import com.portal.business.commons.models.BPPermission;
+import com.portal.business.commons.models.BPProfile;
 import com.portal.business.commons.utils.EjbConstants;
 import java.util.List;
 import javax.persistence.NoResultException;
@@ -56,13 +56,13 @@ public class OperatorData extends AbstractBusinessPortalWs {
         return (Operator) saveEntity(operator);
     }
 
-    public List<Language> getLanguageList() throws EmptyListException, GeneralException {
+    public List<BPLanguage> getLanguageList() throws EmptyListException, GeneralException {
 
-        List<Language> languageList = null;
+        List<BPLanguage> languageList = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Language> cq = cb.createQuery(Language.class);
-            Root<Language> from = cq.from(Language.class);
+            CriteriaQuery<BPLanguage> cq = cb.createQuery(BPLanguage.class);
+            Root<BPLanguage> from = cq.from(BPLanguage.class);
             cq.select(from);
 
             languageList = entityManager.createQuery(cq).getResultList();
@@ -75,13 +75,13 @@ public class OperatorData extends AbstractBusinessPortalWs {
         return languageList;
     }
 
-    public List<Profile> getProfileList() throws EmptyListException, GeneralException {
+    public List<BPProfile> getProfileList() throws EmptyListException, GeneralException {
 
-        List<Profile> profileList = null;
+        List<BPProfile> profileList = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
-            Root<Profile> from = cq.from(Profile.class);
+            CriteriaQuery<BPProfile> cq = cb.createQuery(BPProfile.class);
+            Root<BPProfile> from = cq.from(BPProfile.class);
             cq.select(from);
             cq.where(cb.equal(from.get("isOperator"), true));
 
@@ -95,20 +95,20 @@ public class OperatorData extends AbstractBusinessPortalWs {
         return profileList;
     }
 
-    public Permission loadPermission(Long permissionId) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPPermission loadPermission(Long permissionId) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (permissionId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "permissionId"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<Permission> from = cq.from(Permission.class);
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermission> from = cq.from(BPPermission.class);
 
             cq.select(from).where(cb.equal(from.get("id"), permissionId));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (Permission) query.getSingleResult();
+            return (BPPermission) query.getSingleResult();
 
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException("No se encontro el perfil");

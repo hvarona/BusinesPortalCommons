@@ -5,7 +5,7 @@
  */
 package com.portal.business.commons.utils;
 
-import com.portal.business.commons.models.ReportParameter;
+import com.portal.business.commons.models.BPReportParameter;
 import java.util.Comparator;
 
 /**
@@ -16,8 +16,8 @@ public class IndexComparator implements Comparator<Object>{
 
 
     public int compare(Object emp1, Object emp2) {
-        Integer index1 = ((ReportParameter) emp1).getIndexOrder();
-        Integer index2 = ((ReportParameter) emp2).getIndexOrder();
+        Integer index1 = ((BPReportParameter) emp1).getIndexOrder();
+        Integer index2 = ((BPReportParameter) emp2).getIndexOrder();
         return index1.compareTo(index2);
     }
     

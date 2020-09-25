@@ -15,10 +15,10 @@ import com.portal.business.commons.generic.RemittenceEntity;
 import com.portal.business.commons.utils.QueryConstants;
 
 @Entity
-@Table(name = "report_parameter")
+@Table(name = "bpreport_parameter")
 @NamedQuery(name = QueryConstants.DELETE_REPORT_PARAMETER,
 query = "DELETE FROM ReportParameter rp WHERE rp.report.id=:reportId")
-public class ReportParameter extends RemittenceEntity implements Serializable {
+public class BPReportParameter extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,13 +31,13 @@ public class ReportParameter extends RemittenceEntity implements Serializable {
     //bi-directional many-to-one association to ParameterType
     @ManyToOne
     @JoinColumn(name = "parameterTypeId")
-    private ParameterType parameterType;
+    private BPParameterType parameterType;
     //bi-directional many-to-one association to Report
     @ManyToOne
     @JoinColumn(name = "reportId")
-    private Report report;
+    private BPReport report;
 
-    public ReportParameter() {
+    public BPReportParameter() {
     }
 
     public Long getId() {
@@ -80,19 +80,19 @@ public class ReportParameter extends RemittenceEntity implements Serializable {
         this.required = required;
     }
 
-    public ParameterType getParameterType() {
+    public BPParameterType getParameterType() {
         return this.parameterType;
     }
 
-    public void setParameterType(ParameterType parameterType) {
+    public void setParameterType(BPParameterType parameterType) {
         this.parameterType = parameterType;
     }
 
-    public Report getReport() {
+    public BPReport getReport() {
         return this.report;
     }
 
-    public void setReport(Report report) {
+    public void setReport(BPReport report) {
         this.report = report;
     }
 
@@ -126,7 +126,7 @@ public class ReportParameter extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ReportParameter other = (ReportParameter) obj;
+        final BPReportParameter other = (BPReportParameter) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

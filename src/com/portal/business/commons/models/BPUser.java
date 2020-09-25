@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 @Table(name = "bpuser")
 @DiscriminatorColumn(name = "DTYPE", discriminatorType = DiscriminatorType.INTEGER)
 @DiscriminatorValue("1")
-public class User extends RemittenceEntity implements Serializable {
+public class BPUser extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,13 +48,13 @@ public class User extends RemittenceEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "idProfile", nullable = false)
-    private Profile profile;
+    private BPProfile profile;
 
     @ManyToOne
     @JoinColumn(name = "idLanguage")
-    private Language language;
+    private BPLanguage language;
 
-    public User() {
+    public BPUser() {
     }
 
     public Long getId() {
@@ -113,11 +113,11 @@ public class User extends RemittenceEntity implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public Profile getProfile() {
+    public BPProfile getProfile() {
         return profile;
     }
 
-    public void setProfile(Profile profile) {
+    public void setProfile(BPProfile profile) {
         this.profile = profile;
     }
 
@@ -129,11 +129,11 @@ public class User extends RemittenceEntity implements Serializable {
         this.receiveNotification = receiveNotification;
     }
 
-    public Language getLanguage() {
+    public BPLanguage getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(BPLanguage language) {
         this.language = language;
     }
 
@@ -172,7 +172,7 @@ public class User extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final User other = (User) obj;
+        final BPUser other = (BPUser) obj;
         return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }

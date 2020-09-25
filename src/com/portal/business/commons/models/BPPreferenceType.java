@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "preference_type")
-public class PreferenceType extends RemittenceEntity implements Serializable {
+@Table(name = "bppreference_type")
+public class BPPreferenceType extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class PreferenceType extends RemittenceEntity implements Serializable {
     @Column(name = "type")
     private String type;
 
-    public PreferenceType() {
+    public BPPreferenceType() {
     }
 
     public Long getId() {
@@ -71,7 +71,7 @@ public class PreferenceType extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PreferenceType other = (PreferenceType) obj;
+        final BPPreferenceType other = (BPPreferenceType) obj;
         return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }

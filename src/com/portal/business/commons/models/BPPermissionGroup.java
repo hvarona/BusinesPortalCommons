@@ -3,34 +3,33 @@ package com.portal.business.commons.models;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
+import javax.persistence.FetchType;
+
 @Entity
-@Table(name = "permission_group_data")
-public class PermissionGroupData extends RemittenceEntity implements Serializable {
+@Table(name = "bppermission_group")
+public class BPPermissionGroup extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String alias;
-    private String description;
-    //bi-directional many-to-one association to Language
-    @ManyToOne
-    @JoinColumn(name = "languageId")
-    private Language language;
-    @ManyToOne
-    @JoinColumn(name = "permissionGroupId")
-    private PermissionGroup permissionGroup;
+    private boolean enabled;
+    private String name;
+    //bi-directional many-to-one association to PermissionGroupData
+    @OneToMany(mappedBy = "permissionGroup", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<BPPermissionGroupData> permissionGroupData;
 
-    public PermissionGroupData() {
+    public BPPermissionGroup() {
     }
 
     public Long getId() {
@@ -41,36 +40,38 @@ public class PermissionGroupData extends RemittenceEntity implements Serializabl
         this.id = id;
     }
 
-    public String getAlias() {
-        return this.alias;
+    public boolean getEnabled() {
+        return this.enabled;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public String getDescription() {
-        return this.description;
+    public String getName() {
+        return this.name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Language getLanguage() {
-        return this.language;
+    public List<BPPermissionGroupData> getPermissionGroupData() {
+        return this.permissionGroupData;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setPermissionGroupData(List<BPPermissionGroupData> permissionGroupData) {
+        this.permissionGroupData = permissionGroupData;
     }
 
-    public PermissionGroup getPermissionGroup() {
-        return permissionGroup;
-    }
+    public BPPermissionGroupData getPermissionGroupDataByLanguageId(Long languageId) {
 
-    public void setPermissionGroup(PermissionGroup permissionGroup) {
-        this.permissionGroup = permissionGroup;
+        for (BPPermissionGroupData pgData : this.permissionGroupData) {
+            if (pgData.getLanguage().getId().equals(languageId)) {
+                return pgData;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -103,7 +104,7 @@ public class PermissionGroupData extends RemittenceEntity implements Serializabl
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PermissionGroupData other = (PermissionGroupData) obj;
+        final BPPermissionGroup other = (BPPermissionGroup) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

@@ -11,9 +11,9 @@ package com.portal.business.commons.managers;
 import com.portal.business.commons.data.UserData;
 import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.NullParameterException;
-import com.portal.business.commons.models.Permission;
-import com.portal.business.commons.models.PermissionGroup;
-import com.portal.business.commons.models.Profile;
+import com.portal.business.commons.models.BPPermission;
+import com.portal.business.commons.models.BPPermissionGroup;
+import com.portal.business.commons.models.BPProfile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +22,11 @@ import java.util.Map;
 public class PermissionManager {
 
     private static PermissionManager instance;
-    private List<PermissionGroup> permissionGroups;
-    private List<Permission> permissions;
+    private List<BPPermissionGroup> permissionGroups;
+    private List<BPPermission> permissions;
 //    private UserEJB userEJB;
-    private Map<Long, List<Permission>> permissionByGroup;
-    private Map<Long, List<Permission>> permissionByProfile;
+    private Map<Long, List<BPPermission>> permissionByGroup;
+    private Map<Long, List<BPPermission>> permissionByProfile;
 
     public static synchronized PermissionManager getInstance() throws Exception {
         if (instance == null) {
@@ -39,16 +39,16 @@ public class PermissionManager {
         instance = new PermissionManager();
     }
 
-    public PermissionManager(Profile profile) throws Exception {
+    public PermissionManager(BPProfile profile) throws Exception {
         UserData userdata = new UserData();
 
         permissionGroups = userdata.getPermissionGroups();
         permissions = userdata.getPermissions();
 
-        permissionByGroup = new HashMap<Long, List<Permission>>();
-        permissionByProfile = new HashMap<Long, List<Permission>>();
-        List<Permission> ps = null;
-        for (PermissionGroup permissionGroup : permissionGroups) {
+        permissionByGroup = new HashMap<Long, List<BPPermission>>();
+        permissionByProfile = new HashMap<Long, List<BPPermission>>();
+        List<BPPermission> ps = null;
+        for (BPPermissionGroup permissionGroup : permissionGroups) {
             try {
                 ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profile);
                 permissionByGroup.put(permissionGroup.getId(), ps);
@@ -56,10 +56,10 @@ public class PermissionManager {
             }
         }
         permissions = userdata.getPermissions();
-        List<Profile> profiles = null;
+        List<BPProfile> profiles = null;
         try {
             profiles = userdata.getProfiles();
-            for (Profile prof : profiles) {
+            for (BPProfile prof : profiles) {
                 try {
                     ps = userdata.getPermissionByProfileId(prof);
                     permissionByProfile.put(prof.getId(), ps);
@@ -75,14 +75,14 @@ public class PermissionManager {
 
     public PermissionManager() throws Exception {
         UserData userdata = new UserData();
-        List<Profile> profiles = userdata.getProfiles();
+        List<BPProfile> profiles = userdata.getProfiles();
         permissionGroups = userdata.getPermissionGroups();
         permissions = userdata.getPermissions();
 
         permissionByGroup = new HashMap();
         permissionByProfile = new HashMap();
-        List<Permission> ps;
-        for (PermissionGroup permissionGroup : permissionGroups) {
+        List<BPPermission> ps;
+        for (BPPermissionGroup permissionGroup : permissionGroups) {
             try {
                 ps = userdata.getPermissionByGroupIdAndProfile(permissionGroup, profiles.get(0));
                 permissionByGroup.put(permissionGroup.getId(), ps);
@@ -91,7 +91,7 @@ public class PermissionManager {
         }
         permissions = userdata.getPermissions();
         try {
-            for (Profile profile : profiles) {
+            for (BPProfile profile : profiles) {
                 try {
                     ps = userdata.getPermissionByProfileId(profile);
                     permissionByProfile.put(profile.getId(), ps);
@@ -104,14 +104,14 @@ public class PermissionManager {
 
     }
 
-    public List<Permission> getPermissionByGroupId(Long groupId) throws NullParameterException {
+    public List<BPPermission> getPermissionByGroupId(Long groupId) throws NullParameterException {
         if (groupId == null) {
             throw new NullParameterException("Parameter groupId cannot be null");
         }
         return permissionByGroup.get(groupId);
     }
 
-    public List<PermissionGroup> getPermissionGroups() throws NullParameterException {
+    public List<BPPermissionGroup> getPermissionGroups() throws NullParameterException {
         return permissionGroups;
     }
 //
@@ -132,11 +132,11 @@ public class PermissionManager {
 //    }
 //
 
-    public PermissionGroup getPermissionGroupById(Long permissionGroupId) throws NullParameterException {
+    public BPPermissionGroup getPermissionGroupById(Long permissionGroupId) throws NullParameterException {
         if (permissionGroupId == null) {
             throw new NullParameterException("Parameter permissionGroupId cannot be null");
         }
-        for (PermissionGroup permissionGroup : permissionGroups) {
+        for (BPPermissionGroup permissionGroup : permissionGroups) {
             if (permissionGroup.getId().equals(permissionGroupId)) {
                 return permissionGroup;
             }

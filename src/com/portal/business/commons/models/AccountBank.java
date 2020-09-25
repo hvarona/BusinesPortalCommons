@@ -43,7 +43,7 @@ public class AccountBank extends RemittenceEntity implements Serializable {
     private AccountTypeBank accountTypeBankId;
     @JoinColumn(name = "bankId", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Bank bankId;
+    private BPBank bankId;
     @JoinColumn(name = "statusAccountBankId", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private StatusAccountBank statusAccountBankId;
@@ -112,11 +112,11 @@ public class AccountBank extends RemittenceEntity implements Serializable {
         this.accountTypeBankId = accountTypeBankId;
     }
 
-    public Bank getBankId() {
+    public BPBank getBankId() {
         return bankId;
     }
 
-    public void setBankId(Bank bankId) {
+    public void setBankId(BPBank bankId) {
         this.bankId = bankId;
     }
 

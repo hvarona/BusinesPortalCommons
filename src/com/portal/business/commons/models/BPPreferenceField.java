@@ -20,10 +20,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "preference_field")
-public class PreferenceField extends RemittenceEntity implements Serializable {
+@Table(name = "bppreference_field")
+public class BPPreferenceField extends RemittenceEntity implements Serializable {
 
-    public PreferenceField() {
+    public BPPreferenceField() {
     }
 
     @Id
@@ -36,20 +36,20 @@ public class PreferenceField extends RemittenceEntity implements Serializable {
 
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "preferenceTypeId")
-    private PreferenceType preferenceType;
+    private BPPreferenceType preferenceType;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "preferenceId")
-    private Preference preference;
+    private BPPreference preference;
 
     @Column(name = "enabled")
     private Boolean enabled;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "preferenceField", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    private List<PreferenceFieldData> data;
+    private List<BPPreferenceFieldData> data;
 
     @Transient
-    private Language currentLanguage;
+    private BPLanguage currentLanguage;
 
     @Transient
     private String currentValue;
@@ -70,11 +70,11 @@ public class PreferenceField extends RemittenceEntity implements Serializable {
         this.id = id;
     }
 
-    public PreferenceType getPreferenceType() {
+    public BPPreferenceType getPreferenceType() {
         return preferenceType;
     }
 
-    public void setPreferenceType(PreferenceType preferenceType) {
+    public void setPreferenceType(BPPreferenceType preferenceType) {
         this.preferenceType = preferenceType;
     }
 
@@ -86,19 +86,19 @@ public class PreferenceField extends RemittenceEntity implements Serializable {
         this.enabled = enabled;
     }
 
-    public Preference getPreference() {
+    public BPPreference getPreference() {
         return preference;
     }
 
-    public void setPreference(Preference preference) {
+    public void setPreference(BPPreference preference) {
         this.preference = preference;
     }
 
-    public List<PreferenceFieldData> getData() {
+    public List<BPPreferenceFieldData> getData() {
         return data;
     }
 
-    public void setData(List<PreferenceFieldData> data) {
+    public void setData(List<BPPreferenceFieldData> data) {
         this.data = data;
     }
 
@@ -132,15 +132,15 @@ public class PreferenceField extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PreferenceField other = (PreferenceField) obj;
+        final BPPreferenceField other = (BPPreferenceField) obj;
         return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 
-    public Language getCurrentLanguage() {
+    public BPLanguage getCurrentLanguage() {
         return currentLanguage;
     }
 
-    public void setCurrentLanguage(Language currentLanguage) {
+    public void setCurrentLanguage(BPLanguage currentLanguage) {
         this.currentLanguage = currentLanguage;
     }
 
@@ -148,7 +148,7 @@ public class PreferenceField extends RemittenceEntity implements Serializable {
         if (currentLanguage == null || data == null) {
             return name;
         }
-        for (PreferenceFieldData dat : data) {
+        for (BPPreferenceFieldData dat : data) {
             if (dat.getLanguage().getIso().equals(currentLanguage.getIso())) {
                 return dat.getName();
             }

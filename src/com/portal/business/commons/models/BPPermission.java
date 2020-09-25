@@ -17,8 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Table(name = "permission")
-public class Permission extends RemittenceEntity implements Serializable {
+@Table(name = "bppermission")
+public class BPPermission extends RemittenceEntity implements Serializable {
 
     public static String LOG_IN = "User has logged in.";
     public static String LOG_OUT = "User has logged out.";
@@ -119,14 +119,14 @@ public class Permission extends RemittenceEntity implements Serializable {
     private String name;
     //bi-directional many-to-one association to PermissionData
     @OneToMany(mappedBy = "permission", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<PermissionData> permissionData;
+    private List<BPPermissionData> permissionData;
     @ManyToOne
     @JoinColumn(name = "permissionGroupId")
-    private PermissionGroup permissionGroup;
+    private BPPermissionGroup permissionGroup;
 
-    public Permission() {
+    public BPPermission() {
     }
-    public Permission(Long id) {
+    public BPPermission(Long id) {
         this.id = id;
     }
 
@@ -170,25 +170,25 @@ public class Permission extends RemittenceEntity implements Serializable {
         this.name = name;
     }
 
-    public List<PermissionData> getPermissionData() {
+    public List<BPPermissionData> getPermissionData() {
         return this.permissionData;
     }
 
-    public void setPermissionData(List<PermissionData> permissionData) {
+    public void setPermissionData(List<BPPermissionData> permissionData) {
         this.permissionData = permissionData;
     }
 
-    public PermissionGroup getPermissionGroup() {
+    public BPPermissionGroup getPermissionGroup() {
         return this.permissionGroup;
     }
 
-    public void setPermissionGroup(PermissionGroup permissionGroup) {
+    public void setPermissionGroup(BPPermissionGroup permissionGroup) {
         this.permissionGroup = permissionGroup;
     }
 
-    public PermissionData getPermissionDataByLanguageId(Long languageId) {
-        PermissionData pd = null;
-        for (PermissionData pData : this.permissionData) {
+    public BPPermissionData getPermissionDataByLanguageId(Long languageId) {
+        BPPermissionData pd = null;
+        for (BPPermissionData pData : this.permissionData) {
             if (pData.getLanguage().getId().equals(languageId)) {
                 pd = pData;
                 break;
@@ -227,7 +227,7 @@ public class Permission extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Permission other = (Permission) obj;
+        final BPPermission other = (BPPermission) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

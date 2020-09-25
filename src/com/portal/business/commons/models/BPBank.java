@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bank")
-public class Bank extends RemittenceEntity implements Serializable{
+@Table(name = "bpbank")
+public class BPBank extends RemittenceEntity implements Serializable{
 
 
     private static final long serialVersionUID = 1L;
@@ -31,7 +31,7 @@ public class Bank extends RemittenceEntity implements Serializable{
     private Country countryId;
 
 
-    public Bank() {
+    public BPBank() {
     }
 
     public Long getId() {
@@ -86,7 +86,7 @@ public class Bank extends RemittenceEntity implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Bank other = (Bank) obj;
+        final BPBank other = (BPBank) obj;
         if (this.id != other.id) {
             return false;
         }

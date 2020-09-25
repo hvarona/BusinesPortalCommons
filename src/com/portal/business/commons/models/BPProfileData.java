@@ -3,6 +3,7 @@ package com.portal.business.commons.models;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,32 +13,34 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
+
 @Entity
-@Table(name = "permission_data")
-public class PermissionData extends RemittenceEntity implements Serializable {
+@Table(name = "bpprofile_data")
+public class BPProfileData extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String alias;
     private String description;
     //bi-directional many-to-one association to Language
     @ManyToOne
     @JoinColumn(name = "languageId")
-    private Language language;
-    @ManyToOne
-    @JoinColumn(name = "permissionId")
-    private Permission permission;
+    private BPLanguage language;
+    
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "profileId")
+    private BPProfile profile;
 
-    public PermissionData() {
+    public BPProfileData() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -57,20 +60,20 @@ public class PermissionData extends RemittenceEntity implements Serializable {
         this.description = description;
     }
 
-    public Language getLanguage() {
+    public BPLanguage getLanguage() {
         return this.language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(BPLanguage language) {
         this.language = language;
     }
 
-    public Permission getPermission() {
-        return permission;
+    public BPProfile getProfile() {
+        return profile;
     }
 
-    public void setPermission(Permission permission) {
-        this.permission = permission;
+    public void setProfile(BPProfile profile) {
+        this.profile = profile;
     }
 
     @Override
@@ -86,27 +89,5 @@ public class PermissionData extends RemittenceEntity implements Serializable {
     @Override
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
-    }
-    
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PermissionData other = (PermissionData) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
     }
 }

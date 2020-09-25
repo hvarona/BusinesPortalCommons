@@ -15,8 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "profile")
-public class Profile extends RemittenceEntity implements Serializable {
+@Table(name = "bpprofile")
+public class BPProfile extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +31,11 @@ public class Profile extends RemittenceEntity implements Serializable {
     private boolean isOperator;
 
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
-    private List<PermissionHasProfile> permissionHasProfiles;
+    private List<BPPermissionHasProfile> permissionHasProfiles;
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<ProfileData> profileData;
+    private List<BPProfileData> profileData;
 
-    public Profile() {
+    public BPProfile() {
     }
 
     public Long getId() {
@@ -70,19 +70,19 @@ public class Profile extends RemittenceEntity implements Serializable {
         this.name = name;
     }
 
-    public List<PermissionHasProfile> getPermissionHasProfiles() {
+    public List<BPPermissionHasProfile> getPermissionHasProfiles() {
         return this.permissionHasProfiles;
     }
 
-    public void setPermissionHasProfiles(List<PermissionHasProfile> permissionHasProfiles) {
+    public void setPermissionHasProfiles(List<BPPermissionHasProfile> permissionHasProfiles) {
         this.permissionHasProfiles = permissionHasProfiles;
     }
 
-    public List<ProfileData> getProfileData() {
+    public List<BPProfileData> getProfileData() {
         return this.profileData;
     }
 
-    public void setProfileData(List<ProfileData> profileData) {
+    public void setProfileData(List<BPProfileData> profileData) {
         this.profileData = profileData;
     }
 
@@ -101,9 +101,9 @@ public class Profile extends RemittenceEntity implements Serializable {
         return super.getTableName(this.getClass());
     }
 
-    public ProfileData getProfileDataByLanguageId(Long languageId) {
-        ProfileData pd = null;
-        for (ProfileData pData : this.profileData) {
+    public BPProfileData getProfileDataByLanguageId(Long languageId) {
+        BPProfileData pd = null;
+        for (BPProfileData pData : this.profileData) {
             if (pData.getLanguage().getId().equals(languageId)) {
                 pd = pData;
                 break;
@@ -114,8 +114,8 @@ public class Profile extends RemittenceEntity implements Serializable {
 
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Profile) && (id != null)
-                ? id.equals(((Profile) other).id)
+        return (other instanceof BPProfile) && (id != null)
+                ? id.equals(((BPProfile) other).id)
                 : (other == this);
     }
 

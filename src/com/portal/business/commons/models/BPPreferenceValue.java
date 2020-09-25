@@ -18,8 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "preference_value")
-public class PreferenceValue extends RemittenceEntity implements Serializable {
+@Table(name = "bppreference_value")
+public class BPPreferenceValue extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +43,9 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "idPreferenceField")
-    private PreferenceField preferenceField;
+    private BPPreferenceField preferenceField;
 
-    public PreferenceValue() {
+    public BPPreferenceValue() {
     }
 
     public Long getId() {
@@ -80,11 +80,11 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
         this.value = value;
     }
 
-    public PreferenceField getPreferenceField() {
+    public BPPreferenceField getPreferenceField() {
         return preferenceField;
     }
 
-    public void setPreferenceField(PreferenceField preferenceField) {
+    public void setPreferenceField(BPPreferenceField preferenceField) {
         this.preferenceField = preferenceField;
     }
 
@@ -126,7 +126,7 @@ public class PreferenceValue extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PreferenceValue other = (PreferenceValue) obj;
+        final BPPreferenceValue other = (BPPreferenceValue) obj;
         return !((this.id == null) ? (other.id != null) : !this.id.equals(other.id));
     }
 }

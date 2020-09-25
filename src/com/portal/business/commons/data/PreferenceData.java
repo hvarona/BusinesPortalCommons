@@ -6,9 +6,9 @@ import com.portal.business.commons.exceptions.NullParameterException;
 import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.models.Business;
-import com.portal.business.commons.models.Preference;
-import com.portal.business.commons.models.PreferenceField;
-import com.portal.business.commons.models.PreferenceValue;
+import com.portal.business.commons.models.BPPreference;
+import com.portal.business.commons.models.BPPreferenceField;
+import com.portal.business.commons.models.BPPreferenceValue;
 import com.portal.business.commons.utils.EjbConstants;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -30,12 +30,12 @@ public class PreferenceData extends AbstractBusinessPortalWs {
 
     private static final Logger LOG = Logger.getLogger(PreferenceData.class);
 
-    private PreferenceValue getLastPreferenceValueByPreferenceField(PreferenceField field, Business business) throws GeneralException, NullParameterException, EmptyListException {
+    private BPPreferenceValue getLastPreferenceValueByPreferenceField(BPPreferenceField field, Business business) throws GeneralException, NullParameterException, EmptyListException {
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
-            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            CriteriaQuery<BPPreferenceValue> cq = cb.createQuery(BPPreferenceValue.class);
+            Root<BPPreferenceValue> from = cq.from(BPPreferenceValue.class);
             cq.select(from);
             cq.where(cb.and(
                     cb.equal(from.get("business"), business),
@@ -46,7 +46,7 @@ public class PreferenceData extends AbstractBusinessPortalWs {
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
             query.setMaxResults(1);
-            return (PreferenceValue) query.getSingleResult();
+            return (BPPreferenceValue) query.getSingleResult();
         } catch (Exception ex) {
             return null;
         }
@@ -54,9 +54,9 @@ public class PreferenceData extends AbstractBusinessPortalWs {
 
     public Map<Long, String> getLastPreferenceValues(Business business) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
         Map<Long, String> currentValues = new HashMap();
-        List<PreferenceField> fields = this.getPreferenceFields();
-        for (PreferenceField field : fields) {
-            PreferenceValue pv = getLastPreferenceValueByPreferenceField(field, business);
+        List<BPPreferenceField> fields = this.getPreferenceFields();
+        for (BPPreferenceField field : fields) {
+            BPPreferenceValue pv = getLastPreferenceValueByPreferenceField(field, business);
             if (pv != null) {
                 currentValues.put(field.getId(), pv.getValue());
             }
@@ -64,14 +64,14 @@ public class PreferenceData extends AbstractBusinessPortalWs {
         return currentValues;
     }
 
-    public List<PreferenceField> getPreferenceFields() throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        List<PreferenceField> preferenceFields = null;
+    public List<BPPreferenceField> getPreferenceFields() throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+        List<BPPreferenceField> preferenceFields = null;
 
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PreferenceField> cq = cb.createQuery(PreferenceField.class);
-            Root<PreferenceField> from = cq.from(PreferenceField.class);
+            CriteriaQuery<BPPreferenceField> cq = cb.createQuery(BPPreferenceField.class);
+            Root<BPPreferenceField> from = cq.from(BPPreferenceField.class);
             cq.select(from);
 
             Query query = entityManager.createQuery(cq);
@@ -86,14 +86,14 @@ public class PreferenceData extends AbstractBusinessPortalWs {
         return preferenceFields;
     }
 
-    public List<PreferenceValue> getPreferenceValuesByBusisnessAndField(PreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
-        List<PreferenceValue> preferenceValues = null;
+    public List<BPPreferenceValue> getPreferenceValuesByBusisnessAndField(BPPreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException, EmptyListException {
+        List<BPPreferenceValue> preferenceValues = null;
 
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
-            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            CriteriaQuery<BPPreferenceValue> cq = cb.createQuery(BPPreferenceValue.class);
+            Root<BPPreferenceValue> from = cq.from(BPPreferenceValue.class);
             cq.select(from);
             cq.where(cb.and(
                     cb.equal(from.get("business"), business),
@@ -111,13 +111,13 @@ public class PreferenceData extends AbstractBusinessPortalWs {
         return preferenceValues;
     }
 
-    public PreferenceValue loadActivePreferenceValuesByBusinessAndField(PreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException {
+    public BPPreferenceValue loadActivePreferenceValuesByBusinessAndField(BPPreferenceField field, Business business) throws GeneralException, RegisterNotFoundException, NullParameterException {
 
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PreferenceValue> cq = cb.createQuery(PreferenceValue.class);
-            Root<PreferenceValue> from = cq.from(PreferenceValue.class);
+            CriteriaQuery<BPPreferenceValue> cq = cb.createQuery(BPPreferenceValue.class);
+            Root<BPPreferenceValue> from = cq.from(BPPreferenceValue.class);
             cq.select(from);
             cq.where(cb.and(
                     cb.equal(from.get("business"), business),
@@ -128,17 +128,17 @@ public class PreferenceData extends AbstractBusinessPortalWs {
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
             query.setMaxResults(1);
-            return (PreferenceValue) query.getSingleResult();
+            return (BPPreferenceValue) query.getSingleResult();
         } catch (Exception ex) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }
     }
 
-    public List<PreferenceValue> savePreferenceValues(List<PreferenceValue> values) throws GeneralException, NullParameterException {
+    public List<BPPreferenceValue> savePreferenceValues(List<BPPreferenceValue> values) throws GeneralException, NullParameterException {
         Timestamp time = new Timestamp(new Date().getTime());
-        List<PreferenceValue> returnValues = new ArrayList();
-        for (PreferenceValue pv : values) {
-            PreferenceValue oldPv = null;
+        List<BPPreferenceValue> returnValues = new ArrayList();
+        for (BPPreferenceValue pv : values) {
+            BPPreferenceValue oldPv = null;
             pv.setBeginningDate(time);
             try {
                 oldPv = getLastPreferenceValueByPreferenceField(pv.getPreferenceField(), pv.getBusiness());
@@ -146,28 +146,28 @@ public class PreferenceData extends AbstractBusinessPortalWs {
                     if (!pv.getValue().equals(oldPv.getValue())) {
                         oldPv.setEndingDate(time);
                         saveEntity(oldPv, LOG, getMethodName());
-                        returnValues.add((PreferenceValue) saveEntity(pv, LOG, getMethodName()));
+                        returnValues.add((BPPreferenceValue) saveEntity(pv, LOG, getMethodName()));
                     }
                 }
             } catch (EmptyListException e) {
                 e.printStackTrace();
             }
             if (oldPv == null) {
-                returnValues.add((PreferenceValue) saveEntity(pv, LOG, getMethodName())); //SALVO EL NUEVO VALOR
+                returnValues.add((BPPreferenceValue) saveEntity(pv, LOG, getMethodName())); //SALVO EL NUEVO VALOR
             }
         }
 
         return returnValues;
     }
 
-    public List<Preference> getPreferences() throws GeneralException, RegisterNotFoundException, EmptyListException {
-        List<Preference> preferences = null;
+    public List<BPPreference> getPreferences() throws GeneralException, RegisterNotFoundException, EmptyListException {
+        List<BPPreference> preferences = null;
 
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Preference> cq = cb.createQuery(Preference.class);
-            Root<Preference> from = cq.from(Preference.class);
+            CriteriaQuery<BPPreference> cq = cb.createQuery(BPPreference.class);
+            Root<BPPreference> from = cq.from(BPPreference.class);
             cq.select(from);
 
             Query query = entityManager.createQuery(cq);
@@ -182,18 +182,18 @@ public class PreferenceData extends AbstractBusinessPortalWs {
         return preferences;
     }
 
-    public Preference getPreference(Long preferenceId) throws NullParameterException, GeneralException, RegisterNotFoundException {
+    public BPPreference getPreference(Long preferenceId) throws NullParameterException, GeneralException, RegisterNotFoundException {
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Preference> cq = cb.createQuery(Preference.class);
-            Root<Preference> from = cq.from(Preference.class);
+            CriteriaQuery<BPPreference> cq = cb.createQuery(BPPreference.class);
+            Root<BPPreference> from = cq.from(BPPreference.class);
             cq.select(from);
             cq.where(cb.equal(from.get("id"), preferenceId));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            Preference preference = (Preference) query.getSingleResult();
+            BPPreference preference = (BPPreference) query.getSingleResult();
             return preference;
         } catch (Exception ex) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);

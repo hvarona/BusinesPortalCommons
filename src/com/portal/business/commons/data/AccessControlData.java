@@ -8,11 +8,11 @@ import com.portal.business.commons.exceptions.RegisterNotFoundException;
 
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
-import com.portal.business.commons.models.Permission;
-import com.portal.business.commons.models.PermissionHasProfile;
-import com.portal.business.commons.models.Profile;
-import com.portal.business.commons.models.ProfileData;
-import com.portal.business.commons.models.User;
+import com.portal.business.commons.models.BPPermission;
+import com.portal.business.commons.models.BPPermissionHasProfile;
+import com.portal.business.commons.models.BPProfile;
+import com.portal.business.commons.models.BPProfileData;
+import com.portal.business.commons.models.BPUser;
 import com.portal.business.commons.utils.BusinessPortalMails;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.Encoder;
@@ -42,21 +42,21 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         Map<String, Long> params = new HashMap<String, Long>();
         params.put(QueryConstants.PARAM_PROFILE_ID, profileId);
         try {
-            executeNameQuery(PermissionHasProfile.class, QueryConstants.DELETE_PERMISSION_HAS_PROFILE, params, getMethodName(), logger, "Profile", null, null);
+            executeNameQuery(BPPermissionHasProfile.class, QueryConstants.DELETE_PERMISSION_HAS_PROFILE, params, getMethodName(), logger, "Profile", null, null);
         } catch (Exception e) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
     }
 
-    public List<Profile> getParentsByProfile(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
-        List<Profile> profiles = null;
+    public List<BPProfile> getParentsByProfile(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
+        List<BPProfile> profiles = null;
         Map<String, Object> params = request.getParams();
         if (!params.containsKey(QueryConstants.PARAM_PROFILE_ID)) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_PROFILE_ID), null);
         }
         Query query = null;
         try {
-            query = createQuery("SELECT php.parent FROM ProfileHasProfile php WHERE php.child.id = ?1 AND php.endingDate IS NULL");
+            query = createQuery("SELECT php.parent FROM BPProfileHasProfile php WHERE php.child.id = ?1 AND php.endingDate IS NULL");
             query.setParameter("1", params.get(QueryConstants.PARAM_PROFILE_ID));
             if (request.getLimit() != null && request.getLimit() > 0) {
                 query.setMaxResults(request.getLimit());
@@ -72,24 +72,24 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         return profiles;
     }
 
-    public List<Permission> getPermissions(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
-        List<Permission> permissions = (List<Permission>) listEntities(Permission.class, request, logger, getMethodName());
+    public List<BPPermission> getPermissions(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
+        List<BPPermission> permissions = (List<BPPermission>) listEntities(BPPermission.class, request, logger, getMethodName());
         return permissions;
     }
 
-    public List<Profile> getProfiles(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
-        List<Profile> profiles = (List<Profile>) listEntities(Profile.class, request, logger, getMethodName());
+    public List<BPProfile> getProfiles(WsRequest request) throws EmptyListException, GeneralException, NullParameterException {
+        List<BPProfile> profiles = (List<BPProfile>) listEntities(BPProfile.class, request, logger, getMethodName());
         return profiles;
     }
 
-    public Permission loadPermission(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
-        Permission permission = (Permission) loadEntity(Permission.class, request, logger, getMethodName());
+    public BPPermission loadPermission(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        BPPermission permission = (BPPermission) loadEntity(BPPermission.class, request, logger, getMethodName());
 
         return permission;
     }
 
-    public Profile loadProfile(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
-        Profile profile = (Profile) loadEntity(Profile.class, request, logger, getMethodName());
+    public BPProfile loadProfile(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        BPProfile profile = (BPProfile) loadEntity(BPProfile.class, request, logger, getMethodName());
 
         return profile;
     }
@@ -105,16 +105,16 @@ public class AccessControlData extends AbstractBusinessPortalWs {
     public void logginSuccessful(WsRequest request) throws NullParameterException, GeneralException, RegisterNotFoundException {
     }
 
-    public Permission savePermission(WsRequest request) throws NullParameterException, GeneralException {
-        return (Permission) saveEntity(request, logger, getMethodName());
+    public BPPermission savePermission(WsRequest request) throws NullParameterException, GeneralException {
+        return (BPPermission) saveEntity(request, logger, getMethodName());
     }
 
-    public Profile saveProfile(WsRequest request) throws NullParameterException, GeneralException {
-        return (Profile) saveEntity(request, logger, getMethodName());
+    public BPProfile saveProfile(WsRequest request) throws NullParameterException, GeneralException {
+        return (BPProfile) saveEntity(request, logger, getMethodName());
     }
 
-    public ProfileData saveProfileData(WsRequest request) throws NullParameterException, GeneralException {
-        return (ProfileData) saveEntity(request, logger, getMethodName());
+    public BPProfileData saveProfileData(WsRequest request) throws NullParameterException, GeneralException {
+        return (BPProfileData) saveEntity(request, logger, getMethodName());
 
     }
 
@@ -126,8 +126,8 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         return false;
     }
 
-    public User validateUser(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException, DisabledUserException {
-        User user = null;
+    public BPUser validateUser(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException, DisabledUserException {
+        BPUser user = null;
 
         if (login == null || login.equals("")) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), QueryConstants.PARAM_LOGIN), null);
@@ -158,7 +158,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         return user;
     }
 
-    public static void generateNewPassword(User user) throws GeneralException {
+    public static void generateNewPassword(BPUser user) throws GeneralException {
         try {
             UserData userData = new UserData();
             SecureRandom random = new SecureRandom();
@@ -188,7 +188,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         }
     }
 
-    private static void sendUserRecoveryPasswordMail(User user, String newPassword) throws GeneralException {
+    private static void sendUserRecoveryPasswordMail(BPUser user, String newPassword) throws GeneralException {
         try {
             Mail mail = BusinessPortalMails.getRecoveryPasswordMail(user, newPassword);
             //Inicia el envio del correo electronico

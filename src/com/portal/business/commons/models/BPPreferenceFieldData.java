@@ -18,8 +18,8 @@ import javax.persistence.Table;
  * @author hvarona
  */
 @Entity
-@Table(name = "preference_field_data")
-public class PreferenceFieldData extends RemittenceEntity implements Serializable {
+@Table(name = "bppreference_field_data")
+public class BPPreferenceFieldData extends RemittenceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +28,11 @@ public class PreferenceFieldData extends RemittenceEntity implements Serializabl
 
     @ManyToOne
     @JoinColumn(name = "idPreferenceField")
-    private PreferenceField preferenceField;
+    private BPPreferenceField preferenceField;
 
     @ManyToOne
     @JoinColumn(name = "idLanguage")
-    private Language language;
+    private BPLanguage language;
 
     @Column(name = "name")
     private String name;
@@ -45,19 +45,19 @@ public class PreferenceFieldData extends RemittenceEntity implements Serializabl
         this.id = id;
     }
 
-    public PreferenceField getPreferenceField() {
+    public BPPreferenceField getPreferenceField() {
         return preferenceField;
     }
 
-    public void setPreferenceField(PreferenceField preferenceField) {
+    public void setPreferenceField(BPPreferenceField preferenceField) {
         this.preferenceField = preferenceField;
     }
 
-    public Language getLanguage() {
+    public BPLanguage getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(BPLanguage language) {
         this.language = language;
     }
 
@@ -103,7 +103,7 @@ public class PreferenceFieldData extends RemittenceEntity implements Serializabl
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PreferenceFieldData other = (PreferenceFieldData) obj;
+        final BPPreferenceFieldData other = (BPPreferenceFieldData) obj;
         if (!Objects.equals(this.preferenceField, other.preferenceField)) {
             return false;
         }
