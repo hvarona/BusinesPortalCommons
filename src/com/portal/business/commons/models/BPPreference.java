@@ -2,51 +2,41 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.utils.IndexComparator;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-import java.util.Collections;
-
 @Entity
-@Table(name = "report")
-public class Report extends RemittenceEntity implements Serializable {
+@Table(name = "bppreference")
+public class BPPreference extends RemittenceEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static final Long REPORT_WALLET = 20l;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "description")
     @Lob()
     private String description;
-    @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "reportTypeId")
-    private ReportType reportType;
+    
+    @Column(name = "enabled")
     private boolean enabled;
+    
+    @Column(name = "name")
     private String name;
-    @Lob()
-    private String query;
-    private String webServiceUrl;
-    //bi-directional many-to-one association to ReportHasProfile
-    @OneToMany(mappedBy = "report", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<ReportHasProfile> reportHasProfiles;
-    //bi-directional many-to-one association to ReportParameter
-    @OneToMany(mappedBy = "report", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<ReportParameter> reportParameters;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "preference", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    private List<BPPreferenceField> preferenceFields;
 
-    public Report() {
+    public BPPreference() {
     }
 
     public Long getId() {
@@ -81,45 +71,12 @@ public class Report extends RemittenceEntity implements Serializable {
         this.name = name;
     }
 
-    public String getQuery() {
-        return this.query;
+    public List<BPPreferenceField> getPreferenceFields() {
+        return preferenceFields;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
-
-    public String getWebServiceUrl() {
-        return this.webServiceUrl;
-    }
-
-    public void setWebServiceUrl(String webServiceUrl) {
-        this.webServiceUrl = webServiceUrl;
-    }
-
-    public List<ReportHasProfile> getReportHasProfiles() {
-        return this.reportHasProfiles;
-    }
-
-    public void setReportHasProfiles(List<ReportHasProfile> reportHasProfiles) {
-        this.reportHasProfiles = reportHasProfiles;
-    }
-
-    public List<ReportParameter> getReportParameters() {
-        Collections.sort(reportParameters, new IndexComparator());
-        return this.reportParameters;
-    }
-
-    public void setReportParameters(List<ReportParameter> reportParameters) {
-        this.reportParameters = reportParameters;
-    }
-
-    public ReportType getReportType() {
-        return reportType;
-    }
-
-    public void setReportType(ReportType reportType) {
-        this.reportType = reportType;
+    public void setPreferenceFields(List<BPPreferenceField> preferenceFields) {
+        this.preferenceFields = preferenceFields;
     }
 
     @Override
@@ -136,7 +93,7 @@ public class Report extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -152,7 +109,7 @@ public class Report extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Report other = (Report) obj;
+        final BPPreference other = (BPPreference) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

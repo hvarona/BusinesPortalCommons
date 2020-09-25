@@ -8,7 +8,7 @@ import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
 import com.portal.business.commons.models.AccountBank;
 import com.portal.business.commons.models.AccountTypeBank;
-import com.portal.business.commons.models.Bank;
+import com.portal.business.commons.models.BPBank;
 import com.portal.business.commons.models.Business;
 import com.portal.business.commons.models.StatusAccountBank;
 import com.portal.business.commons.utils.EjbConstants;
@@ -90,19 +90,19 @@ public class AccountBankData extends AbstractBusinessPortalWs {
         }
     }
     
-    public Bank getBank(Long bankId) throws GeneralException, RegisterNotFoundException, NullParameterException {
+    public BPBank getBank(Long bankId) throws GeneralException, RegisterNotFoundException, NullParameterException {
         if (bankId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "storeId"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Bank> cq = cb.createQuery(Bank.class);
-            Root<Bank> from = cq.from(Bank.class);
+            CriteriaQuery<BPBank> cq = cb.createQuery(BPBank.class);
+            Root<BPBank> from = cq.from(BPBank.class);
             cq.select(from);
             cq.where(cb.equal(from.get("id"), bankId));
 
             Query query = entityManager.createQuery(cq);
-            return (Bank) query.getSingleResult();
+            return (BPBank) query.getSingleResult();
         } catch (Exception e) {
             throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
         }
@@ -144,8 +144,8 @@ public class AccountBankData extends AbstractBusinessPortalWs {
         }
     }
 
-    public List<Bank> getBanks(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
-        return (List<Bank>) listEntities(Bank.class, request, LOG, getMethodName());
+    public List<BPBank> getBanks(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
+        return (List<BPBank>) listEntities(BPBank.class, request, LOG, getMethodName());
     }
     
     public List<AccountTypeBank> getAccountTypeBanks(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {

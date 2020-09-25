@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "operator")
 @DiscriminatorValue("2")
-public class Operator extends User {
+public class Operator extends BPUser {
 
     @Column(name = "firstname")
     private String firstName;
@@ -35,7 +35,7 @@ public class Operator extends User {
             joinColumns = @JoinColumn(name = "idPermission"),
             inverseJoinColumns = @JoinColumn(name = "idOperator")
     )
-    private List<Permission> excludedPermission;
+    private List<BPPermission> excludedPermission;
     
     
     @ManyToOne
@@ -70,11 +70,11 @@ public class Operator extends User {
         this.commerce = commerce;
     }
 
-    public List<Permission> getExcludedPermission() {
+    public List<BPPermission> getExcludedPermission() {
         return excludedPermission;
     }
 
-    public void setExcludedPermission(List<Permission> excludedPermission) {
+    public void setExcludedPermission(List<BPPermission> excludedPermission) {
         this.excludedPermission = excludedPermission;
     }
 

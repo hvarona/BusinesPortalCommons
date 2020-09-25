@@ -15,7 +15,7 @@ public class BusinessTransaction {
 
     private BusinessClose close;
 
-    private User user;
+    private BPUser user;
 
     private Date dateTransaction;
 
@@ -29,7 +29,7 @@ public class BusinessTransaction {
 
     private double amountWithoutFee;
 
-    public BusinessTransaction(Business business, BusinessClose close, User user, 
+    public BusinessTransaction(Business business, BusinessClose close, BPUser user, 
             Date dateTransaction, Long transactionId, OperationType type, 
             float businessFee, double totalAmount, double amountWithoutFee) {
         this.business = business;
@@ -95,11 +95,11 @@ public class BusinessTransaction {
         this.close = close;
     }
 
-    public User getUser() {
+    public BPUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BPUser user) {
         this.user = user;
     }
 

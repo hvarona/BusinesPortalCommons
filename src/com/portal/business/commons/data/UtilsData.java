@@ -8,7 +8,7 @@ import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
 import com.portal.business.commons.models.IpAddress;
 import com.portal.business.commons.models.IpBlackList;
-import com.portal.business.commons.models.Language;
+import com.portal.business.commons.models.BPLanguage;
 import com.portal.business.commons.models.Period;
 import com.portal.business.commons.models.Store;
 import com.portal.business.commons.utils.EjbConstants;
@@ -37,34 +37,34 @@ public class UtilsData extends AbstractBusinessPortalWs {
     private static String pass = "";
     private static final Logger logger = Logger.getLogger(UtilsData.class);
 
-    public List<Language> getLanguages() throws EmptyListException, GeneralException, NullParameterException {
+    public List<BPLanguage> getLanguages() throws EmptyListException, GeneralException, NullParameterException {
         WsRequest request = new WsRequest();
-        List<Language> languages = (List<Language>) listEntities(Language.class, request, logger, getMethodName());
+        List<BPLanguage> languages = (List<BPLanguage>) listEntities(BPLanguage.class, request, logger, getMethodName());
         return languages;
     }
 
-    public List<Language> getLanguages(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
-        return (List<Language>) listEntities(Language.class, request, logger, getMethodName());
+    public List<BPLanguage> getLanguages(WsRequest request) throws GeneralException, EmptyListException, NullParameterException {
+        return (List<BPLanguage>) listEntities(BPLanguage.class, request, logger, getMethodName());
     }
 
-    public Language loadLanguage(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
-        Language language = (Language) loadEntity(Language.class, request, logger, getMethodName());
+    public BPLanguage loadLanguage(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        BPLanguage language = (BPLanguage) loadEntity(BPLanguage.class, request, logger, getMethodName());
         return language;
     }
 
-    public Language getLanguage(String isoName) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPLanguage getLanguage(String isoName) throws RegisterNotFoundException, NullParameterException, GeneralException {
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Language> cq = cb.createQuery(Language.class);
-            Root<Language> from = cq.from(Language.class);
+            CriteriaQuery<BPLanguage> cq = cb.createQuery(BPLanguage.class);
+            Root<BPLanguage> from = cq.from(BPLanguage.class);
             cq.select(from);
             cq.where(
                     cb.equal(from.get("iso"), isoName));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (Language) query.getSingleResult();
+            return (BPLanguage) query.getSingleResult();
         } catch (Exception ex) {
             throw new GeneralException(logger, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), ex.getMessage()), null);
         }

@@ -1,38 +1,26 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.exceptions.TableNotFoundException;
+import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.portal.business.commons.exceptions.TableNotFoundException;
-import com.portal.business.commons.generic.RemittenceEntity;
-
 @Entity
-@Table(name = "language")
-public class Language extends RemittenceEntity implements Serializable {
+@Table(name = "bpparameter_type")
+public class BPParameterType extends RemittenceEntity implements Serializable {
 
-    public static final Long ENGLISH = 1L;
-    public static final Long SPANISH = 2L;
-    public static final Long PORTUGUESE = 3L;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String description;
-    private boolean enabled;
-    private String iso;
+    private String name;
 
-    public Language() {
-    }
-
-    public Language(Long id, String description, boolean enabled, String iso) {
-        this.id = id;
-        this.description = description;
-        this.enabled = enabled;
-        this.iso = iso;
+    public BPParameterType() {
     }
 
     public Long getId() {
@@ -43,35 +31,19 @@ public class Language extends RemittenceEntity implements Serializable {
         this.id = id;
     }
 
-    public String getDescription() {
-        return this.description;
+    public String getName() {
+        return this.name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean getEnabled() {
-        return this.enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getIso() {
-        return this.iso;
-    }
-
-    public void setIso(String iso) {
-        this.iso = iso;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "ParameterType{" + "id=" + id + ", name=" + name + '}';
     }
-
+    
     @Override
     public Object getPk() {
         return getId();
@@ -81,7 +53,7 @@ public class Language extends RemittenceEntity implements Serializable {
     public String getTableName() throws TableNotFoundException {
         return super.getTableName(this.getClass());
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -97,7 +69,7 @@ public class Language extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Language other = (Language) obj;
+        final BPParameterType other = (BPParameterType) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

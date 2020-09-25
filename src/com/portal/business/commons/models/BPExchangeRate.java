@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "exchange_rate")
-public class ExchangeRate extends RemittenceEntity implements Serializable {
+@Table(name = "bpexchange_rate")
+public class BPExchangeRate extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -114,7 +114,7 @@ public class ExchangeRate extends RemittenceEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ExchangeRate other = (ExchangeRate) obj;
+        final BPExchangeRate other = (BPExchangeRate) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

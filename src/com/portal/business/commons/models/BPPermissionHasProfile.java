@@ -15,10 +15,10 @@ import javax.persistence.Table;
 import javax.persistence.NamedQuery;
 
 @Entity
-@Table(name = "permission_has_profile")
+@Table(name = "bppermission_has_profile")
 @NamedQuery(name = QueryConstants.DELETE_PERMISSION_HAS_PROFILE,
-query = "DELETE FROM PermissionHasProfile php WHERE php.profile.id=:profileId")
-public class PermissionHasProfile extends RemittenceEntity implements Serializable {
+query = "DELETE FROM BPPermissionHasProfile php WHERE php.profile.id=:profileId")
+public class BPPermissionHasProfile extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -27,13 +27,13 @@ public class PermissionHasProfile extends RemittenceEntity implements Serializab
     //bi-directional many-to-one association to Permission
     @ManyToOne
     @JoinColumn(name = "permissionId")
-    private Permission permission;
+    private BPPermission permission;
     //bi-directional many-to-one association to Profile
     @ManyToOne
     @JoinColumn(name = "profileId")
-    private Profile profile;
+    private BPProfile profile;
 
-    public PermissionHasProfile() {
+    public BPPermissionHasProfile() {
     }
 
     public Long getId() {
@@ -44,19 +44,19 @@ public class PermissionHasProfile extends RemittenceEntity implements Serializab
         this.id = id;
     }
 
-    public Permission getPermission() {
+    public BPPermission getPermission() {
         return this.permission;
     }
 
-    public void setPermission(Permission permission) {
+    public void setPermission(BPPermission permission) {
         this.permission = permission;
     }
 
-    public Profile getProfile() {
+    public BPProfile getProfile() {
         return this.profile;
     }
 
-    public void setProfile(Profile profile) {
+    public void setProfile(BPProfile profile) {
         this.profile = profile;
     }
 
@@ -90,7 +90,7 @@ public class PermissionHasProfile extends RemittenceEntity implements Serializab
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PermissionHasProfile other = (PermissionHasProfile) obj;
+        final BPPermissionHasProfile other = (BPPermissionHasProfile) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

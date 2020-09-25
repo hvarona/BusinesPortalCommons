@@ -4,8 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "event")
-public class Event implements Serializable {
+@Table(name = "bpdevent")
+public class BPEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -14,7 +14,7 @@ public class Event implements Serializable {
     private String description;
     private String name;
 
-    public Event() {
+    public BPEvent() {
     }
 
     public Long getId() {
@@ -56,7 +56,7 @@ public class Event implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Event other = (Event) obj;
+        final BPEvent other = (BPEvent) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

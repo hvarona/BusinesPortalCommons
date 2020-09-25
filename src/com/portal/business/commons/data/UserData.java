@@ -7,11 +7,11 @@ import com.portal.business.commons.exceptions.RegisterNotFoundException;
 import com.portal.business.commons.generic.AbstractBusinessPortalWs;
 import com.portal.business.commons.generic.WsRequest;
 import com.portal.business.commons.models.Business;
-import com.portal.business.commons.models.Permission;
-import com.portal.business.commons.models.PermissionGroup;
-import com.portal.business.commons.models.PermissionHasProfile;
-import com.portal.business.commons.models.Profile;
-import com.portal.business.commons.models.User;
+import com.portal.business.commons.models.BPPermission;
+import com.portal.business.commons.models.BPPermissionGroup;
+import com.portal.business.commons.models.BPPermissionHasProfile;
+import com.portal.business.commons.models.BPProfile;
+import com.portal.business.commons.models.BPUser;
 import com.portal.business.commons.utils.EjbConstants;
 import java.util.List;
 import javax.persistence.NoResultException;
@@ -30,14 +30,14 @@ public class UserData extends AbstractBusinessPortalWs {
 
     private static final Logger LOG = Logger.getLogger(UserData.class);
 
-    public List<User> getUsers(WsRequest request) throws EmptyListException, GeneralException {
+    public List<BPUser> getUsers(WsRequest request) throws EmptyListException, GeneralException {
 
-        List<User> users = null;
+        List<BPUser> users = null;
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> from = cq.from(User.class);
+            CriteriaQuery<BPUser> cq = cb.createQuery(BPUser.class);
+            Root<BPUser> from = cq.from(BPUser.class);
             cq.select(from);
 
             Query query = entityManager.createQuery(cq);
@@ -52,29 +52,29 @@ public class UserData extends AbstractBusinessPortalWs {
         return users;
     }
 
-    public User loadUser(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
-        User user = (User) loadEntity(User.class, request, LOG, getMethodName());
+    public BPUser loadUser(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        BPUser user = (BPUser) loadEntity(BPUser.class, request, LOG, getMethodName());
 
         return user;
     }
 
-    public User saveUser(WsRequest request) throws NullParameterException, GeneralException {
-        return (User) saveEntity(request, LOG, getMethodName());
+    public BPUser saveUser(WsRequest request) throws NullParameterException, GeneralException {
+        return (BPUser) saveEntity(request, LOG, getMethodName());
     }
 
-    public User saveUser(User user) throws NullParameterException, GeneralException {
+    public BPUser saveUser(BPUser user) throws NullParameterException, GeneralException {
         if (user == null) {
             throw new NullParameterException(LOG, sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "user"), null);
         }
-        return (User) saveEntity(user);
+        return (BPUser) saveEntity(user);
     }
 
-    public List<PermissionGroup> getPermissionGroups() throws EmptyListException, NullParameterException, GeneralException {
-        List<PermissionGroup> permissionGroups = null;
+    public List<BPPermissionGroup> getPermissionGroups() throws EmptyListException, NullParameterException, GeneralException {
+        List<BPPermissionGroup> permissionGroups = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PermissionGroup> cq = cb.createQuery(PermissionGroup.class);
-            Root<PermissionGroup> from = cq.from(PermissionGroup.class);
+            CriteriaQuery<BPPermissionGroup> cq = cb.createQuery(BPPermissionGroup.class);
+            Root<BPPermissionGroup> from = cq.from(BPPermissionGroup.class);
             cq.select(from);
 
             Query query = entityManager.createQuery(cq);
@@ -91,13 +91,13 @@ public class UserData extends AbstractBusinessPortalWs {
 
     }
 
-    public List<Permission> getPermissions() throws EmptyListException, NullParameterException, GeneralException {
-        List<Permission> permissions = null;
+    public List<BPPermission> getPermissions() throws EmptyListException, NullParameterException, GeneralException {
+        List<BPPermission> permissions = null;
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<Permission> from = cq.from(Permission.class);
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermission> from = cq.from(BPPermission.class);
             cq.select(from).where(cb.equal(from.get("enabled"), true));
 
             Query query = entityManager.createQuery(cq);
@@ -113,15 +113,15 @@ public class UserData extends AbstractBusinessPortalWs {
         return permissions;
     }
 
-    public List<Permission> getPermissionByGroupId(PermissionGroup permissionGroup) throws EmptyListException, NullParameterException, GeneralException {
+    public List<BPPermission> getPermissionByGroupId(BPPermissionGroup permissionGroup) throws EmptyListException, NullParameterException, GeneralException {
         if (permissionGroup == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "permissionGroup"), null);
         }
-        List<Permission> permissions = null;
+        List<BPPermission> permissions = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<Permission> from = cq.from(Permission.class);
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermission> from = cq.from(BPPermission.class);
             cq.select(from);
             cq.where(cb.and(cb.equal(from.get("enabled"), true),
                     cb.equal(from.get("permissiongroup"), permissionGroup)));
@@ -139,16 +139,16 @@ public class UserData extends AbstractBusinessPortalWs {
         return permissions;
     }
 
-    public List<Permission> getPermissionByProfileId(Profile profile) throws EmptyListException, NullParameterException, GeneralException {
+    public List<BPPermission> getPermissionByProfileId(BPProfile profile) throws EmptyListException, NullParameterException, GeneralException {
         if (profile == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "groupId"), null);
         }
-        List<Permission> permissions = null;
+        List<BPPermission> permissions = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<PermissionHasProfile> from = cq.from(PermissionHasProfile.class);
-            Join<PermissionHasProfile, Permission> permission = from.join("permission");
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermissionHasProfile> from = cq.from(BPPermissionHasProfile.class);
+            Join<BPPermissionHasProfile, BPPermission> permission = from.join("permission");
             cq.select(permission);
             cq.where(cb.and(cb.equal(permission.get("enabled"), true),
                     cb.equal(from.get("profile"), profile)));
@@ -166,21 +166,21 @@ public class UserData extends AbstractBusinessPortalWs {
         return permissions;
     }
 
-    public Permission loadPermissionById(Long permissionId) throws GeneralException, NullParameterException, RegisterNotFoundException {
+    public BPPermission loadPermissionById(Long permissionId) throws GeneralException, NullParameterException, RegisterNotFoundException {
         WsRequest bRequest = new WsRequest(permissionId);
-        Permission permission = (Permission) loadEntity(Permission.class, bRequest, LOG, getMethodName());
+        BPPermission permission = (BPPermission) loadEntity(BPPermission.class, bRequest, LOG, getMethodName());
         return permission;
 
     }
 
-    public List<Profile> getProfiles() throws EmptyListException, GeneralException {
+    public List<BPProfile> getProfiles() throws EmptyListException, GeneralException {
 
-        List<Profile> profiles = null;
+        List<BPProfile> profiles = null;
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
-            Root<Profile> from = cq.from(Profile.class);
+            CriteriaQuery<BPProfile> cq = cb.createQuery(BPProfile.class);
+            Root<BPProfile> from = cq.from(BPProfile.class);
             cq.select(from);
             cq.where(cb.equal(from.get("enabled"), true));
 
@@ -197,14 +197,14 @@ public class UserData extends AbstractBusinessPortalWs {
         return profiles;
     }
 
-    public List<Profile> getOperatorsProfiles() throws EmptyListException, GeneralException {
+    public List<BPProfile> getOperatorsProfiles() throws EmptyListException, GeneralException {
 
-        List<Profile> profiles = null;
+        List<BPProfile> profiles = null;
         try {
 
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
-            Root<Profile> from = cq.from(Profile.class);
+            CriteriaQuery<BPProfile> cq = cb.createQuery(BPProfile.class);
+            Root<BPProfile> from = cq.from(BPProfile.class);
             cq.select(from);
             cq.where(cb.and(cb.equal(from.get("enabled"), true),
                     cb.equal(from.get("isOperator"), true)));
@@ -222,20 +222,20 @@ public class UserData extends AbstractBusinessPortalWs {
         return profiles;
     }
 
-    public User loadUserByLogin(String login) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPUser loadUserByLogin(String login) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (login == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "login"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> from = cq.from(User.class);
+            CriteriaQuery<BPUser> cq = cb.createQuery(BPUser.class);
+            Root<BPUser> from = cq.from(BPUser.class);
             cq.select(from);
             cq.where(cb.equal(from.get("login"), login));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (User) query.getSingleResult();
+            return (BPUser) query.getSingleResult();
 
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException(LOG, sysError.format(EjbConstants.ERR_EMPTY_LIST_EXCEPTION, this.getClass(), getMethodName()), ex);
@@ -246,20 +246,20 @@ public class UserData extends AbstractBusinessPortalWs {
 
     }
 
-    public User loadUserByLogin(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPUser loadUserByLogin(String login, String password) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (login == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "login"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> from = cq.from(User.class);
+            CriteriaQuery<BPUser> cq = cb.createQuery(BPUser.class);
+            Root<BPUser> from = cq.from(BPUser.class);
 
             cq.select(from).where(cb.and(cb.equal(from.get("login"), login), cb.equal(from.get("password"), password)));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (User) query.getSingleResult();
+            return (BPUser) query.getSingleResult();
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException("");
         } catch (Exception ex) {
@@ -268,19 +268,19 @@ public class UserData extends AbstractBusinessPortalWs {
         }
     }
 
-    public List<Permission> getPermissionByGroupIdAndProfile(PermissionGroup permissionGroup, Profile profile) throws EmptyListException, NullParameterException, GeneralException {
+    public List<BPPermission> getPermissionByGroupIdAndProfile(BPPermissionGroup permissionGroup, BPProfile profile) throws EmptyListException, NullParameterException, GeneralException {
         if (permissionGroup == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "permissionGroup"), null);
         }
         if (profile == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "profile"), null);
         }
-        List<Permission> permissions = null;
+        List<BPPermission> permissions = null;
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<PermissionHasProfile> from = cq.from(PermissionHasProfile.class);
-            Join<PermissionHasProfile, Permission> permission = from.join("permission");
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermissionHasProfile> from = cq.from(BPPermissionHasProfile.class);
+            Join<BPPermissionHasProfile, BPPermission> permission = from.join("permission");
 
             cq.select(permission);
             cq.where(
@@ -302,20 +302,20 @@ public class UserData extends AbstractBusinessPortalWs {
         return permissions;
     }
 
-    public User loadUserByEmail(String email) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPUser loadUserByEmail(String email) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (email == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "login"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> from = cq.from(User.class);
+            CriteriaQuery<BPUser> cq = cb.createQuery(BPUser.class);
+            Root<BPUser> from = cq.from(BPUser.class);
 
             cq.select(from).where(cb.and(cb.equal(from.get("email"), email), cb.equal(from.get("enabled"), true)));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (User) query.getSingleResult();
+            return (BPUser) query.getSingleResult();
 
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException("No se encontro el usuario");
@@ -325,20 +325,20 @@ public class UserData extends AbstractBusinessPortalWs {
         }
     }
 
-    public Profile loadProfile(Long profileId) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPProfile loadProfile(Long profileId) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (profileId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "profileId"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
-            Root<Profile> from = cq.from(Profile.class);
+            CriteriaQuery<BPProfile> cq = cb.createQuery(BPProfile.class);
+            Root<BPProfile> from = cq.from(BPProfile.class);
 
             cq.select(from).where(cb.equal(from.get("id"), profileId));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (Profile) query.getSingleResult();
+            return (BPProfile) query.getSingleResult();
 
         } catch (NoResultException ex) {
             ex.printStackTrace();
@@ -349,26 +349,26 @@ public class UserData extends AbstractBusinessPortalWs {
         }
     }
 
-    public Profile loadProfile(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
-        Profile profile = (Profile) loadEntity(Profile.class, request, LOG, getMethodName());
+    public BPProfile loadProfile(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
+        BPProfile profile = (BPProfile) loadEntity(BPProfile.class, request, LOG, getMethodName());
 
         return profile;
     }
 
-    public Permission loadPermission(Long permissionId) throws RegisterNotFoundException, NullParameterException, GeneralException {
+    public BPPermission loadPermission(Long permissionId) throws RegisterNotFoundException, NullParameterException, GeneralException {
         if (permissionId == null) {
             throw new NullParameterException(sysError.format(EjbConstants.ERR_NULL_PARAMETER, this.getClass(), getMethodName(), "permissionId"), null);
         }
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
-            Root<Permission> from = cq.from(Permission.class);
+            CriteriaQuery<BPPermission> cq = cb.createQuery(BPPermission.class);
+            Root<BPPermission> from = cq.from(BPPermission.class);
 
             cq.select(from).where(cb.equal(from.get("id"), permissionId));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");
-            return (Permission) query.getSingleResult();
+            return (BPPermission) query.getSingleResult();
 
         } catch (NoResultException ex) {
             ex.printStackTrace();

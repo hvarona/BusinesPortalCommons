@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "business")
 @DiscriminatorValue("3")
-public class Business extends User {
+public class Business extends BPUser {
 
     @Column(name = "code")
     private String code;

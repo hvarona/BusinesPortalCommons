@@ -1,8 +1,8 @@
 package com.portal.business.commons.utils;
 
 import com.portal.business.commons.exceptions.GeneralException;
-import com.portal.business.commons.models.Language;
-import com.portal.business.commons.models.User;
+import com.portal.business.commons.models.BPLanguage;
+import com.portal.business.commons.models.BPUser;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,7 @@ public class BusinessPortalMails {
     public static String SAC_COORDINADORES_MAIL = "sac-coordinadores@alodiga.com";
     public static String INFO_EMAIL = "customercare@alodiga.com";
 
-    public static Mail getRecoveryPasswordMail(User user, String newPassword) throws GeneralException {
+    public static Mail getRecoveryPasswordMail(BPUser user, String newPassword) throws GeneralException {
         String hello = "Hola";
         String subject = "Alodiga ESP: Recuperación de clave.";
         String text1 = "Nos complace notificarle que su clave de acceso ha sido generada automaticamente.";
@@ -29,7 +29,7 @@ public class BusinessPortalMails {
         String thanks = "Gracias por preferirnos, Alodiga Mejora tu vida";
         String messageFooter1 = "Este mensaje ha sido enviado desde una cuenta de correo electr&oacute;nico exclusivamente de notificaciones que no admite mensajes. No responda esta comunicaci&oacute;n.";
         String allRights = "Todos los derechos reservados";
-        if (user.getLanguage().getId().equals(Language.ENGLISH)) {
+        if (user.getLanguage().getId().equals(BPLanguage.ENGLISH)) {
             hello = "Hello";
             subject = "Alodiga ESP: Password Recovery.";
             text1 = "We are pleased to notify you that your password has been generated automatically.";

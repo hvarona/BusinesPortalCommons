@@ -1,6 +1,6 @@
 package com.portal.business.commons.startup;
 
-import com.portal.business.commons.models.Language;
+import com.portal.business.commons.models.BPLanguage;
 
 /**
  *
@@ -8,9 +8,9 @@ import com.portal.business.commons.models.Language;
  */
 public class Languages {
 
-    public static final Language[] LANG = new Language[]{
-        new Language(1L, "ENGLISH", true, "en"),
-        new Language(2L, "SPANISH", true, "es"),
-        new Language(3L, "PORTUGUESE", true, "pt")};
+    public static final BPLanguage[] LANG = new BPLanguage[]{
+        new BPLanguage(1L, "ENGLISH", true, "en"),
+        new BPLanguage(2L, "SPANISH", true, "es"),
+        new BPLanguage(3L, "PORTUGUESE", true, "pt")};
 
 }
