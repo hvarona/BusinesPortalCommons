@@ -6,6 +6,7 @@ import com.portal.business.commons.data.BusinessSellData;
 import com.portal.business.commons.data.OperatorData;
 import com.portal.business.commons.data.PosData;
 import com.portal.business.commons.data.StoreData;
+import com.portal.business.commons.enumeration.BPTransactionStatus;
 import com.portal.business.commons.enumeration.OperationType;
 import com.portal.business.commons.exceptions.EmptyListException;
 import com.portal.business.commons.exceptions.GeneralException;
@@ -30,8 +31,11 @@ import javax.servlet.http.HttpServlet;
  */
 public class Startup extends HttpServlet {
 
-    private static final int weeks = 8;
+    private static final int weeks = 20;
     private static final float[] posibleAmounts = new float[]{1, 2, 5, 10, 20, 50, 100};
+
+    private static final float businessCommissionPercentage = 2;
+    private static final float DiscountRatePercentage = 1;
 
     @Override
     public void init() throws ServletException {
@@ -50,8 +54,9 @@ public class Startup extends HttpServlet {
                 }
             }*/
         createSellData();
-        createRechargeTransactions();
-        createWithdrawTransaction();
+        createRechargeTransactions(false);
+        createRechargeTransactions(true);
+        //createWithdrawTransaction();
         createCloses();
         System.out.println("---------- BussinessPortal Initialized successfully ----------");
 
@@ -119,7 +124,7 @@ public class Startup extends HttpServlet {
         }
     }
 
-    private void createRechargeTransactions() {
+    private void createRechargeTransactions(boolean isCard) {
         try {
 
             BusinessData businessData = new BusinessData();
@@ -131,7 +136,13 @@ public class Startup extends HttpServlet {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             cal.set(Calendar.HOUR_OF_DAY, 9);
             cal.set(Calendar.MINUTE, (int) (Math.random() * 29) + 30);
-            if (businessData.getBusinessTransactionsNumber(business, cal.getTime(), new Date(), OperationType.RECHARGE) <= 0) {
+            long transactionAmount = 0;
+            if (isCard) {
+                transactionAmount = businessData.getBusinessTransactionsNumber(business, cal.getTime(), new Date(), OperationType.CARD_RECHARGE);
+            } else {
+                transactionAmount = businessData.getBusinessTransactionsNumber(business, cal.getTime(), new Date(), OperationType.RECHARGE);
+            }
+            if (transactionAmount <= 0) {
                 List<Operator> operators = new OperatorData().getOperatorList(business);
                 while (cal.getTimeInMillis() < System.currentTimeMillis()) {
                     long transactionId = (long) (Math.random() * 2500);
@@ -148,13 +159,21 @@ public class Startup extends HttpServlet {
                     switch ((int) (Math.random() * 2)) {
                         case 0: {
                             float businessFee = (float) (0.05 * totalCharge);
-                            saveRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            if (isCard) {
+                                saveCardRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            } else {
+                                saveRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            }
                             transactionId += (long) (Math.random() * 10);
                         }
                         break;
                         case 1:
                             float businessFee = (float) (0.2 * totalCharge);
-                            saveRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            if (isCard) {
+                                saveCardRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            } else {
+                                saveRecharge(business, operator, businessFee, totalCharge, transactionId, rechargeDate);
+                            }
                             transactionId += (long) (Math.random() * 10);
                             break;
 
@@ -261,28 +280,54 @@ public class Startup extends HttpServlet {
     }
 
     private void saveRecharge(Business business, BPUser operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
+        int businessCommission = (int) (totalCharge * businessCommissionPercentage / 100) * 100;
+        float businessCommissionFloat = businessCommission / 100;
         BusinessBalanceIncoming log = new BusinessBalanceIncoming();
         log.setBusiness(business);
         log.setUser(operator);
         log.setBusinessFee(businessFee);
-        log.setAmountWithoutFee(totalCharge - businessFee);
-        log.setTotalAmount(totalCharge);
+        log.setBusinessCommission(businessCommissionFloat);
+        log.setAmountWithoutFee(totalCharge);
+        log.setTotalAmount(totalCharge - businessFee);
         log.setDateTransaction(dateRecharge);
         log.setTransactionId(transactionId);
+        log.setTransactionStatus(BPTransactionStatus.COMPLETED);
         log.setType(OperationType.RECHARGE);
         BusinessData businessData = new BusinessData();
         businessData.saveIncomingBalance(log);
     }
 
+    private void saveCardRecharge(Business business, BPUser operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
+        int businessCommission = (int) (totalCharge * businessCommissionPercentage / 100) * 100;
+        float businessCommissionFloat = businessCommission / 100;
+        BusinessBalanceIncoming log = new BusinessBalanceIncoming();
+        log.setBusiness(business);
+        log.setUser(operator);
+        log.setBusinessFee(businessFee);
+        log.setBusinessCommission(businessCommissionFloat);
+        log.setAmountWithoutFee(totalCharge);
+        log.setTotalAmount(totalCharge - businessFee);
+        log.setDateTransaction(dateRecharge);
+        log.setTransactionId(transactionId);
+        log.setTransactionStatus(BPTransactionStatus.COMPLETED);
+        log.setType(OperationType.CARD_RECHARGE);
+        BusinessData businessData = new BusinessData();
+        businessData.saveIncomingBalance(log);
+    }
+
     private void saveWithdrae(Business business, BPUser operator, float businessFee, float totalCharge, long transactionId, Date dateRecharge) throws NullParameterException, GeneralException {
+        int businessCommission = (int) (totalCharge * businessCommissionPercentage / 100) * 100;
+        float businessCommissionFloat = businessCommission / 100;
         BusinessBalanceOutgoing log = new BusinessBalanceOutgoing();
         log.setBusiness(business);
         log.setUser(operator);
         log.setBusinessFee(businessFee);
-        log.setAmountWithoutFee(totalCharge - businessFee);
-        log.setTotalAmount(totalCharge);
+        log.setBusinessCommission(businessCommissionFloat);
+        log.setAmountWithoutFee(totalCharge);
+        log.setTotalAmount(totalCharge - businessFee);
         log.setDateTransaction(dateRecharge);
         log.setTransactionId(transactionId);
+        log.setTransactionStatus(BPTransactionStatus.COMPLETED);
         log.setType(OperationType.WITHDRAW);
         BusinessData businessData = new BusinessData();
         businessData.saveOutgoinBalance(log);
@@ -290,15 +335,19 @@ public class Startup extends HttpServlet {
 
     private long addBusinessSellTransaction(Business business, Store store, Pos pos, long idWalletTransaction,
             Date date, String origin, float amount) {
-
+        int businessCommission = (int) (amount * DiscountRatePercentage / 100) * 100;
+        float businessCommissionFloat = businessCommission / 100;
         BusinessSell sell = new BusinessSell();
         sell.setBusiness(business);
         sell.setStore(store);
         sell.setPos(pos);
-        sell.setAmount(amount);
+        sell.setAmount(amount - businessCommissionFloat);
         sell.setDateSell(date);
+        sell.setAmountWithoutFee(amount);
+        sell.setDiscountRate(businessCommissionFloat);
         sell.setIdWalletTransaction(idWalletTransaction);
         sell.setOrigin(origin);
+        sell.setTransactionStatus(BPTransactionStatus.COMPLETED);
         BusinessSellData businessSellData = new BusinessSellData();
 
         try {

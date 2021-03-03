@@ -28,8 +28,8 @@ public class CmsCard implements Serializable {
     @Column(name = "cardNumber")
     private String cardNumber;
 
-    @Column(name = "sequenceNumber")
-    private int sequenceNumber;
+    @Column(name = "sequentialNumber")
+    private int sequentialNumber;
 
     @Column(name = "cardHolder")
     private String cardHolder;
@@ -45,8 +45,8 @@ public class CmsCard implements Serializable {
     @Column(name = "securityCodeCard")
     private String securityCodeCard;
 
-    @Column(name = "securityMagneticStrip")
-    private String securityMagneticStrip;
+    @Column(name = "securityCodeMagneticStrip")
+    private String securityCodeMagneticStrip;
 
     @Column(name = "ICVVMagneticStrip")
     private String ICVVMagneticStrip;
@@ -65,7 +65,7 @@ public class CmsCard implements Serializable {
     private int pinLenght;
 
     @ManyToOne
-    @JoinColumn(name = "naturalCustomerId")
+    @JoinColumn(name = "personCustomerId")
     private CmsNaturalCustomer naturalCustomer;
 
     @Column(name = "automaticRenewalDate")
@@ -82,8 +82,8 @@ public class CmsCard implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date statusUpdateReasonDate;
 
-    @Column(name = "indPendingNewCardIssue")
-    private Boolean indPendingNewCardIssue;
+    @Column(name = "indDeliveryRequest")
+    private Boolean indDeliveryRequest;
 
     @Column(name = "createDate")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -112,12 +112,12 @@ public class CmsCard implements Serializable {
         this.cardNumber = cardNumber;
     }
 
-    public int getSequenceNumber() {
-        return sequenceNumber;
+    public int getSequentialNumber() {
+        return sequentialNumber;
     }
 
-    public void setSequenceNumber(int sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
+    public void setSequentialNumber(int sequentialNumber) {
+        this.sequentialNumber = sequentialNumber;
     }
 
     public String getCardHolder() {
@@ -152,12 +152,12 @@ public class CmsCard implements Serializable {
         this.securityCodeCard = securityCodeCard;
     }
 
-    public String getSecurityMagneticStrip() {
-        return securityMagneticStrip;
+    public String getSecurityCodeMagneticStrip() {
+        return securityCodeMagneticStrip;
     }
 
-    public void setSecurityMagneticStrip(String securityMagneticStrip) {
-        this.securityMagneticStrip = securityMagneticStrip;
+    public void setSecurityCodeMagneticStrip(String securityCodeMagneticStrip) {
+        this.securityCodeMagneticStrip = securityCodeMagneticStrip;
     }
 
     public String getICVVMagneticStrip() {
@@ -232,12 +232,12 @@ public class CmsCard implements Serializable {
         this.statusUpdateReasonDate = statusUpdateReasonDate;
     }
 
-    public Boolean getIndPendingNewCardIssue() {
-        return indPendingNewCardIssue;
+    public Boolean getIndDeliveryRequest() {
+        return indDeliveryRequest;
     }
 
-    public void setIndPendingNewCardIssue(Boolean indPendingNewCardIssue) {
-        this.indPendingNewCardIssue = indPendingNewCardIssue;
+    public void setIndDeliveryRequest(Boolean indDeliveryRequest) {
+        this.indDeliveryRequest = indDeliveryRequest;
     }
 
     public Date getCreateDate() {

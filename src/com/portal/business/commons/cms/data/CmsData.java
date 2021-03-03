@@ -277,7 +277,7 @@ public class CmsData {
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException("No se encontro el documento de persona");
         } catch (Exception ex) {
-            ex.getMessage();
+            ex.printStackTrace();
             throw new GeneralException("No se encontro el documento de persona");
         }
     }
@@ -298,7 +298,7 @@ public class CmsData {
         } catch (NoResultException ex) {
             throw new RegisterNotFoundException("Card Number not found");
         } catch (Exception ex) {
-            ex.getMessage();
+            ex.printStackTrace();
             throw new GeneralException("Database Error");
         }
     }

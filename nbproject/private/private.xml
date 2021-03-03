@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/Person.java</file>
-            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/Address.java</file>
-            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/LegalPerson.java</file>
-            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/data/BusinessData.java</file>
-            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/META-INF/persistence.xml</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/BPUser.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/models/Pos.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/managers/PermissionManager.java</file>
+            <file>file:/C:/Users/hamor/Documents/NetBeansProjects/BusinesPortalCommons/src/com/portal/business/commons/data/UserData.java</file>
         </group>
     </open-files>
 </project-private>

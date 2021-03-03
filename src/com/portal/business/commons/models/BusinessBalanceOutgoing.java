@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.enumeration.BPTransactionStatus;
 import com.portal.business.commons.enumeration.OperationType;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
@@ -46,6 +47,10 @@ public class BusinessBalanceOutgoing extends RemittenceEntity implements Seriali
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTransaction;
 
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "createdDate")
+    private Date createdDate;
+
     @Column(name = "transactionId")
     private Long transactionId;
 
@@ -60,6 +65,12 @@ public class BusinessBalanceOutgoing extends RemittenceEntity implements Seriali
 
     @Column(name = "amountWithoutFee")
     private double amountWithoutFee;
+
+    @Column(name = "businessCommission")
+    private float businessCommission;
+
+    @Column(name = "status")
+    private BPTransactionStatus transactionStatus;
 
     public BusinessBalanceOutgoing() {
     }
@@ -142,6 +153,30 @@ public class BusinessBalanceOutgoing extends RemittenceEntity implements Seriali
 
     public void setAmountWithoutFee(double amountWithoutFee) {
         this.amountWithoutFee = amountWithoutFee;
+    }
+
+    public BPTransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(BPTransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public float getBusinessCommission() {
+        return businessCommission;
+    }
+
+    public void setBusinessCommission(float businessCommission) {
+        this.businessCommission = businessCommission;
     }
 
     @Override

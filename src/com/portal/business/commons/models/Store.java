@@ -12,13 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author usuario
  */
 @Entity
-@Table(name = "store")
+@Table(name = "store", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"idCommerce", "name"})
+    ,@UniqueConstraint(columnNames = {"idCommerce", "storeCode"})})
 public class Store extends RemittenceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

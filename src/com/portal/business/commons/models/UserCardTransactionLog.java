@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.enumeration.BPTransactionStatus;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
@@ -30,6 +31,10 @@ public class UserCardTransactionLog extends RemittenceEntity implements Serializ
     @ManyToOne
     @JoinColumn
     private BPUser user;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "createdDate")
+    private Date createdDate;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "datelog")
@@ -43,6 +48,9 @@ public class UserCardTransactionLog extends RemittenceEntity implements Serializ
 
     @Column(name = "cardNumber")
     private String cardNumber;
+
+    @Column(name = "status")
+    private BPTransactionStatus transactionStatus;
 
     public static enum TransactionAction {
 
@@ -116,6 +124,24 @@ public class UserCardTransactionLog extends RemittenceEntity implements Serializ
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+    public BPTransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(BPTransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    
 
     @Override
     public Object getPk() {

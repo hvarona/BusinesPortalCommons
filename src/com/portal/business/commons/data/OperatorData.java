@@ -45,6 +45,17 @@ public class OperatorData extends AbstractBusinessPortalWs {
         return operatorList;
     }
 
+    public Operator getOperatorByLogin(String login) {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Operator> cq = cb.createQuery(Operator.class);
+            Root<Operator> from = cq.from(Operator.class);
+            return entityManager.createQuery(cq.select(from).where(cb.equal(from.get("login"), login))).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Operator loadOperator(WsRequest request) throws RegisterNotFoundException, NullParameterException, GeneralException {
         return (Operator) loadEntity(Operator.class, request, LOG, getMethodName());
     }

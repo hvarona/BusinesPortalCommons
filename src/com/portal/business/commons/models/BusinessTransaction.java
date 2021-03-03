@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.enumeration.BPTransactionStatus;
 import com.portal.business.commons.enumeration.OperationType;
 import java.util.Date;
 
@@ -27,11 +28,16 @@ public class BusinessTransaction {
 
     private double totalAmount;
 
+    private float businessCommission;
+
     private double amountWithoutFee;
 
-    public BusinessTransaction(Business business, BusinessClose close, BPUser user, 
-            Date dateTransaction, Long transactionId, OperationType type, 
-            float businessFee, double totalAmount, double amountWithoutFee) {
+    private BPTransactionStatus status;
+
+    public BusinessTransaction(Business business, BusinessClose close, BPUser user,
+            Date dateTransaction, Long transactionId, OperationType type,
+            float businessFee, double totalAmount, double amountWithoutFee,
+            BPTransactionStatus status) {
         this.business = business;
         this.close = close;
         this.user = user;
@@ -41,9 +47,8 @@ public class BusinessTransaction {
         this.businessFee = businessFee;
         this.totalAmount = totalAmount;
         this.amountWithoutFee = amountWithoutFee;
+        this.status = status;
     }
-
-    
 
     public BusinessTransaction(BusinessBalanceIncoming incoming) {
         this.id = incoming.getId();
@@ -56,6 +61,8 @@ public class BusinessTransaction {
         this.businessFee = incoming.getBusinessFee();
         this.totalAmount = incoming.getTotalAmount();
         this.amountWithoutFee = incoming.getAmountWithoutFee();
+        this.businessCommission = incoming.getBusinessCommission();
+        this.status = incoming.getTransactionStatus();
     }
 
     public BusinessTransaction(BusinessBalanceOutgoing outgoing) {
@@ -69,6 +76,8 @@ public class BusinessTransaction {
         this.businessFee = outgoing.getBusinessFee();
         this.totalAmount = outgoing.getTotalAmount();
         this.amountWithoutFee = outgoing.getAmountWithoutFee();
+        this.businessCommission = outgoing.getBusinessCommission();
+        this.status = outgoing.getTransactionStatus();
     }
 
     public Long getId() {
@@ -149,6 +158,22 @@ public class BusinessTransaction {
 
     public void setAmountWithoutFee(double amountWithoutFee) {
         this.amountWithoutFee = amountWithoutFee;
+    }
+
+    public float getBusinessCommission() {
+        return businessCommission;
+    }
+
+    public void setBusinessCommission(float businessCommission) {
+        this.businessCommission = businessCommission;
+    }
+
+    public BPTransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BPTransactionStatus status) {
+        this.status = status;
     }
 
 }

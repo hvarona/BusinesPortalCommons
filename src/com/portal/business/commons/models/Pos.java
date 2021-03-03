@@ -2,7 +2,6 @@ package com.portal.business.commons.models;
 
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
-import com.portal.business.commons.generic.RemittenceEntityListerner;
 import com.portal.business.commons.utils.AlodigaCryptographyUtils;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -20,15 +19,16 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Column;
-import javax.persistence.EntityListeners;
 import javax.persistence.Temporal;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author hvarona
  */
 @Entity
-@Table(name = "pos")
+@Table(name = "pos", uniqueConstraints = @UniqueConstraint(columnNames = {"storeId","posCode"}))
+
 public class Pos extends RemittenceEntity implements Serializable {
 
     private final static DateFormat HOUR_FORMAT = new SimpleDateFormat("hh aa");

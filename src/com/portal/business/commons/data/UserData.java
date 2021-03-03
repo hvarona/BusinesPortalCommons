@@ -76,6 +76,8 @@ public class UserData extends AbstractBusinessPortalWs {
             CriteriaQuery<BPPermissionGroup> cq = cb.createQuery(BPPermissionGroup.class);
             Root<BPPermissionGroup> from = cq.from(BPPermissionGroup.class);
             cq.select(from);
+            
+            cq.where(cb.equal(from.get("enabled"), true));
 
             Query query = entityManager.createQuery(cq);
             query.setHint("toplink.refresh", "true");

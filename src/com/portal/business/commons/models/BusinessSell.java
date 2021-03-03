@@ -1,5 +1,6 @@
 package com.portal.business.commons.models;
 
+import com.portal.business.commons.enumeration.BPTransactionStatus;
 import com.portal.business.commons.exceptions.TableNotFoundException;
 import com.portal.business.commons.generic.RemittenceEntity;
 import java.io.Serializable;
@@ -55,6 +56,18 @@ public class BusinessSell extends RemittenceEntity implements Serializable {
     @JoinColumn(name = "idBusinessClose")
     private BusinessClose businessClose;
 
+    @Column(name = "discountRate")
+    private float discountRate;
+
+    @Column(name = "idDiscountRate")
+    private String idDiscountRate;
+
+    @Column(name = "amountWithoutFee")
+    private float amountWithoutFee;
+
+    @Column(name = "status")
+    private BPTransactionStatus transactionStatus;
+
     public BusinessSell() {
     }
 
@@ -66,8 +79,6 @@ public class BusinessSell extends RemittenceEntity implements Serializable {
         this.idWalletTransaction = idWalletTransaction;
         this.businessClose = businessClose;
     }
-    
-    
 
     public Long getId() {
         return id;
@@ -139,6 +150,38 @@ public class BusinessSell extends RemittenceEntity implements Serializable {
 
     public void setBusinessClose(BusinessClose businessClose) {
         this.businessClose = businessClose;
+    }
+
+    public float getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(float discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public String getIdDiscountRate() {
+        return idDiscountRate;
+    }
+
+    public void setIdDiscountRate(String idDiscountRate) {
+        this.idDiscountRate = idDiscountRate;
+    }
+
+    public BPTransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(BPTransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public float getAmountWithoutFee() {
+        return amountWithoutFee;
+    }
+
+    public void setAmountWithoutFee(float amountWithoutFee) {
+        this.amountWithoutFee = amountWithoutFee;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class BPUser extends RemittenceEntity implements Serializable {
     private boolean enabled;
     @Column(name = "receiveNotification")
     private boolean receiveNotification;
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
     @Column(name = "password")
     private String password;

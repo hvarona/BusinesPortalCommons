@@ -60,6 +60,24 @@ public class BusinessSellData extends AbstractBusinessPortalWs {
         }
     }
 
+    public BusinessSell getBusinessSell(Business business, String id) throws GeneralException {
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<BusinessSell> cq = cb.createQuery(BusinessSell.class);
+            Root<BusinessSell> from = cq.from(BusinessSell.class);
+            cq.select(from);
+
+            cq.where(cb.equal(from.get("business"), business),
+                    cb.equal(from.get("id"), id));
+            Query query = entityManager.createQuery(cq);
+
+            return (BusinessSell) query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(LOG, sysError.format(EjbConstants.ERR_GENERAL_EXCEPTION, this.getClass(), getMethodName(), e.getMessage()), null);
+        }
+    }
+
     public Long getBusinessSalesNumber(Business business, Date startDate, Date endDate) throws GeneralException {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();

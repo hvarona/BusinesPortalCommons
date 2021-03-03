@@ -17,6 +17,7 @@ import com.portal.business.commons.utils.BusinessPortalMails;
 import com.portal.business.commons.utils.EjbConstants;
 import com.portal.business.commons.utils.Encoder;
 import com.portal.business.commons.utils.Mail;
+import com.portal.business.commons.utils.MailSenderThread;
 import com.portal.business.commons.utils.QueryConstants;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -192,7 +193,7 @@ public class AccessControlData extends AbstractBusinessPortalWs {
         try {
             Mail mail = BusinessPortalMails.getRecoveryPasswordMail(user, newPassword);
             //Inicia el envio del correo electronico
-            (new com.portal.business.commons.utils.RegisterMailSender(mail)).start();
+            (new MailSenderThread(mail)).start();
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new GeneralException(ex.getMessage());
