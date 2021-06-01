@@ -38,7 +38,9 @@ public class SendMailService {
         body.append(REGISTER_LINK_URL).append("'> ").append(msg.getString("acceptMessageLinkText"));
         body.append("</a></p>");
         body.append("<br>").append(msg.getString("acceptMessageUser")).append(user);
-        body.append("<br>").append(msg.getString("acceptMessagePassword")).append(password);
+        if (password != null && !password.isEmpty()) {
+            body.append("<br>").append(msg.getString("acceptMessagePassword")).append(password);
+        }
         body.append("<br><br>").append(msg.getString("acceptMessageFooter"));
         sendFormattedMail(REGISTER_FROM_MAIL, to, msg.getString("acceptSubject"), userFullName, body.toString(), msg);
     }
